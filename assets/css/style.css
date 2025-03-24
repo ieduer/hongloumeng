@@ -1,16 +1,16 @@
-/* 引入匯文明朝體，請確保字體文件在 assets/fonts 目錄下 */
-  @font-face {
+/* 引入匯文明朝體 */
+@font-face {
     font-family: "Huiwen Mingchao";
     src: url("https://cdn.jsdelivr.net/gh/gptv/lunyu@main/assets/fonts/HuWenMingChaoTi.woff2") format("woff2"),
          url("https://cdn.jsdelivr.net/gh/gptv/lunyu@main/assets/fonts/HuWenMingChaoTi.woff") format("woff");
     font-weight: normal;
     font-style: normal;
-}
+  }
   
   /* 全局樣式 */
   body {
     font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
-    background: #f9f5e7; /* 淡雅背景色 */
+    background: #f9f5e7;
     color: #333;
     margin: 0;
     padding: 0 10px;
@@ -27,7 +27,7 @@
     margin-bottom: 0.5em;
   }
   
-  /* 夜晚模式（通過 body.dark-mode 啟用） */
+  /* 夜晚模式 */
   body.dark-mode {
     background: #1a1a1a;
     color: #f0f0f0;
@@ -53,30 +53,37 @@
     cursor: pointer;
   }
   
-  /* 主要內容區域寬度限制：可根據需要包一個 <main> 元素 */
+  /* 主要內容區域 */
   main {
     max-width: 800px;
     margin: 0 auto;
     padding: 0 1rem;
   }
   
-  /* 目錄區：可自動換行，避免溢出 */
+  /* 目錄區：調整為網格布局，每行四章 */
   #chapter-menu {
     margin-bottom: 1rem;
     background: #fff;
     border: 1px solid #ddd;
     padding: 1rem;
-    /* 若資料量很大，可考慮:
-       white-space: nowrap; 
-       overflow-x: auto; 
-    */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
   }
   
   #chapter-menu button {
-    display: block;
-    margin: 0.4rem 0;
     width: 100%;
-    text-align: left;
+    text-align: center;
+    padding: 0.5rem;
+    border: 1px solid #0077cc;
+    border-radius: 5px;
+    background: #e0f0ff;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  #chapter-menu button:hover {
+    background: #cce4ff;
   }
   
   /* 章節內容區塊 */
@@ -88,13 +95,15 @@
     margin-bottom: 1rem;
   }
   
-  /* 對話窗口樣式 */
+  /* 對話窗口樣式，確保足夠寬 */
   #dialogue-box {
     padding: 1.5rem;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   #messages {
@@ -119,7 +128,7 @@
     transform: translateY(1px);
   }
   
-  /* 輸入區域的容器 */
+  /* 輸入區域 */
   #input-area {
     display: flex;
     flex-wrap: wrap;
@@ -190,7 +199,7 @@
     }
   }
   
-  /* 深色模式支持 (可選) */
+  /* 深色模式支持 */
   @media (prefers-color-scheme: dark) {
     body {
       background: #1a1a1a;

@@ -5,7 +5,7 @@ fetch('data/hongloumeng.json')
     const chapterMenu = document.getElementById('chapter-menu');
     data.chapters.forEach(chapter => {
       const btn = document.createElement('button');
-      // 若数据使用 chapterNumber，请改为 chapter.chapterNumber
+      // 这里假设章节号字段为 chapter，如需使用 chapterNumber 请相应修改
       btn.textContent = `${chapter.chapter} - ${chapter.title}`;
       btn.onclick = () => loadChapter(chapter);
       chapterMenu.appendChild(btn);
@@ -17,16 +17,21 @@ fetch('data/hongloumeng.json')
 document.getElementById('toggle-menu-btn').addEventListener('click', () => {
   const menu = document.getElementById('chapter-menu');
   if (menu.style.display === 'none' || menu.style.display === '') {
-    menu.style.display = 'block';
+    menu.style.display = 'grid'; // 改为 grid 布局（css 中设置了网格样式）
   } else {
     menu.style.display = 'none';
   }
 });
 
 function loadChapter(chapter) {
-  document.getElementById('chapter-content').innerText = chapter.content;
+  // 将正文根据换行符分段
+  const paragraphs = chapter.content.split(/\n+/).filter(p => p.trim() !== '');
+  const formattedContent = paragraphs.map(p => `<p>${p}</p>`).join('');
+  document.getElementById('chapter-content').innerHTML = formattedContent;
   window.currentChapter = chapter;
   document.getElementById('messages').innerHTML = ''; // 清空对话区
+  // 自动隐藏目录
+  document.getElementById('chapter-menu').style.display = 'none';
 }
 
 // 生成模拟题，读取高考真题数据后根据当前章节匹配相关题目
@@ -53,14 +58,14 @@ function generateQuestion() {
       }
       // 随机选取一个题目作为参考
       const chosenQuestion = relevantQuestions[Math.floor(Math.random() * relevantQuestions.length)];
-
+  
       // 构造指示词，结合高考真题整理说明和参考题目
-      const prompt = `你是曹雪芹，基于以下高考《红楼梦》真题数据整理说明：“${gaokao.instructions}”。\n参考题目：${chosenQuestion.originalQuestion}\n请针对《红楼梦》第${window.currentChapter.chapter}回内容设计一道高仿真模拟题，题型和真实高考题高度一致。`;
-
+      const prompt = `你是曹雪芹，基于以下高考《红楼梦》真题数据整理说明：“${gaokao.instructions}”。\n参考题目：${chosenQuestion.originalQuestion}\n请针对《红楼梦》第${window.currentChapter.chapter}回内容设计一道高仿真模拟题，题型和真实高考题高度一致。回覆結構：本章情節是⋯⋯，高考真題中與本章最相關的一道題目是⋯⋯，模擬題目：⋯⋯。記住：這一輪不給學生答案。`;
+  
       callGeminiAPI(prompt, (result) => {
         // 将 AI 返回内容按换行符分段格式化
-        let paragraphs = result.split(/\n+/).filter(p => p.trim() !== '');
-        let formattedReply = paragraphs.map(p => `<p>${p}</p>`).join('');
+        const paragraphs = result.split(/\n+/).filter(p => p.trim() !== '');
+        const formattedReply = paragraphs.map(p => `<p>${p}</p>`).join('');
         document.getElementById('messages').innerHTML = `<div class="ai-message"><strong>生成的模擬題：</strong>${formattedReply}</div>`;
         window.currentQuestion = result;
       });
@@ -86,8 +91,8 @@ function submitAnswer() {
   const prompt = `你是曹雪芹，基于近十年高考《红楼梦》真题出题模式，针对《红楼梦》第${window.currentChapter.chapter}回生成的题目：“${window.currentQuestion}”，请给出标准答案，并对学生答案：“${studentAnswer}”逐点进行详细分析，指出不足并给出改进建议。`;
   
   callGeminiAPI(prompt, (result) => {
-    let paragraphs = result.split(/\n+/).filter(p => p.trim() !== '');
-    let formattedReply = paragraphs.map(p => `<p>${p}</p>`).join('');
+    const paragraphs = result.split(/\n+/).filter(p => p.trim() !== '');
+    const formattedReply = paragraphs.map(p => `<p>${p}</p>`).join('');
     document.getElementById('messages').innerHTML += `<div class="ai-message"><strong>標準答案與点评：</strong>${formattedReply}</div>`;
   });
 }
