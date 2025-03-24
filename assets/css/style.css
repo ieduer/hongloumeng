@@ -1,17 +1,13 @@
 /* 引入匯文明朝體，請確保字體文件在 assets/fonts 目錄下 */
 @font-face {
-    font-family: "Huiwen Mingchao";
-    src: url("https://cdn.jsdelivr.net/gh/gptv/lunyu@main/assets/fonts/HuWenMingChaoTi.woff2") format("woff2"),
-         url("https://cdn.jsdelivr.net/gh/gptv/lunyu@main/assets/fonts/HuWenMingChaoTi.woff") format("woff");
+    font-family: 'HuWenMingChaoTi';
+    src: url('../fonts/HuWenMingChaoTi.woff2') format('woff2'),
+         url('../fonts/HuWenMingChaoTi.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-body {
-    font-family: "Huiwen Mingchao", serif !important;
-}
-  
 /* 全局樣式 */
 body {
     font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
@@ -20,51 +16,51 @@ body {
     margin: 0;
     padding: 0 10px;
     line-height: 1.6;
-  }
-  
-  header, footer {
+}
+
+header, footer {
     text-align: center;
     padding: 1rem;
-  }
-  
-  h1 {
+}
+
+h1 {
     font-size: 2em;
     margin-bottom: 0.5em;
-  }
-  
-  /* 夜晚模式 */
-  body.dark-mode {
+}
+
+/* 夜晚模式 */
+body.dark-mode {
     background: #1a1a1a;
     color: #f0f0f0;
-  }
-  body.dark-mode header,
-  body.dark-mode footer {
+}
+body.dark-mode header,
+body.dark-mode footer {
     background: #1a1a1a;
-  }
-  body.dark-mode #dialogue-box,
-  body.dark-mode #chapter-menu,
-  body.dark-mode #chapter-content {
+}
+body.dark-mode #dialogue-box,
+body.dark-mode #chapter-menu,
+body.dark-mode #chapter-content {
     background: #2a2a2a;
     border-color: #444;
-  }
-  
-  /* 切換目錄按鈕 */
-  #toggle-menu-btn {
+}
+
+/* 切換目錄按鈕 */
+#toggle-menu-btn {
     font-size: 1rem;
     padding: 0.5rem 1rem;
     margin-bottom: 1rem;
     cursor: pointer;
-  }
-  
-  /* 主要內容區域 */
-  main {
+}
+
+/* 主要內容區域 */
+main {
     max-width: 800px;
     margin: 0 auto;
     padding: 0 1rem;
-  }
-  
-  /* 目錄區：網格布局，每行4個按鈕 */
-  #chapter-menu {
+}
+
+/* 目錄區：網格布局，每行4個按鈕 */
+#chapter-menu {
     margin-bottom: 1rem;
     background: #fff;
     border: 1px solid #ddd;
@@ -73,32 +69,32 @@ body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
-  }
-  #chapter-menu button {
+}
+#chapter-menu button {
     width: 100%;
     text-align: center;
-    padding: 1rem; /* 調整按鈕尺寸，恢復原來較大 */
+    padding: 1rem;
     border: 1px solid #0077cc;
     border-radius: 5px;
     background: #e0f0ff;
     cursor: pointer;
     transition: background 0.2s;
-  }
-  #chapter-menu button:hover {
+}
+#chapter-menu button:hover {
     background: #cce4ff;
-  }
-  
-  /* 章節內容區 */
-  #chapter-content {
+}
+
+/* 章節內容區 */
+#chapter-content {
     padding: 1rem;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-bottom: 1rem;
-  }
-  
-  /* 對話窗口區域 */
-  #dialogue-box {
+}
+
+/* 對話窗口區域 */
+#dialogue-box {
     padding: 1.5rem;
     background: #fff;
     border: 1px solid #ddd;
@@ -106,109 +102,95 @@ body {
     margin-bottom: 1.5rem;
     width: 100%;
     box-sizing: border-box;
-  }
-  
-  /* 消息區 */
-  #messages {
+}
+
+/* 消息區 */
+#messages {
     min-height: 150px;
     margin-bottom: 1.5rem;
-  }
-  
-  /* 按鈕區 */
-  #input-area {
+}
+
+/* 按鈕區 */
+#input-area {
     display: flex;
     flex-wrap: wrap;
     gap: 0.8rem;
     margin-bottom: 1.5rem;
-  }
-  #input-area button {
+    align-items: center;
+}
+#input-area button {
     flex-grow: 1;
-    min-width: 200px; /* 調整為較大尺寸 */
+    min-width: 200px;
     padding: 1rem;
     font-size: 1rem;
-  }
-  
-/* 父容器 #input-area 的布局 */
-#input-area {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
-  align-items: center; /* 垂直居中，可选 */
 }
 
-/* 默认隐藏 #answer-section，点击后变为 flex */
+/* 答案輸入區：設置為垂直布局 */
 #answer-section {
-  display: none;
-  flex: 1; 
-  align-items: center;
-  gap: 0.5rem; /* 文本框和按钮之间的间距 */
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
 }
-
-/* 文本框可拉伸 */
 #answer-section textarea {
-  flex: 1; 
-  height: 6rem; 
-  padding: 0.6rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-  margin-bottom: 0.8rem;
+    flex: 1;
+    height: 10rem; /* 調整輸入框高度 */
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
-
-/* “送出答案”按钮也设置相同大小 */
 #answer-section button {
-  padding: 1rem;
-  font-size: 1rem;
-  border: 1px solid #0077cc;
-  border-radius: 5px;
-  background: #e0f0ff;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-  min-width: 150px;
-  margin-bottom: 0.8rem;
-}
-  
-  /* 按鈕共同樣式 */
-  button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
     border: 1px solid #0077cc;
     border-radius: 5px;
     background: #e0f0ff;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
-  }
-  button:hover {
+}
+
+/* 按鈕共同樣式 */
+button {
+    border: 1px solid #0077cc;
+    border-radius: 5px;
+    background: #e0f0ff;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+button:hover {
     background: #cce4ff;
-  }
-  button:active {
+}
+button:active {
     transform: translateY(1px);
-  }
-  
-  /* 響應式設計 */
-  @media (max-width: 768px) {
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
     body { padding: 0; }
     main { padding: 0 0.5rem; }
     h1 { font-size: 1.5em; }
     #dialogue-box { padding: 1rem; }
     #input-area { gap: 0.5rem; }
     #input-area button { padding: 0.8rem; font-size: 0.95rem; min-width: 150px; }
-    #answer-section textarea { height: 4rem; }
-  }
-  
-  /* 深色模式支持 */
-  @media (prefers-color-scheme: dark) {
+    #answer-section textarea { height: 6rem; }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
     body { background: #1a1a1a; color: #f0f0f0; }
     #dialogue-box { background: #2a2a2a; border-color: #444; }
     button {
-      background: #1a3d66;
-      border-color: #2a5a8a;
-      color: #f0f0f0;
+        background: #1a3d66;
+        border-color: #2a5a8a;
+        color: #f0f0f0;
     }
     button:hover { background-color: #2a5a8a; }
     #answer-section textarea {
-      background: #333;
-      color: #f0f0f0;
-      border-color: #555;
+        background: #333;
+        color: #f0f0f0;
+        border-color: #555;
     }
-  }
+}
