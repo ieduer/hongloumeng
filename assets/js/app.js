@@ -92,7 +92,7 @@ function callGeminiAPI(prompt, callback) {
   .then(res => res.json())
   .then(data => {
     console.log('API返回数据：', data);
-    callback(data.response);
+    callback(data.answer);
   })
   .catch(err => {
     console.error('API 調用錯誤：', err);
