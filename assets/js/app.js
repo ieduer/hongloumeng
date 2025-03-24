@@ -23,6 +23,11 @@ document.getElementById('toggle-menu-btn').addEventListener('click', () => {
   }
 });
 
+// 新增：切换黑暗模式事件监听（点击月亮按钮切换 body 的 dark-mode 类）
+document.getElementById('toggle-dark-btn').addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+});
+
 // 加載章節時，插入分段處理（任務2）
 function loadChapter(chapter) {
   // 若原文中無明顯分段符，將中文標點後插入換行標記
@@ -53,7 +58,7 @@ function generateQuestion() {
         relevantQuestions = gaokao.data;
       }
       const chosenQuestion = relevantQuestions[Math.floor(Math.random() * relevantQuestions.length)];
-      const prompt = `你是曹雪芹，基于以下高考《红楼梦》真题数据整理说明：“${gaokao.instructions}”。\n参考题目：${chosenQuestion.originalQuestion}\n请针对《红楼梦》第${window.currentChapter.chapter}回内容设计一道高仿真模拟题，题型和真实高考题高度一致。`;
+      const prompt = `你是曹雪芹，基于以下高考《红楼梦》真题数据整理说明：“${gaokao.instructions}”。\n参考题目：${chosenQuestion.originalQuestion}\n请针对《红楼梦》第${window.currentChapter.chapter}回内容设计一道高仿真模拟题，题型和真实高考题高度一致。回覆結構：本章情節概述：⋯⋯。高考真題與本章最相關的類型是⋯⋯，老夫給你出的模擬題是⋯⋯。注意：這一輪不要給答案`;
       
       callGeminiAPI(prompt, (result) => {
         // 將返回的文本按換行符分段格式化

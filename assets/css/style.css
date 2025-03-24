@@ -12,8 +12,8 @@ body {
     font-family: "Huiwen Mingchao", serif !important;
 }
   
-  /* 全局樣式 */
-  body {
+/* 全局樣式 */
+body {
     font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
     background: #f9f5e7;
     color: #333;
@@ -63,7 +63,7 @@ body {
     padding: 0 1rem;
   }
   
-  /* 目錄區：採用網格布局，每行4個按鈕 */
+  /* 目錄區：網格布局，每行4個按鈕 */
   #chapter-menu {
     margin-bottom: 1rem;
     background: #fff;
@@ -77,7 +77,7 @@ body {
   #chapter-menu button {
     width: 100%;
     text-align: center;
-    padding: 0.5rem;
+    padding: 1rem; /* 調整按鈕尺寸，恢復原來較大 */
     border: 1px solid #0077cc;
     border-radius: 5px;
     background: #e0f0ff;
@@ -97,7 +97,7 @@ body {
     margin-bottom: 1rem;
   }
   
-  /* 對話窗口樣式 */
+  /* 對話窗口區域 */
   #dialogue-box {
     padding: 1.5rem;
     background: #fff;
@@ -108,28 +108,34 @@ body {
     box-sizing: border-box;
   }
   
+  /* 消息區 */
+  #messages {
+    min-height: 150px;
+    margin-bottom: 1.5rem;
+  }
+  
   /* 按鈕區 */
-  #button-area {
+  #input-area {
     display: flex;
     flex-wrap: wrap;
     gap: 0.8rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
-  #button-area button {
+  #input-area button {
     flex-grow: 1;
-    min-width: 150px;
-    padding: 0.5rem 1rem;
+    min-width: 200px; /* 調整為較大尺寸 */
+    padding: 1rem;
     font-size: 1rem;
   }
   
-  /* 答案輸入區：提高高度 */
+  /* 答案輸入區：送出答案區塊 */
   #answer-section {
     margin-top: 1rem;
     display: none; /* 默認隱藏 */
   }
   #answer-section textarea {
     width: 100%;
-    height: 6rem; /* 提高輸入區高度 */
+    height: 6rem; /* 增加輸入框高度 */
     padding: 0.6rem;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -141,6 +147,22 @@ body {
     border-color: #0077cc;
     outline: none;
     box-shadow: 0 0 3px rgba(0, 119, 204, 0.3);
+  }
+  #answer-section button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 1px solid #0077cc;
+    border-radius: 5px;
+    background: #e0f0ff;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  #answer-section button:hover {
+    background: #cce4ff;
+  }
+  #answer-section button:active {
+    transform: translateY(1px);
   }
   
   /* 按鈕共同樣式 */
@@ -164,8 +186,8 @@ body {
     main { padding: 0 0.5rem; }
     h1 { font-size: 1.5em; }
     #dialogue-box { padding: 1rem; }
-    #button-area { gap: 0.5rem; }
-    #button-area button { padding: 0.6rem; font-size: 0.95rem; min-width: 120px; }
+    #input-area { gap: 0.5rem; }
+    #input-area button { padding: 0.8rem; font-size: 0.95rem; min-width: 150px; }
     #answer-section textarea { height: 4rem; }
   }
   
