@@ -5,7 +5,7 @@ fetch('data/hongloumeng.json')
     const chapterMenu = document.getElementById('chapter-menu');
     data.chapters.forEach(chapter => {
       const btn = document.createElement('button');
-      // 显示章节编号和标题（如果数据字段为 chapterNumber，请将 chapter.chapter 替换为 chapter.chapterNumber）
+      // 若数据使用 chapterNumber，请改为 chapter.chapterNumber
       btn.textContent = `${chapter.chapter} - ${chapter.title}`;
       btn.onclick = () => loadChapter(chapter);
       chapterMenu.appendChild(btn);
@@ -35,6 +35,10 @@ function generateQuestion() {
     alert("請先選擇一個章節！");
     return;
   }
+  
+  // 显示进度提示
+  document.getElementById('messages').innerHTML = `<div class="ai-progress"><strong>提示：</strong>曹雪芹正在幫你分析高考題，請稍候...</div>`;
+  
   // 读取高考真题数据
   fetch('data/gaokao.json')
     .then(res => res.json())
@@ -54,7 +58,10 @@ function generateQuestion() {
       const prompt = `你是曹雪芹，基于以下高考《红楼梦》真题数据整理说明：“${gaokao.instructions}”。\n参考题目：${chosenQuestion.originalQuestion}\n请针对《红楼梦》第${window.currentChapter.chapter}回内容设计一道高仿真模拟题，题型和真实高考题高度一致。`;
 
       callGeminiAPI(prompt, (result) => {
-        document.getElementById('messages').innerHTML = `<div class="ai-message"><strong>生成的模擬題：</strong>${result}</div>`;
+        // 将 AI 返回内容按换行符分段格式化
+        let paragraphs = result.split(/\n+/).filter(p => p.trim() !== '');
+        let formattedReply = paragraphs.map(p => `<p>${p}</p>`).join('');
+        document.getElementById('messages').innerHTML = `<div class="ai-message"><strong>生成的模擬題：</strong>${formattedReply}</div>`;
         window.currentQuestion = result;
       });
     })
@@ -73,10 +80,15 @@ function submitAnswer() {
     alert("請輸入答案！");
     return;
   }
+  // 显示用户提交的答案，模仿 Lunyu 项目的自由提问样式
+  document.getElementById('messages').innerHTML += `<div class="user-message"><strong>你的答案：</strong><p>${studentAnswer}</p></div>`;
+  
   const prompt = `你是曹雪芹，基于近十年高考《红楼梦》真题出题模式，针对《红楼梦》第${window.currentChapter.chapter}回生成的题目：“${window.currentQuestion}”，请给出标准答案，并对学生答案：“${studentAnswer}”逐点进行详细分析，指出不足并给出改进建议。`;
   
   callGeminiAPI(prompt, (result) => {
-    document.getElementById('messages').innerHTML += `<div class="ai-message"><strong>標準答案與点评：</strong>${result}</div>`;
+    let paragraphs = result.split(/\n+/).filter(p => p.trim() !== '');
+    let formattedReply = paragraphs.map(p => `<p>${p}</p>`).join('');
+    document.getElementById('messages').innerHTML += `<div class="ai-message"><strong>標準答案與点评：</strong>${formattedReply}</div>`;
   });
 }
 
