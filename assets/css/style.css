@@ -128,14 +128,27 @@ body {
     font-size: 1rem;
   }
   
-  /* 答案輸入區：送出答案區塊 */
-  #answer-section {
-    margin-top: 1rem;
-    display: none; /* 默認隱藏 */
+/* 父容器 #input-area 的布局 */
+#input-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    align-items: center; /* 垂直居中，可选 */
   }
+  
+  /* 默认隐藏 #answer-section，点击后变为 flex */
+  #answer-section {
+    display: none;
+    flex: 1; 
+    align-items: center;
+    gap: 0.5rem; /* 文本框和按钮之间的间距 */
+  }
+  
+  /* 文本框可拉伸 */
   #answer-section textarea {
-    width: 100%;
-    height: 6rem; /* 增加輸入框高度 */
+    flex: 1; 
+    height: 6rem; 
     padding: 0.6rem;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -143,13 +156,9 @@ body {
     box-sizing: border-box;
     margin-bottom: 0.8rem;
   }
-  #answer-section textarea:focus {
-    border-color: #0077cc;
-    outline: none;
-    box-shadow: 0 0 3px rgba(0, 119, 204, 0.3);
-  }
+  
+  /* “送出答案”按钮也设置相同大小 */
   #answer-section button {
-    width: 100%;
     padding: 1rem;
     font-size: 1rem;
     border: 1px solid #0077cc;
@@ -157,12 +166,8 @@ body {
     background: #e0f0ff;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
-  }
-  #answer-section button:hover {
-    background: #cce4ff;
-  }
-  #answer-section button:active {
-    transform: translateY(1px);
+    min-width: 150px;
+    margin-bottom: 0.8rem;
   }
   
   /* 按鈕共同樣式 */

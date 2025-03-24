@@ -58,7 +58,7 @@ function generateQuestion() {
         relevantQuestions = gaokao.data;
       }
       const chosenQuestion = relevantQuestions[Math.floor(Math.random() * relevantQuestions.length)];
-      const prompt = `你是曹雪芹，基于以下高考《红楼梦》真题数据整理说明：“${gaokao.instructions}”。\n参考题目：${chosenQuestion.originalQuestion}\n请针对《红楼梦》第${window.currentChapter.chapter}回内容设计一道高仿真模拟题，题型和真实高考题高度一致。回覆結構：本章情節概述：⋯⋯。高考真題與本章最相關的類型是⋯⋯，老夫給你出的模擬題是⋯⋯。注意：這一輪不要給答案`;
+      const prompt = `你是曹雪芹，基于以下高考《红楼梦》真题数据整理说明：“${gaokao.instructions}”。\n参考题目：${chosenQuestion.originalQuestion}\n请针对《红楼梦》第${window.currentChapter.chapter}回内容设计一道高仿真模拟题，题型和真实高考题高度一致。回覆結構：本章情節概述：⋯⋯。高考真題與本章最相關的類型是⋯⋯，老夫給你出的模擬題是⋯⋯。注意：不要給答案`;
       
       callGeminiAPI(prompt, (result) => {
         // 將返回的文本按換行符分段格式化
@@ -71,9 +71,25 @@ function generateQuestion() {
     .catch(err => console.error('加载高考真题数据错误：', err));
 }
 
-// 顯示答案輸入區塊（單獨區塊，任務1要求）
+// 给“提交答案”按钮加一个 id="showAnswerInputButton"
+// <button id="showAnswerInputButton" onclick="showAnswerInput()">提交答案</button>
+
+// 显示答案输入区块
 function showAnswerInput() {
-  document.getElementById('answer-section').style.display = 'block';
+  // 1. 隐藏“提交答案”按钮
+  const showInputBtn = document.getElementById('showAnswerInputButton');
+  showInputBtn.style.display = 'none';
+
+  // 2. 将“送出答案”区块移动到“生成模拟题”按钮旁
+  const inputArea = document.getElementById('input-area'); 
+  const answerSection = document.getElementById('answer-section');
+  // 将 #answer-section 直接 append 到 #input-area
+  inputArea.appendChild(answerSection);
+
+  // 3. 显示“送出答案”区块，并让它占据整行
+  answerSection.style.display = 'flex';
+  answerSection.style.width = '100%';
+  // 如需更改布局，可在 CSS 中统一设置
 }
 
 // 提交答案後，將答案區塊移到按鈕區下方（任務1）
