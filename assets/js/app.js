@@ -12,6 +12,16 @@ fetch('data/hongloumeng.json')
   })
   .catch(err => console.error('加载章节数据错误：', err));
 
+// 在 app.js 中，给“显示目录”按钮添加事件监听
+document.getElementById('toggle-menu-btn').addEventListener('click', () => {
+  const menu = document.getElementById('chapter-menu');
+  if (menu.style.display === 'none') {
+    menu.style.display = 'block';
+  } else {
+    menu.style.display = 'none';
+  }
+});
+
 function loadChapter(chapter) {
   document.getElementById('chapter-content').innerText = chapter.content;
   window.currentChapter = chapter;
