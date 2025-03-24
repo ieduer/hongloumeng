@@ -1,117 +1,183 @@
-// 加载《红楼梦》章节数据
-fetch('data/hongloumeng.json')
-  .then(res => res.json())
-  .then(data => {
-    const chapterMenu = document.getElementById('chapter-menu');
-    data.chapters.forEach(chapter => {
-      const btn = document.createElement('button');
-      // 这里假设章节号字段为 chapter，如需使用 chapterNumber 请相应修改
-      btn.textContent = `${chapter.chapter} - ${chapter.title}`;
-      btn.onclick = () => loadChapter(chapter);
-      chapterMenu.appendChild(btn);
-    });
-  })
-  .catch(err => console.error('加载章节数据错误：', err));
+/* 引入匯文明朝體，請確保字體文件在 assets/fonts 目錄下 */
+@font-face {
+  font-family: 'HuWenMingChaoTi';
+  src: url('../fonts/HuWenMingChaoTi.woff2') format('woff2'),
+       url('../fonts/HuWenMingChaoTi.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
-// 给“显示目录”按钮添加事件监听，切换目录显示/隐藏
-document.getElementById('toggle-menu-btn').addEventListener('click', () => {
-  const menu = document.getElementById('chapter-menu');
-  if (menu.style.display === 'none' || menu.style.display === '') {
-    menu.style.display = 'grid'; // 改为 grid 布局（css 中设置了网格样式）
-  } else {
-    menu.style.display = 'none';
+/* 全局樣式 */
+body {
+  font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
+  background: #f9f5e7;
+  color: #333;
+  margin: 0;
+  padding: 0 10px;
+  line-height: 1.6;
+}
+
+header, footer {
+  text-align: center;
+  padding: 1rem;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+/* 夜晚模式 */
+body.dark-mode {
+  background: #1a1a1a;
+  color: #f0f0f0;
+}
+body.dark-mode header,
+body.dark-mode footer {
+  background: #1a1a1a;
+}
+body.dark-mode #dialogue-box,
+body.dark-mode #chapter-menu,
+body.dark-mode #chapter-content {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+/* 切換目錄按鈕 */
+#toggle-menu-btn {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+/* 主要內容區域 */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* 目錄區：採用網格布局，每行4個按鈕 */
+#chapter-menu {
+  margin-bottom: 1rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  display: none; /* 默認隱藏 */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+#chapter-menu button {
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem;
+  border: 1px solid #0077cc;
+  border-radius: 5px;
+  background: #e0f0ff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#chapter-menu button:hover {
+  background: #cce4ff;
+}
+
+/* 章節內容區 */
+#chapter-content {
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+/* 對話窗口樣式 */
+#dialogue-box {
+  padding: 1.5rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 按鈕區 */
+#button-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+#button-area button {
+  flex-grow: 1;
+  min-width: 150px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+/* 答案輸入區：提高高度 */
+#answer-section {
+  margin-top: 1rem;
+  display: none; /* 默認隱藏 */
+}
+#answer-section textarea {
+  width: 100%;
+  height: 6rem; /* 提高輸入區高度 */
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 0.8rem;
+}
+#answer-section textarea:focus {
+  border-color: #0077cc;
+  outline: none;
+  box-shadow: 0 0 3px rgba(0, 119, 204, 0.3);
+}
+
+/* 按鈕共同樣式 */
+button {
+  border: 1px solid #0077cc;
+  border-radius: 5px;
+  background: #e0f0ff;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+button:hover {
+  background: #cce4ff;
+}
+button:active {
+  transform: translateY(1px);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  body { padding: 0; }
+  main { padding: 0 0.5rem; }
+  h1 { font-size: 1.5em; }
+  #dialogue-box { padding: 1rem; }
+  #button-area { gap: 0.5rem; }
+  #button-area button { padding: 0.6rem; font-size: 0.95rem; min-width: 120px; }
+  #answer-section textarea { height: 4rem; }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  body { background: #1a1a1a; color: #f0f0f0; }
+  #dialogue-box { background: #2a2a2a; border-color: #444; }
+  button {
+    background: #1a3d66;
+    border-color: #2a5a8a;
+    color: #f0f0f0;
   }
-});
-
-function loadChapter(chapter) {
-  // 将正文根据换行符分段
-  const paragraphs = chapter.content.split(/\n+/).filter(p => p.trim() !== '');
-  const formattedContent = paragraphs.map(p => `<p>${p}</p>`).join('');
-  document.getElementById('chapter-content').innerHTML = formattedContent;
-  window.currentChapter = chapter;
-  document.getElementById('messages').innerHTML = ''; // 清空对话区
-  // 自动隐藏目录
-  document.getElementById('chapter-menu').style.display = 'none';
-}
-
-// 生成模拟题，读取高考真题数据后根据当前章节匹配相关题目
-function generateQuestion() {
-  if (!window.currentChapter) {
-    alert("請先選擇一個章節！");
-    return;
+  button:hover { background-color: #2a5a8a; }
+  #answer-section textarea {
+    background: #333;
+    color: #f0f0f0;
+    border-color: #555;
   }
-  
-  // 显示进度提示
-  document.getElementById('messages').innerHTML = `<div class="ai-progress"><strong>提示：</strong>曹雪芹正在幫你分析高考題，請稍候...</div>`;
-  
-  // 读取高考真题数据
-  fetch('data/gaokao.json')
-    .then(res => res.json())
-    .then(gaokao => {
-      // 根据章节标题或内容尝试匹配相关题目
-      let relevantQuestions = gaokao.data.filter(q => {
-        return window.currentChapter.title.includes(q.chapter) || window.currentChapter.content.includes(q.chapter);
-      });
-      // 如果匹配不到，则使用全部数据作为参考
-      if (relevantQuestions.length === 0) {
-        relevantQuestions = gaokao.data;
-      }
-      // 随机选取一个题目作为参考
-      const chosenQuestion = relevantQuestions[Math.floor(Math.random() * relevantQuestions.length)];
-  
-      // 构造指示词，结合高考真题整理说明和参考题目
-      const prompt = `你是曹雪芹，基于以下高考《红楼梦》真题数据整理说明：“${gaokao.instructions}”。\n参考题目：${chosenQuestion.originalQuestion}\n请针对《红楼梦》第${window.currentChapter.chapter}回内容设计一道高仿真模拟题，题型和真实高考题高度一致。回覆結構：本章情節是⋯⋯，高考真題中與本章最相關的一道題目是⋯⋯，模擬題目：⋯⋯。記住：這一輪不給學生答案。`;
-  
-      callGeminiAPI(prompt, (result) => {
-        // 将 AI 返回内容按换行符分段格式化
-        const paragraphs = result.split(/\n+/).filter(p => p.trim() !== '');
-        const formattedReply = paragraphs.map(p => `<p>${p}</p>`).join('');
-        document.getElementById('messages').innerHTML = `<div class="ai-message"><strong>生成的模擬題：</strong>${formattedReply}</div>`;
-        window.currentQuestion = result;
-      });
-    })
-    .catch(err => console.error('加载高考真题数据错误：', err));
-}
-
-// 显示答案输入区域
-function showAnswerInput() {
-  document.getElementById('answer-section').style.display = 'block';
-}
-
-// 提交答案后调用 Gemini API 获取标准答案与点评
-function submitAnswer() {
-  const studentAnswer = document.getElementById('userAnswer').value;
-  if (!studentAnswer) {
-    alert("請輸入答案！");
-    return;
-  }
-  // 显示用户提交的答案，模仿 Lunyu 项目的自由提问样式
-  document.getElementById('messages').innerHTML += `<div class="user-message"><strong>你的答案：</strong><p>${studentAnswer}</p></div>`;
-  
-  const prompt = `你是曹雪芹，基于近十年高考《红楼梦》真题出题模式，针对《红楼梦》第${window.currentChapter.chapter}回生成的题目：“${window.currentQuestion}”，请给出标准答案，并对学生答案：“${studentAnswer}”逐点进行详细分析，指出不足并给出改进建议。`;
-  
-  callGeminiAPI(prompt, (result) => {
-    const paragraphs = result.split(/\n+/).filter(p => p.trim() !== '');
-    const formattedReply = paragraphs.map(p => `<p>${p}</p>`).join('');
-    document.getElementById('messages').innerHTML += `<div class="ai-message"><strong>標準答案與点评：</strong>${formattedReply}</div>`;
-  });
-}
-
-// 调用 Gemini API 的函数（通过 Cloudflare Worker 代理）
-function callGeminiAPI(prompt, callback) {
-  fetch('https://hlm.bdfz.workers.dev', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ prompt })
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log('API返回数据：', data);
-    callback(data.answer);
-  })
-  .catch(err => {
-    console.error('API 調用錯誤：', err);
-  });
 }
