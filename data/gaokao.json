@@ -1,0 +1,131 @@
+{
+    "instructions": "以下是包含原题内容的高考《红楼梦》真题数据整理。",
+    "data": [
+      {
+        "year": 2024,
+        "questionNumber": "15(1)",
+        "questionType": "简答题",
+        "topic": "王熙凤评价 (乖，巧)",
+        "chapter": "35",
+        "questionSummary": "结合书中其他情节，谈谈对王熙凤“乖”“巧”的理解。(5分)",
+        "originalQuestion": "贾母和薛宝钗用“乖”“巧”评价王熙凤。请结合书中其他情节,谈谈你对王熙凤“乖”“巧”的理解。(5分)"
+      },
+      {
+        "year": 2024,
+        "questionNumber": "15(2)",
+        "questionType": "简答题",
+        "topic": "薛宝钗性格，贾母人物特点",
+        "chapter": "35",
+        "questionSummary": "薛宝钗性格和贾母人物特点分析。(5分)",
+        "originalQuestion": "薛宝钗的话体现了她怎样的性格,又反映了贾母怎样的人物特点?请结合书中其他情节,分别予以解说。(5分)"
+      },
+      {
+        "year": 2022,
+        "questionNumber": "15(1)",
+        "questionType": "简答题",
+        "topic": "书名解释 (《情僧录》《风月宝鉴》《金陵十二钗》)",
+        "chapter": "1",
+        "questionSummary": "任选三个书名，解释与作品内容关联。(6分)",
+        "originalQuestion": "除了《红楼梦》外，这里还提到了小说另外四个书名。请从中任选三个，解释这些书名和作品内容有何关联。（6分）"
+      },
+      {
+        "year": 2022,
+        "questionNumber": "15(2)",
+        "questionType": "简答题",
+        "topic": "书名《红楼梦》的合理性",
+        "chapter": "5",
+        "questionSummary": "结合作品内容，谈《红楼梦》作为书名的合理性。(4分)",
+        "originalQuestion": "结合作品内容，谈谈《红楼梦》作为书名的合理性。（4分）"
+      },
+      {
+        "year": 2021,
+        "questionNumber": "16(1)",
+        "questionType": "简答题",
+        "topic": "秦可卿托梦中的“非常喜事”",
+        "chapter": "13",
+        "questionSummary": "“非常喜事”在小说中指什么？",
+        "originalQuestion": "这里说的“非常喜事”在小说中指什么？"
+      },
+      {
+        "year": 2021,
+        "questionNumber": "16(2)",
+        "questionType": "简答题",
+        "topic": "秦可卿托梦画线部分与后续情节的关系",
+        "chapter": "13",
+        "questionSummary": "画线部分与小说后续情节有何关系？举例说明。",
+        "originalQuestion": "画线的部分与小说后续情节有何关系？请结合原著，举例说明。"
+      },
+      {
+        "year": 2021,
+        "questionNumber": "微写作",
+        "questionType": "微写作",
+        "topic": "遗憾又启迪的人物",
+        "chapter": "全书",
+        "questionSummary": "选择《红楼梦》中令人遗憾又给人启迪的人物，谈谈原因和启发。(150字)",
+        "originalQuestion": "文学名著中常有一些让人心生遗憾又给人启迪的人物。请从《红楼梦》《呐喊》《边城》《红岩》《平凡的世界》《老人与海》中选择一个人物，谈谈他（或她）为何令你感到遗憾，又带给你怎样的启发。要求：写明作品和人物，言之有理。不超过150字。"
+      },
+      {
+        "year": 2020,
+        "questionNumber": "17",
+        "questionType": "简答题",
+        "topic": "晴雯判词情节印证",
+        "chapter": "5",
+        "questionSummary": "晴雯判词画线部分，任选三处举例印证。(5分)",
+        "originalQuestion": "请从判词的画线部分选择三处，各举出原著中的一个具体情节加以印证。"
+      },
+      {
+        "year": 2020,
+        "questionNumber": "23",
+        "questionType": "微写作",
+        "topic": "读名著原著 vs 缩写本/连环画",
+        "chapter": "全书",
+        "questionSummary": "读《红楼梦》等“大部头”名著原著 vs 缩写本/连环画的看法。(150字)",
+        "originalQuestion": "有的同学觉得阅读《红楼梦》《平凡的世界》等“大部头”名著太费时间和精力，不如读缩写本或连环画省时省力。对此你有什么看法？请阐述自己的观点。要求：观点明确，言之有据。150字左右。"
+      },
+      {
+        "year": 2019,
+        "questionNumber": "22③",
+        "questionType": "微写作",
+        "topic": "“心清如水”的人 (赞美)",
+        "chapter": "《边城》《红楼梦》",
+        "questionSummary": "《边城》《红楼梦》中“心清如水”的人，写诗或抒情文字赞美。(150字)",
+        "originalQuestion": "在《边城》《红楼梦》中，谁是“心清如水”的人？写一首诗或一段抒情文字赞美他（她）。要求：写出赞美对象的姓名和特点，不超过150字。"
+      },
+      {
+        "year": 2018,
+        "questionNumber": "23②",
+        "questionType": "微写作",
+        "topic": "既可悲又可叹的人物",
+        "chapter": "《红楼梦》",
+        "questionSummary": "《红楼梦》中既可悲又可叹的人物，简述人物形象。(150-200字)",
+        "originalQuestion": "从《红楼梦》《呐喊》《平凡的世界》中选择一个既可悲又可叹的人物，简述这个人物形象。要求：符合原著故事情节。150—200字。"
+      },
+      {
+        "year": 2017,
+        "questionNumber": "24",
+        "questionType": "选择题",
+        "topic": "大观园环境与贾宝玉性格关系",
+        "chapter": "全书/大观园",
+        "questionSummary": "大观园环境与贾宝玉性格关系的理解，选不正确项。(3分)",
+        "originalQuestion": "下列对经典作品中环境与人物的联系，理解不正确的一项是（3分）\nA．大观园是《红楼梦》中人物活动的一个主要场所。正是这个众姐妹诗意生活着的“世外桃源”，造就了贾宝玉力求摆脱世俗的叛逆性格。"
+      },
+      {
+        "year": 2017,
+        "questionNumber": "微写作",
+        "questionType": "微写作",
+        "topic": "花比喻女性人物 (林黛玉/薛宝钗/史湘云/香菱)",
+        "chapter": "全书/人物",
+        "questionSummary": "用一种花比喻《红楼梦》女性人物并陈述理由。(180字)",
+        "originalQuestion": "请从《红楼梦》中的林黛玉、薛宝钗、史湘云、香菱之中选择一人，用一种花来比喻她，并简要陈述这样比喻的理由。要求：依据原著，自圆其说。"
+      },
+      {
+        "year": 2014,
+        "questionNumber": "-",
+        "questionType": "选择题",
+        "topic": "“多病西施”，“冷月葬花魂” 指代的才女",
+        "chapter": "全书/人物/诗句",
+        "questionSummary": "“多病西施”和“冷月葬花魂”指代的才女 (选择题)。(2分)",
+        "originalQuestion": "《红楼梦》中，两位才女中秋月下吟诗，其中一位被称作“多病西施”，她所吟的“冷月葬花魂”诗句，正是其诗意而悲剧的人生的写照。此才女是（2分）\nA．史湘云 B．林黛玉 C．薛宝钗 D．妙玉"
+      }
+    ]
+  }

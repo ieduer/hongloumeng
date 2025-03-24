@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="https://raw.githubusercontent.com/gptv/suen/main/images/Avatar-small.jpeg" type="image/jpeg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <title>AI红楼梦</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div id="container">
+    <aside id="sidebar">
+      <button id="toggle-menu-btn">顯示目錄</button>
+      <nav id="chapter-menu" style="display: none;"></nav>
+    </aside>
+    <div id="main-content">
+      <header>
+        <h1>AI红楼梦</h1>
+        <button id="toggle-dark-btn" title="切換夜晚模式" style="font-size: 1.5rem; background: none; border: none; cursor: pointer;">🌓</button>
+      </header>
+      <!-- 显示章节内容 -->
+      <section id="chapter-content"></section>
+      <!-- 显示模拟题和AI点评 -->
+      <section id="dialogue-box">
+        <div id="messages"></div>
+        <div id="input-area">
+          <button onclick="generateQuestion()">生成模拟题</button>
+          <button onclick="showAnswerInput()">提交答案</button>
+          <div id="answer-section" style="display:none;">
+            <textarea id="userAnswer" placeholder="請在此輸入你的答案…"></textarea>
+            <button onclick="submitAnswer()">送出答案</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <footer style="text-align:center; margin-top:20px;">
+    <p>© Suen <a href="https://bdfz.net/posts/hlm">About</a></p>
+  </footer>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
