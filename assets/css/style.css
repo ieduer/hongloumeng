@@ -1,11 +1,15 @@
 /* 引入匯文明朝體，請確保字體文件在 assets/fonts 目錄下 */
 @font-face {
-    font-family: 'HuWenMingChaoTi';
-    src: url('../fonts/HuWenMingChaoTi.woff2') format('woff2'),
-         url('../fonts/HuWenMingChaoTi.woff') format('woff');
+    font-family: "Huiwen Mingchao";
+    src: url("https://cdn.jsdelivr.net/gh/gptv/lunyu@main/assets/fonts/HuWenMingChaoTi.woff2") format("woff2"),
+         url("https://cdn.jsdelivr.net/gh/gptv/lunyu@main/assets/fonts/HuWenMingChaoTi.woff") format("woff");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
+}
+
+body {
+    font-family: "Huiwen Mingchao", serif !important;
 }
 
 /* 全局樣式 */
