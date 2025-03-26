@@ -45,7 +45,7 @@ function generateQuestion() {
     return;
   }
   // 显示进度提示
-  document.getElementById('messages').innerHTML = `<div class="ai-progress"><strong>提示：</strong>曹雪芹正在幫你分析高考題，請稍候...</div>`;
+  document.getElementById('messages').innerHTML = `<div class="ai-progress"><strong>提示：</strong>曹雪芹正在幫你分析高考題，請稍候...要分析的內容比較多，所以，你可以先看看小說⋯⋯</div>`;
   
   fetch('data/gaokao.json')
     .then(res => res.json())
