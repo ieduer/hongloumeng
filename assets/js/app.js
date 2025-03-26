@@ -113,7 +113,7 @@ function submitAnswer() {
 
 // 调用 Gemini API 的函数（通过 Cloudflare Worker 代理）
 function callGeminiAPI(prompt, callback) {
-  fetch('https://hlm.bdfz.workers.dev', {
+  fetch('https://apis.bdfz.workers.dev', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
