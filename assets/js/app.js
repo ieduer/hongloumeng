@@ -30,8 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("初始化數據加載失敗:", error);
         messagesContainer.innerHTML = `<p style="color: red;">基礎數據加載失敗，請刷新頁面或檢查網絡連接。</p>`;
         if (chatButton) chatButton.disabled = true;
-        // 更新: 移除對 toggleMenuBtn 的禁用，因為它只是標籤
-        // if (toggleMenuBtn) toggleMenuBtn.disabled = true;
     });
 
     const savedTheme = localStorage.getItem('theme');
@@ -65,18 +63,18 @@ function loadInitialContent() {
     }
 
     messagesContainer.innerHTML = '';
-    conversationHistory = [];
+    conversationHistory = []; // 清空歷史記錄
     currentChapterData = null;
-    initialContentChapter = null;
+    initialContentChapter = null; // 重置初始內容記錄
 
     try {
         const randomIndex = Math.floor(Math.random() * hongloumengData.chapters.length);
         const randomChapter = hongloumengData.chapters[randomIndex];
-        initialContentChapter = randomChapter;
+        initialContentChapter = randomChapter; // 記錄下來，用於後續對話上下文
         const chapterContent = randomChapter.content || "";
         const chapterInfo = `（隨機摘自 第 ${randomChapter.chapter} 回 ${randomChapter.title}）`;
 
-        // 提取詩詞或摘要的邏輯保持不變...
+        // 提取詩詞或摘要的邏輯 (保持不變)
         const lines = chapterContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
         let poem = "";
         let potentialPoemLines = [];
@@ -112,11 +110,12 @@ function loadInitialContent() {
         }
 
         const displayMessage = `偶拾書中一頁，錄得數語，以饗客官：\n\n${initialText}`;
-        // 更新: 初始消息也用 formatContentForDisplay 處理換行
+        // 初始消息也用 formatContentForDisplay 處理，確保格式一致
         appendMessageToChat('ai', displayMessage);
 
+        // 加入對話歷史，標記這是系統展示的初始內容
         conversationHistory.push({
-            role: 'ai',
+            role: 'ai', // 用 AI role 標記，但內容指明是系統行為
             content: `(系統展示了隨機內容: ${initialText.substring(0, 100)}... ${chapterInfo})`
         });
 
@@ -131,70 +130,92 @@ function loadInitialContent() {
 function loadChapter(chapter) {
     console.log(`加載章節: 第 ${chapter.chapter} 回`);
     currentChapterData = chapter; // 設置當前章節
-    initialContentChapter = null; // 清除初始隨機章節記錄
-    conversationHistory = []; // 清空對話歷史
+    initialContentChapter = null; // 清除初始隨機章節記錄，因為現在有明確章節了
+    conversationHistory = []; // 清空對話歷史，開始新的章節對話流
 
-    // 更新: 確保傳遞的是完整的 chapter.content
+    // 使用更新後的 formatContentForDisplay 處理全文，進行分段和基礎 Markdown
     const formattedContent = formatContentForDisplay(chapter.content);
     messagesContainer.innerHTML = ''; // 清空現有消息
 
-    // 顯示章節標題和全文，添加特殊 class 以應用背景色
+    // 顯示章節標題和分段後的全文
+    // 添加特殊 class 以便應用特定樣式 (如背景色)
     appendMessageToChat('ai', `<h3>第 ${chapter.chapter} 回 ${chapter.title}</h3>\n${formattedContent}`, ['chapter-content-display']);
 
-    // 加入對話歷史 (簡化版)
-     conversationHistory.push({
-         role: 'ai',
+    // 加入對話歷史，標記展示了全文
+    conversationHistory.push({
+         role: 'ai', // 用 AI role 標記，內容指明系統行為
          content: `(系統展示了 第 ${chapter.chapter} 回 ${chapter.title} 全文)`
      });
 
     // 為新章節請求 AI 分析/出題
     requestInitialAnalysis(chapter);
-
-    // 更新: 移除移動端隱藏菜單的邏輯，菜單始終顯示
-    // if (window.innerWidth < 768) {
-    //      // chapterMenu.style.display = 'none'; // 不再隱藏
-    //      // menuLabelBtn.textContent = '顯示目錄'; // 按鈕文字固定為'目錄'
-    // }
 }
 
-// 格式化文本內容（優先按段落，其次按句子）
+// 更新：格式化文本內容（分段、基礎Markdown轉HTML）
 function formatContentForDisplay(text) {
     if (!text) return "";
 
-    // 統一換行符
+    // 1. Basic cleanup (統一換行，移除文末標記)
     text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    text = text.replace(/\(本[章回]完\)$/gm, '').trim();
 
-    // 移除文末的 (本章完) 等標記
-    text = text.replace(/\(本[章回]完\)$/g, '').trim();
+    // 2. IMPORTANT: Escape HTML tags in the original text FIRST to prevent XSS.
+    let escapedText = text.replace(/</g, "<").replace(/>/g, ">");
 
-    // 嘗試按空行分段 (匹配一個或多個空行)
-    // 保留段首空格 (全角/半角) 以維持縮進效果
-    const paragraphs = text.split(/\n\s*\n+/g) // 分割符是換行+可選空白+至少一個換行
-                           .map(p => p.trim()) // 去掉段落前後的空白，但保留段內的
-                           .filter(p => p.length > 0);
+    // 3. Apply basic Markdown conversions (on the escaped text)
+    // Headers (must be at the start of a line)
+    escapedText = escapedText.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+    escapedText = escapedText.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+    escapedText = escapedText.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+    // Bold and Italic (handle ***, **, *) - Order matters!
+    escapedText = escapedText.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    escapedText = escapedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    escapedText = escapedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    // Basic Unordered Lists (simple conversion, doesn't handle nesting well)
+    escapedText = escapedText.replace(/^(?:[\*\-]\s+.*(?:\n|$))+/gm, (match) => {
+        const items = match.trim().split('\n').map(line => `<li>${line.replace(/^[\*\-]\s+/, '').trim()}</li>`).join('');
+        return `<ul>${items}</ul>`; // Removed extra newlines for cleaner HTML
+    });
+    // Basic Ordered Lists (simple conversion)
+     escapedText = escapedText.replace(/^(?:\d+\.\s+.*(?:\n|$))+/gm, (match) => {
+        const items = match.trim().split('\n').map(line => `<li>${line.replace(/^\d+\.\s+/, '').trim()}</li>`).join('');
+        return `<ol>${items}</ol>`; // Removed extra newlines
+    });
+    // Convert explicit newlines (that weren't paragraph breaks) to <br> AFTER list conversion
+    // but BEFORE paragraph splitting based on double newlines. This helps preserve line breaks within list items or code blocks if any.
+    // Let's refine this: only convert \n to <br> INSIDE the final blocks/paragraphs.
 
-    // 如果分段效果不明顯（比如只有一段或很少段落）
-    if (paragraphs.length <= 5 && text.length > 300) {
-        // 嘗試按單個換行符分段，這對於詩歌或列表可能更友好
-        const lines = text.split('\n')
-                          .map(l => l.trim())
-                          .filter(l => l.length > 0);
-        if (lines.length > paragraphs.length) {
-            // console.log("Splitting by single newline");
-            // 對每個行添加 <p> 標籤，並嘗試保留原始縮進（通過CSS實現可能更好）
-            return lines.map(l => `<p>${l.replace(/</g, "<").replace(/>/g, ">")}</p>`).join('');
-        }
+
+    // 4. Split into logical blocks based on double newlines.
+    // Treats Markdown blocks (like <ul>, <ol>, <h1>) or regular text blocks separated by blank lines.
+    const blocks = escapedText.split(/\n\s*\n+/g)
+                             .map(block => block.trim()) // Trim whitespace around each block
+                             .filter(block => block.length > 0); // Remove empty blocks
+
+    let resultHtml = "";
+    if (blocks.length > 0) {
+        resultHtml = blocks.map(block => {
+            // Check if the block is already a recognized HTML block element from our Markdown conversion
+            if (/^<(?:h[1-6]|ul|ol|p|blockquote)/i.test(block)) {
+                 // If it is, keep it as is, but convert internal newlines to <br>
+                 // This handles multi-line list items correctly if the regex was simple.
+                 return block.replace(/\n/g, '<br>');
+            } else {
+                // Otherwise, wrap the block in a <p> tag
+                // And convert internal newlines to <br>
+                return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+            }
+        }).join(''); // Join the blocks together
+    } else {
+         // Fallback: If splitting yields nothing, treat the whole (processed) text as one paragraph
+         // Convert all remaining newlines to <br>
+         resultHtml = `<p>${escapedText.replace(/\n/g, '<br>')}</p>`;
     }
 
-    // 如果主要按空行分段，效果不錯
-    if (paragraphs.length > 1) {
-        // console.log(`Splitting by ${paragraphs.length} paragraphs (double newline)`);
-        return paragraphs.map(p => `<p>${p.replace(/</g, "<").replace(/>/g, ">")}</p>`).join('');
-    }
+    // 5. Final cleanup: Remove potentially empty paragraphs created during processing
+    resultHtml = resultHtml.replace(/<p>\s*<\/p>/gi, '');
 
-    // 最後的兜底：如果上面都不理想，整個作為一個段落
-    // console.log("Fallback to single paragraph");
-    return `<p>${text.replace(/\n/g, ' ').trim().replace(/</g, "<").replace(/>/g, ">")}</p>`;
+    return resultHtml;
 }
 
 
@@ -206,47 +227,50 @@ function requestInitialAnalysis(chapter) {
         return;
     }
 
-    // 更新: 使用修改後的 showLoadingIndicator
     showLoadingIndicator('Gemini 正為您命題...');
 
     try {
-        // 提取章節摘要和隨機選取高考題目的邏輯保持不變...
-        const chapterContentExcerpt = chapter.content.substring(0, 500).replace(/\s+/g, ' ') + "...";
+        const chapterContentExcerpt = chapter.content.substring(0, 500).replace(/\s+/g, ' ').trim() + "..."; // Trimmed excerpt
+        // Find relevant Gaokao question (logic remains the same)
         let relevantQuestions = gaokaoData.data.filter(q => {
-            const chapterNumMatch = chapter.title.match(/第(\s*[一二三四五六七八九十百]+)\s*回/);
-            const chapterNum = chapterNumMatch ? chapterNumMatch[1].replace(/\s/g,'') : null;
-            return (chapterNum && q.chapter && q.chapter.includes(chapterNum)) ||
-                   (q.originalQuestion && chapter.title.split('').some(char => q.originalQuestion.includes(char))) ||
-                   (q.originalQuestion && chapterContentExcerpt.substring(0,100).split('').some(char => q.originalQuestion.includes(char)));
+             const chapterNumMatch = chapter.title.match(/第(\s*[一二三四五六七八九十百]+)\s*回/);
+             const chapterNum = chapterNumMatch ? chapterNumMatch[1].replace(/\s/g,'') : null;
+             return (chapterNum && q.chapter && q.chapter.includes(chapterNum)) ||
+                    (q.originalQuestion && chapter.title.split('').some(char => q.originalQuestion.includes(char))) ||
+                    (q.originalQuestion && chapterContentExcerpt.substring(0,100).split('').some(char => q.originalQuestion.includes(char)));
         });
         if (relevantQuestions.length === 0) relevantQuestions = gaokaoData.data; // Fallback
         const chosenQuestion = relevantQuestions[Math.floor(Math.random() * relevantQuestions.length)];
 
-        const prompt = `吾乃曹雪芹。方纔閱覽《紅樓夢》第 ${chapter.chapter} 回：${chapter.title}。\n\n此回情節撮要如下：\n“${chapterContentExcerpt}”\n\n觀當今科舉（高考）之風，常以此書設題考較學子。據老夫所見資料（${gaokaoData.instructions}），與本章相關之題型，或可參照此例：“${chosenQuestion.originalQuestion}”\n\n然老夫意欲別出心裁，依本章 ${chapter.title} 之內容，為客官擬一模擬新題如下：\n\n[此處生成緊密結合本章內容的新模擬題，題型風格參考上述高考真題，切記切記：萬勿提供答案！！！]\n\n客官閱後，若有不明或欲深談此章，老夫願洗耳恭聽。`;
+        // 更新後的 Prompt，指導 AI 先分析再命題
+        const prompt = `吾乃曹雪芹。方纔與客官一同閱覽《紅樓夢》第 ${chapter.chapter} 回：${chapter.title}。\n\n` +
+                       `此回情節撮要（供汝參考，無需複述）：\n“${chapterContentExcerpt}”\n\n` +
+                       `老夫聽聞當今有「高考」，常以拙作設題考較學子。老夫亦查閱了相關資料（${gaokaoData.instructions}），見有此類試題與本章或相關，例如：“${chosenQuestion.originalQuestion}”\n\n` +
+                       `現請汝：\n` +
+                       `1. 先在心中回顧本章「${chapter.title}」之主要情節、人物互動與關鍵細節。\n` + // 強調內部分析
+                       `2. 參照上述「高考」題型風格（例如設問方式、考查點：可能是情節理解、人物分析、藝術手法、文化內涵等）。\n` +
+                       `3. 為客官擬定一【新】模擬試題，務必緊密結合【本章具體內容】。\n` +
+                       `4. 【切記】：只需生成【試題本身】，萬勿提供答案、解析或任何多餘文字！\n\n` +
+                       `模擬試題：\n\n`; // AI 在此處接續生成題目
 
-        // 不需要添加用戶歷史記錄來觸發這個
-
+        // 注意：此處不向 conversationHistory 添加用戶消息，因為這是系統觸發的分析請求
         callGeminiAPI(prompt, (result) => {
-            // 更新: 在回調中先移除指示器，再添加消息
             removeLoadingIndicator();
+            // AI 回覆（即生成的題目）添加到聊天框，並進行格式化（包括 MD 轉 HTML）
             appendMessageToChat('ai', result);
-            // 添加模型回復到歷史
+            // 將 AI 生成的題目加入對話歷史
             conversationHistory.push({ role: 'model', content: result });
             trimConversationHistory();
         });
 
     } catch (error) {
         console.error("生成初始分析 Prompt 時出錯:", error);
-        // 更新: 出錯也要移除指示器
         removeLoadingIndicator();
         appendMessageToChat('ai', `（哎呀，構思題目時出了些岔子：${error.message}）`);
     }
 }
 
 // --- 用戶交互 ---
-
-// 更新: 移除目錄切換按鈕的事件監聽器
-// toggleMenuBtn.addEventListener('click', () => { ... });
 
 // 切換黑暗模式 (保持不變)
 document.getElementById('toggle-dark-btn').addEventListener('click', () => {
@@ -259,37 +283,45 @@ function sendChatMessage() {
     const messageText = userInput.value.trim();
     if (!messageText) return;
 
-    // 1. 添加用戶消息到聊天框
+    // 1. 添加用戶消息到聊天框 (簡單處理換行)
     appendMessageToChat('user', messageText);
     userInput.value = ''; // 清空輸入框
 
     // 2. 添加用戶消息到歷史記錄
     conversationHistory.push({ role: 'user', content: messageText });
+    trimConversationHistory(); // 修剪歷史記錄，防止過長
 
     // 3. 確定上下文 (當前章節或初始內容)
+    // currentChapterData 由 loadChapter 設置
+    // initialContentChapter 由 loadInitialContent 設置，並在 loadChapter 時清除
+    // buildPromptWithHistory 會根據 currentChapterData 或 (如果 currentChapterData 為 null) 來判斷上下文
     let activeChapterContext = currentChapterData;
+    // 如果沒有選擇章節，但之前有初始內容，用初始內容的章節信息作為參考上下文
+    // 但注意：初始內容只是摘錄，AI 不知道全文
     if (!activeChapterContext && initialContentChapter) {
-        console.log("用戶正在回應初始內容，使用 initialContentChapter 作為上下文");
+        console.log("用戶正在回應初始內容，使用 initialContentChapter 作為參考上下文");
         activeChapterContext = initialContentChapter;
-        // 響應一次後清除初始內容上下文，避免一直關聯
-        initialContentChapter = null;
+        // 響應一次後清除初始內容上下文引用，避免後續無關問題也關聯到初始章節
+        // 但保留 conversationHistory 中的記錄
+         initialContentChapter = null;
     }
 
-    // 4. 顯示加載提示 (更新: 立即顯示在用戶消息下方)
+
+    // 4. 顯示加載提示
     showLoadingIndicator('Gemini 回覆中...');
 
-    // 5. 構造 Prompt
+    // 5. 構造 Prompt (包含歷史記錄和上下文)
     const prompt = buildPromptWithHistory(messageText, activeChapterContext);
 
     // 6. 調用 API
     callGeminiAPI(prompt, (result) => {
-        // 7. 更新: 在回調中，先移除加載提示
+        // 7. 移除加載提示
         removeLoadingIndicator();
-        // 8. 添加 AI 回覆到聊天框
+        // 8. 添加 AI 回覆到聊天框 (會進行格式化)
         appendMessageToChat('ai', result);
         // 9. 添加 AI 回覆到歷史記錄
         conversationHistory.push({ role: 'model', content: result });
-        // 10. 修剪歷史記錄
+        // 10. 再次修剪歷史記錄
         trimConversationHistory();
     });
 }
@@ -299,9 +331,8 @@ chatButton.addEventListener('click', sendChatMessage);
 
 // 監聽輸入框 Enter 鍵
 userInput.addEventListener('keypress', (e) => {
-    // Shift+Enter 換行，單獨 Enter 發送
     if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault(); // 阻止默認換行行為
+        e.preventDefault();
         sendChatMessage();
     }
 });
@@ -316,18 +347,14 @@ function appendMessageToChat(sender, message, classes = []) {
         messageElement.classList.add(...classes);
     }
 
-    // 使用 formatContentForDisplay 處理 AI 消息，用戶消息直接包裹
-    // 同時進行基本的 HTML 轉義防止 XSS (雖然 formatContentForDisplay 已包含)
-    const safeMessage = message.replace(/</g, "<").replace(/>/g, ">");
+    // 對於 AI 消息，使用 formatContentForDisplay 進行分段和 Markdown 處理
+    // 對於用戶消息，進行基本的 HTML 轉義並處理換行
     if (sender === 'ai') {
-        // 讓 formatContentForDisplay 處理段落等
-        // 注意：formatContentForDisplay 內部應已處理轉義，這裡的 safeMessage 主要是兜底
-        // 但 formatContentForDisplay 輸出的是帶 <p> 的 HTML，所以直接用 innerHTML
         messageElement.innerHTML = formatContentForDisplay(message);
     } else {
-        // 用戶消息簡單處理換行（如果需要）或直接顯示
-        // messageElement.textContent = message; // 更安全，但不支持換行顯示
-        messageElement.innerHTML = `<p>${safeMessage.replace(/\n/g, '<br>')}</p>`; // 支持換行
+        // User message: escape HTML and convert newlines to <br>
+        const safeMessage = message.replace(/</g, "<").replace(/>/g, ">");
+        messageElement.innerHTML = `<p>${safeMessage.replace(/\n/g, '<br>')}</p>`; // Simple paragraph wrap
     }
 
     messagesContainer.appendChild(messageElement);
@@ -335,23 +362,19 @@ function appendMessageToChat(sender, message, classes = []) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// 更新: 顯示加載指示器 (只負責顯示)
+// 顯示加載指示器 (保持不變)
 function showLoadingIndicator(text) {
-    // 移除可能存在的舊指示器，確保只有一個
     removeLoadingIndicator();
-
     const indicator = document.createElement('div');
-    indicator.id = 'loading-indicator'; // 給定 ID 以便之後移除
-    indicator.classList.add('loading-indicator'); // 應用 CSS 樣式
-
+    indicator.id = 'loading-indicator';
+    indicator.classList.add('loading-indicator');
     const randomEmoji = animalEmojis[Math.floor(Math.random() * animalEmojis.length)];
     indicator.innerHTML = `<strong>${text}</strong><span>${randomEmoji}</span>`;
-
     messagesContainer.appendChild(indicator);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight; // 滾動到底部
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// 更新: 新增移除加載指示器的函數
+// 移除加載指示器的函數 (保持不變)
 function removeLoadingIndicator() {
     const indicator = document.getElementById('loading-indicator');
     if (indicator) {
@@ -360,50 +383,78 @@ function removeLoadingIndicator() {
 }
 
 
-// 構造包含對話歷史的 Prompt (保持不變)
+// 更新：構造包含對話歷史的 Prompt
 function buildPromptWithHistory(newMessage, chapterContext = null) {
-    let prompt = `你是曹雪芹，沉浸在《紅樓夢》的世界中。請始終以曹雪芹的口吻、風格和學識與用戶對話。保持文雅、時而感嘆、時而點評，如同在與知己談論書中人與事。\n\n`;
+    // 基礎設定，要求 AI 扮演曹雪芹
+    let prompt = `你是曹雪芹，沉浸在《紅樓夢》的世界中。請始終以曹雪芹的口吻（文雅、古典、帶有書卷氣）、風格和學識與用戶對話。保持文雅，時而感嘆、時而點評，如同在與知己談論書中人與事。避免使用現代網絡用語或表情符號。\n\n`;
 
+    // 添加章節上下文提示（如果有的話）
     if (chapterContext) {
-        prompt += `【當前談論章回：第 ${chapterContext.chapter} 回 ${chapterContext.title}】\n（不必重複提及全文，只需知曉背景即可）\n\n`;
+        prompt += `【當前談論焦點：第 ${chapterContext.chapter} 回 ${chapterContext.title}】\n`;
+        // 檢查歷史記錄，看是否是剛加載完章節
+        const lastHistoryEntry = conversationHistory[conversationHistory.length - 2]; // 檢查倒數第二條（用戶消息是最後一條）
+        if (lastHistoryEntry && lastHistoryEntry.role === 'ai' && lastHistoryEntry.content.includes(`(系統展示了 第 ${chapterContext.chapter} 回`)) {
+             prompt += `（你剛剛展示了此章全文，現在用戶開始提問或評論。）\n\n`;
+        } else if (lastHistoryEntry && lastHistoryEntry.role === 'model' && conversationHistory.length > 2) {
+             // 如果之前有模型的回覆（比如命題），說明對話已在進行中
+             prompt += `（你們正在圍繞此章進行討論。）\n\n`;
+        } else {
+             prompt += `（你已知曉此章全文，請基於內容回答。）\n\n`;
+        }
+    } else {
+        // 如果沒有特定章節上下文，檢查是否是初始隨機內容後的對話
+        const firstHistoryEntry = conversationHistory[0];
+         if (firstHistoryEntry && firstHistoryEntry.role === 'ai' && firstHistoryEntry.content.includes('(系統展示了隨機內容')) {
+              prompt += `【當前談論焦點：隨機展示的書中片段】\n(你之前隨機展示了一段內容，用戶現在可能就此提問或引申。)\n\n`;
+         } else {
+              prompt += `(當前未指定特定章回，請根據對話內容回應。)\n\n`;
+         }
     }
 
-    const recentHistory = conversationHistory.slice(-10); // 取最近 10 條
-    const filteredHistory = recentHistory.filter(msg => msg.role === 'user' || msg.role === 'model');
+    // 過濾出實際的對話輪次（用戶提問和 AI 回答）
+    // 排除系統提示信息，只保留 'user' 和 'model' 角色
+    const conversationTurns = conversationHistory.filter(msg => msg.role === 'user' || msg.role === 'model');
+    const recentTurns = conversationTurns.slice(-10); // 取最近的對話（最多5輪）
 
-    if (filteredHistory.length > 1) { // 至少有一輪對話
+    // 構建歷史對話部分
+    if (recentTurns.length > 0) {
         prompt += "【往來筆談】:\n";
-        // 確保不包含當前正在發送的 user message (它在 filteredHistory 的末尾)
-        filteredHistory.slice(0, -1).forEach(msg => {
+        recentTurns.forEach(msg => {
+            // 確定角色標識
             const rolePrefix = msg.role === 'user' ? '客官 (用戶)' : '老夫 (曹雪芹)';
-            // 清理並截斷內容，避免 prompt 過長
-            const cleanedContent = msg.content.replace(/\(系統展示了.*\)/g, '(先前內容)') // 替換系統提示
-                                             .replace(/<[^>]*>/g, "") // 移除 HTML 標籤
-                                             .replace(/\s+/g, ' ') // 壓縮空白
-                                             .substring(0, 200); // 截斷
+            // 清理內容：移除HTML標籤，壓縮空白，截斷長度
+            const cleanedContent = msg.content
+                                      .replace(/<[^>]*>/g, "") // Strip HTML tags
+                                      .replace(/\s+/g, ' ')      // Normalize whitespace
+                                      .trim()
+                                      .substring(0, 200); // Truncate to keep prompt concise
             prompt += `${rolePrefix}: ${cleanedContent}${msg.content.length > 200 ? '...' : ''}\n`;
         });
-        prompt += "\n";
+        prompt += "\n"; // 在歷史記錄和新消息間加空行
     }
 
-    prompt += `【客官新言】:\n用戶: ${newMessage}\n`;
-    prompt += "\n【老夫回應】:\n曹雪芹:";
+    // 添加用戶的最新消息
+    prompt += `【客官新言】:\n用戶: ${newMessage}\n\n`; // 用戶的新消息
+    prompt += `【老夫回應】:\n曹雪芹:`; // 提示 AI 從這裡開始回答
 
-    // console.log("Generated Prompt:", prompt); // Debugging
+    // console.log("Generated Prompt:", prompt); // 用於調試
     return prompt;
 }
 
-// 限制對話歷史長度 (保持不變)
-function trimConversationHistory(maxLength = 16) { // 稍微減少長度
+
+// 限制對話歷史長度 (稍微增加長度以保留更多上下文)
+function trimConversationHistory(maxLength = 20) { // 保留最近 20 條記錄 (包括系統消息)
     if (conversationHistory.length > maxLength) {
-        // 保留最新的 maxLength 條記錄
+        // 從數組開頭移除舊的記錄
         conversationHistory.splice(0, conversationHistory.length - maxLength);
+        // console.log(`History trimmed to ${conversationHistory.length} items.`);
     }
 }
 
 
-// 調用 Gemini API 的函數 (保持不變，回調處理移到調用處)
+// 調用 Gemini API 的函數
 function callGeminiAPI(prompt, callback) {
+  // 更新：顯示加載指示器移到調用此函數之前
   fetch('https://apis.bdfz.workers.dev', { // 確保 URL 正確
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -411,29 +462,27 @@ function callGeminiAPI(prompt, callback) {
   })
   .then(res => {
     if (!res.ok) {
-        // 嘗試解析 JSON 錯誤信息
         return res.json().then(errData => {
-             // 拋出包含服務器錯誤信息的 Error
              throw new Error(`API請求失敗 (狀態 ${res.status}): ${errData.error || JSON.stringify(errData)}`);
         }).catch(() => {
-            // 如果解析 JSON 失敗，拋出基本錯誤
             throw new Error(`API請求失敗 (狀態 ${res.status}): 無法解析錯誤響應體`);
         });
     }
-    return res.json(); // 解析成功的 JSON 響應
+    return res.json();
   })
   .then(data => {
+    // 更新：移除加載指示器移到回調函數內部處理之前
     if (data && data.answer) {
       callback(data.answer); // 將結果傳遞給回調
     } else {
       console.error('API 返回數據格式錯誤或無回答:', data);
-      // 提供一個默認的錯誤回覆
       callback("唉，老夫搜索枯腸，竟一時語塞。許是方纔神遊太虛，待緩過神來再與客官細談。");
     }
   })
   .catch(err => {
     console.error('調用 API 或處理響應時出錯：', err);
-    // 將錯誤信息傳遞給回調，以便在界面上顯示
+    // 更新：移除加載指示器同樣移到回調之前
+    // 將錯誤信息格式化後傳遞給回調，以便在界面上顯示
      callback(`噫！與後端通路似乎阻滯不暢：<br><pre style="font-size: 0.8em; color: #888;">${err.message}</pre>還請客官稍待片刻，或尋網站主事之人問詢。`);
   });
 }

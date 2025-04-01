@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="https://raw.githubusercontent.com/gptv/suen/main/images/Avatar-small.jpeg" type="image/jpeg">
-    <!-- Favicon links (保持不變) -->
+    <!-- Favicon links -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -14,32 +14,24 @@
 <body>
     <div id="container">
         <aside id="sidebar">
-            <!-- 更新: 目錄按鈕改為靜態標籤，ID 可以保留或更改，文字改為 "目錄" -->
             <button id="menu-label-btn" class="ghibli-button toggle-menu">目錄</button>
-            <!-- 更新: 容器用於裝載章節列表，JS 會填充內容 -->
             <div id="chapter-menu-container">
                  <nav id="chapter-menu"></nav>
             </div>
         </aside>
 
         <div id="main-content">
-            <!-- 頭部固定 -->
             <header>
                 <h1>AI红楼梦</h1>
-                <!-- 黑暗模式按鈕移到右上角 -->
                 <button id="toggle-dark-btn" title="切換夜晚模式" class="ghibli-button dark-mode-toggle">🌓</button>
             </header>
 
-            <!-- 對話框區域 -->
             <section id="dialogue-box">
-                <!-- 消息顯示區域，可滾動 -->
                 <div id="messages">
-                    <!-- 初始內容將由 JS 加載 -->
+                    <!-- 內容由 JS 加載 -->
                 </div>
-                <!-- 輸入區域固定在對話框底部 -->
                 <div id="input-area">
                     <input type="text" id="user-input" placeholder="與曹雪芹聊聊紅樓夢..." aria-label="在此輸入訊息">
-                    <!-- 更新按鈕文字 -->
                     <button id="chat-button" class="ghibli-button chat">發送</button>
                 </div>
             </section>
@@ -48,7 +40,8 @@
 
     <!-- Footer -->
     <footer>
-        <p>© Suen <a href="https://bdfz.net/posts/hlm">About</a></p>
+        <!-- target="_blank" and rel="noopener noreferrer" ensure link opens in new tab securely -->
+        <p>© Suen <a href="https://bdfz.net/posts/hlm" target="_blank" rel="noopener noreferrer">About</a></p>
     </footer>
 
     <script src="assets/js/app.js"></script>
