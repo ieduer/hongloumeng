@@ -1,206 +1,497 @@
-/* 引入匯文明朝體，請確保字體文件在 assets/fonts 目錄下 */
+/* 引入匯文明朝體 (保持不變) */
 @font-face {
     font-family: 'HuWenMingChaoTi';
     src: url('../fonts/HuWenMingChaoTi.woff2') format('woff2'),
          url('../fonts/HuWenMingChaoTi.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-  }
+}
 
 /* =======================================
    全局樣式
    ======================================= */
-   body {
+:root {
+    /* Ghibli 風格顏色 (可根據喜好微調) */
+    --ghibli-bg: #F0EADD;         /* 主背景 */
+    --ghibli-text: #5C4033;       /* 主要文字 */
+    --ghibli-panel-bg: #FFFFFF;   /* 面板背景 (如對話框) */
+    --ghibli-panel-border: #D3C1AE;/* 面板邊框 */
+    --ghibli-button-bg: #A3C9E6;  /* 按鈕背景 (淡藍) */
+    --ghibli-button-hover: #87A9C6;/* 按鈕懸停 */
+    --ghibli-button-text: #FFFFFF; /* 按鈕文字 */
+    --ghibli-button-alt-bg: #B5C8A9; /* 交替按鈕背景 (淡綠) */
+    --ghibli-button-alt-hover: #90A27F; /* 交替按鈕懸停 */
+    --ghibli-user-msg-bg: #D1E7DD; /* 用戶消息背景 (淡綠) */
+    --ghibli-ai-msg-bg: #F8D7DA;   /* AI 消息背景 (淡粉) */
+    --ghibli-link: #0077cc;      /* 鏈接顏色 */
+
+    /* Dark Mode Colors */
+    --ghibli-dark-bg: #2c3e50;        /* 暗模式主背景 */
+    --ghibli-dark-text: #ecf0f1;      /* 暗模式主要文字 */
+    --ghibli-dark-panel-bg: #34495e;   /* 暗模式面板背景 */
+    --ghibli-dark-panel-border: #4a617a; /* 暗模式面板邊框 */
+    --ghibli-dark-button-bg: #5dade2;  /* 暗模式按鈕 (稍亮藍) */
+    --ghibli-dark-button-hover: #3498db; /* 暗模式按鈕懸停 */
+    --ghibli-dark-button-text: #1a2531; /* 暗模式按鈕文字 */
+    --ghibli-dark-button-alt-bg: #58D68D;/* 暗模式交替按鈕 (稍亮綠) */
+    --ghibli-dark-button-alt-hover: #2ECC71;/* 暗模式交替按鈕懸停 */
+    --ghibli-dark-user-msg-bg: #2e6b4e;/* 暗模式用戶消息 */
+    --ghibli-dark-ai-msg-bg: #7d3c3c; /* 暗模式AI消息 */
+    --ghibli-dark-link: #5dade2;
+}
+
+body {
     font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
-    /* background: #f9f5e7;  <-- Comment out or remove the old background color */
-    color: #333;
+    background-color: var(--ghibli-bg); /* Fallback color */
+    color: var(--ghibli-text);
     margin: 0;
-    padding: 0 10px; /* Keep padding if you need spacing from viewport edges */
-    line-height: 1.6;
-  
-    /* --- Add these lines for the background image --- */
-    background-image: url('../img/bg.webp'); /* Path relative to the CSS file */
-    background-color: #f9f5e7; /* Fallback color if image doesn't load */
-    background-size: cover; /* Scale the image to cover the entire viewport */
-    background-position: center center; /* Center the image */
-    background-repeat: no-repeat; /* Prevent the image from tiling */
-    background-attachment: fixed; /* Keep the background fixed when scrolling */
-    min-height: 100vh; /* Ensure body takes at least full viewport height */
-  }
+    padding: 0; /* No padding on body itself */
+    line-height: 1.7; /* Increased for readability */
 
-header, footer {
-    text-align: center;
-    padding: 1rem;
+    /* --- Background image (保持不變) --- */
+    background-image: url('../img/bg.webp');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex; /* Use flex for main layout */
+    flex-direction: column; /* Stack header/main/footer vertically */
 }
 
-h1 {
-    font-size: 2em;
-    margin-bottom: 0.5em;
+/* 主容器佈局 */
+#container {
+    display: flex;
+    flex: 1; /* Take remaining vertical space */
+    padding: 10px; /* Add padding around the content */
+    gap: 15px; /* Space between sidebar and main content */
+    max-width: 1600px; /* Optional: Limit overall width */
+    margin: 0 auto; /* Center the container */
 }
 
-/* 夜晚模式 */
-body.dark-mode {
-    background: #1a1a1a;
-    color: #f0f0f0;
-}
-body.dark-mode header,
-body.dark-mode footer {
-    background: #1a1a1a;
-}
-body.dark-mode #dialogue-box,
-body.dark-mode #chapter-menu,
-body.dark-mode #chapter-content {
-    background: #2a2a2a;
-    border-color: #444;
+/* 側邊欄 (目錄) */
+#sidebar {
+    width: 250px; /* Fixed width for sidebar */
+    flex-shrink: 0; /* Prevent shrinking */
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Needed for sticky button positioning */
+    height: calc(100vh - 40px); /* Full height minus padding/footer space (adjust as needed) */
 }
 
-/* 切換目錄按鈕 */
-#toggle-menu-btn {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    margin-bottom: 1rem;
+/* 主內容區域 */
+#main-content {
+    flex: 1; /* Take remaining horizontal space */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 40px); /* Match sidebar height */
+    overflow: hidden; /* Prevent main content itself from scrolling */
+}
+
+/* 固定頭部 */
+#main-content header {
+    background-color: var(--ghibli-panel-bg); /* Use panel bg */
+    color: var(--ghibli-text);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between; /* Title left, button right */
+    align-items: center;
+    border-bottom: 1px solid var(--ghibli-panel-border);
+    position: sticky; /* Make header sticky */
+    top: 0;           /* Stick to the top of main-content */
+    z-index: 10;      /* Ensure it's above dialogue content */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+#main-content header h1 {
+    font-size: 1.8em;
+    margin: 0;
+    color: var(--ghibli-text);
+}
+
+/* --- 按鈕通用 Ghibli 風格 --- */
+.ghibli-button {
+    font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
+    padding: 10px 18px;
+    border: none; /* Remove default border */
+    border-radius: 20px; /* Rounded corners */
     cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.ghibli-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* 主要內容區域 */
-main {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 1rem;
+/* 目錄切換按鈕 (淺藍) */
+.toggle-menu {
+    background-color: var(--ghibli-button-bg);
+    color: var(--ghibli-button-text);
+    margin-bottom: 15px; /* Space below button */
+    /* Make toggle button sticky within sidebar */
+    position: sticky;
+    top: 10px; /* Stick 10px from the top of sidebar */
+    z-index: 5; /* Above chapter buttons */
+}
+.toggle-menu:hover {
+    background-color: var(--ghibli-button-hover);
 }
 
-/* 目錄區：網格布局，每行4個按鈕 */
+/* 夜晚模式按鈕 (特殊樣式) */
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    font-size: 1.8rem; /* Larger emoji */
+    padding: 0;
+    box-shadow: none;
+    color: var(--ghibli-text); /* Match text color */
+    transition: transform 0.3s ease;
+}
+.dark-mode-toggle:hover {
+    transform: scale(1.1);
+}
+.dark-mode-toggle:active {
+    transform: scale(1.05);
+}
+
+/* 聊天按鈕 (淺綠) */
+.chat {
+    background-color: var(--ghibli-button-alt-bg);
+    color: var(--ghibli-button-text);
+    padding: 10px 25px; /* Make chat button wider */
+    flex-shrink: 0; /* Don't shrink */
+}
+.chat:hover {
+    background-color: var(--ghibli-button-alt-hover);
+}
+
+/* --- 章節目錄樣式 --- */
 #chapter-menu {
-    margin-bottom: 1rem;
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 1rem;
-    display: none; /* 默認隱藏 */
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    /* Removed grid layout, buttons stack vertically */
+    background: none; /* Transparent background */
+    border: none; /* No border */
+    padding: 0;
+    overflow-y: auto; /* Allow scrolling for chapters */
+    flex: 1; /* Take remaining space in sidebar */
+    display: block; /* Default display */
+    /* Add some padding for scrollbar */
+    padding-right: 5px;
 }
 #chapter-menu button {
     width: 100%;
-    text-align: center;
-    padding: 1rem;
-    border: 1px solid #0077cc;
-    border-radius: 5px;
-    background: #e0f0ff;
+    text-align: left; /* Align text left */
+    padding: 12px 15px; /* Adjust padding */
+    margin-bottom: 8px; /* Space between buttons */
+    border-radius: 10px; /* Less rounded */
+    background: var(--ghibli-panel-bg); /* Use panel bg for chapters */
+    color: var(--ghibli-text);
+    border: 1px solid var(--ghibli-panel-border);
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, border-color 0.2s;
+    font-size: 0.95rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
-#chapter-menu button:hover {
-    background: #cce4ff;
+/* Alternate button colors for visual rhythm */
+#chapter-menu button:nth-child(odd) {
+    background-color: var(--ghibli-button-bg); /* Light Blue */
+    border-color: var(--ghibli-button-hover);
+    color: var(--ghibli-button-text);
+}
+#chapter-menu button:nth-child(odd):hover {
+    background-color: var(--ghibli-button-hover);
+}
+#chapter-menu button:nth-child(even) {
+    background-color: var(--ghibli-button-alt-bg); /* Light Green */
+    border-color: var(--ghibli-button-alt-hover);
+    color: var(--ghibli-button-text);
+}
+#chapter-menu button:nth-child(even):hover {
+    background-color: var(--ghibli-button-alt-hover);
 }
 
-/* 章節內容區 */
-#chapter-content {
-    padding: 1rem;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-}
-
-/* 對話窗口區域 */
+/* --- 對話框區域 --- */
 #dialogue-box {
-    padding: 1.5rem;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    width: 100%;
-    box-sizing: border-box;
+    background: var(--ghibli-panel-bg);
+    border: 1px solid var(--ghibli-panel-border);
+    border-radius: 15px; /* More rounded */
+    flex: 1; /* Take remaining vertical space in main-content */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent dialogue box itself from scrolling */
+    padding: 0; /* Remove padding, handle inside */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    position: relative; /* Needed for absolute positioning of input area if desired */
 }
 
-/* 消息區 */
+/* 消息顯示區域 */
 #messages {
-    min-height: 150px;
-    margin-bottom: 1.5rem;
+    flex: 1; /* Take available space */
+    overflow-y: auto; /* Enable scrolling for messages */
+    padding: 20px; /* Padding inside the message area */
+    word-wrap: break-word; /* Break long words */
 }
 
-/* 按鈕區 */
+/* 消息段落間距 */
+#messages p {
+    margin-bottom: 1em; /* Space below paragraphs */
+    font-size: 1.05rem; /* Slightly larger font for content */
+    line-height: 1.8;
+}
+#messages p:last-child {
+    margin-bottom: 0;
+}
+
+/* 段落之間的 🌿 分隔符 */
+.paragraph-separator {
+    display: block; /* Make it take its own line */
+    text-align: center; /* Center the emoji */
+    margin: 1em 0; /* Add space around it */
+    color: var(--ghibli-button-alt-bg); /* Green color */
+    font-size: 1.2em; /* Make emoji slightly larger */
+}
+
+/* 用戶和 AI 消息樣式 */
+.message-bubble {
+    max-width: 80%; /* Limit message width */
+    padding: 12px 18px;
+    border-radius: 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
+
+.user-message {
+    background-color: var(--ghibli-user-msg-bg);
+    color: var(--ghibli-text); /* Adjust if needed */
+    margin-left: auto; /* Align right */
+    border-bottom-right-radius: 5px; /* Speech bubble effect */
+    text-align: left; /* Keep text aligned left inside bubble */
+}
+
+.ai-message {
+    background-color: var(--ghibli-ai-msg-bg);
+    color: var(--ghibli-text); /* Adjust if needed */
+    margin-right: auto; /* Align left */
+    border-bottom-left-radius: 5px; /* Speech bubble effect */
+    text-align: left;
+}
+
+/* 加載指示器樣式 */
+.loading-indicator {
+    text-align: center;
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 80%;
+    background-color: rgba(135, 169, 198, 0.2); /* Semi-transparent blue */
+    border-radius: 10px;
+    color: var(--ghibli-text);
+    font-style: italic;
+    animation: blink 1.8s linear infinite; /* Apply blinking animation */
+}
+.loading-indicator strong {
+    font-style: normal; /* Keep title normal */
+}
+.loading-indicator span { /* Emoji */
+    margin-left: 8px;
+    display: inline-block; /* Allows animation/transform if needed */
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* 輸入區域 */
 #input-area {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    margin-bottom: 1.5rem;
-    align-items: center;
-}
-#input-area button {
-    flex-grow: 1;
-    min-width: 200px;
-    padding: 1rem;
-    font-size: 1rem;
-}
-
-/* 答案輸入區：設置為垂直布局 */
-#answer-section {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    gap: 0.5rem;
-}
-#answer-section textarea {
-    flex: 1;
-    height: 10rem; /* 調整輸入框高度 */
-    padding: 0.6rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-#answer-section button {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1rem;
-    border: 1px solid #0077cc;
-    border-radius: 5px;
-    background: #e0f0ff;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid var(--ghibli-panel-border);
+    background-color: var(--ghibli-panel-bg); /* Match dialogue bg */
+    /* Position fixed at bottom (alternative - might need #dialogue-box position:relative) */
+    /* position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 40px); */
 }
 
-/* 按鈕共同樣式 */
-button {
-    border: 1px solid #0077cc;
-    border-radius: 5px;
-    background: #e0f0ff;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+#user-input {
+    flex-grow: 1; /* Take most space */
+    padding: 12px 15px;
+    border: 1px solid var(--ghibli-panel-border);
+    border-radius: 20px; /* Match button roundness */
+    font-size: 1rem;
+    font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
+    background-color: #fff; /* White background for input */
+    color: var(--ghibli-text);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
-button:hover {
-    background: #cce4ff;
-}
-button:active {
-    transform: translateY(1px);
+#user-input:focus {
+    outline: none;
+    border-color: var(--ghibli-button-hover);
+    box-shadow: 0 0 0 2px rgba(135, 169, 198, 0.3); /* Subtle focus ring */
 }
 
-/* 響應式設計 */
+/* Footer樣式 (保持不變) */
+footer {
+    text-align: center;
+    padding: 15px;
+    margin-top: auto; /* Push footer to bottom if content is short */
+    font-size: 0.9em;
+    color: var(--ghibli-text);
+}
+footer a {
+    color: var(--ghibli-link);
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* --- 夜晚模式 --- */
+body.dark-mode {
+    background-color: var(--ghibli-dark-bg);
+    color: var(--ghibli-dark-text);
+    background-image: none; /* Optionally hide image in dark mode */
+}
+body.dark-mode #main-content header {
+    background-color: var(--ghibli-dark-panel-bg);
+    color: var(--ghibli-dark-text);
+    border-bottom-color: var(--ghibli-dark-panel-border);
+}
+body.dark-mode #main-content header h1 {
+    color: var(--ghibli-dark-text);
+}
+body.dark-mode #dialogue-box {
+    background-color: var(--ghibli-dark-panel-bg);
+    border-color: var(--ghibli-dark-panel-border);
+}
+body.dark-mode #input-area {
+    background-color: var(--ghibli-dark-panel-bg);
+    border-top-color: var(--ghibli-dark-panel-border);
+}
+body.dark-mode #user-input {
+    background-color: #495057; /* Darker input bg */
+    color: var(--ghibli-dark-text);
+    border-color: var(--ghibli-dark-panel-border);
+}
+body.dark-mode #user-input:focus {
+    border-color: var(--ghibli-dark-button-hover);
+     box-shadow: 0 0 0 2px rgba(93, 173, 226, 0.4);
+}
+body.dark-mode .ghibli-button {
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+}
+body.dark-mode .toggle-menu {
+    background-color: var(--ghibli-dark-button-bg);
+    color: var(--ghibli-dark-button-text);
+}
+body.dark-mode .toggle-menu:hover {
+    background-color: var(--ghibli-dark-button-hover);
+}
+body.dark-mode .dark-mode-toggle {
+    color: var(--ghibli-dark-text);
+}
+body.dark-mode .chat {
+    background-color: var(--ghibli-dark-button-alt-bg);
+    color: var(--ghibli-dark-button-text);
+}
+body.dark-mode .chat:hover {
+    background-color: var(--ghibli-dark-button-alt-hover);
+}
+body.dark-mode #chapter-menu button {
+    background: var(--ghibli-dark-panel-bg);
+    color: var(--ghibli-dark-text);
+    border: 1px solid var(--ghibli-dark-panel-border);
+}
+body.dark-mode #chapter-menu button:nth-child(odd) {
+    background-color: var(--ghibli-dark-button-bg);
+    border-color: var(--ghibli-dark-button-hover);
+    color: var(--ghibli-dark-button-text);
+}
+body.dark-mode #chapter-menu button:nth-child(odd):hover {
+    background-color: var(--ghibli-dark-button-hover);
+}
+body.dark-mode #chapter-menu button:nth-child(even) {
+    background-color: var(--ghibli-dark-button-alt-bg);
+    border-color: var(--ghibli-dark-button-alt-hover);
+    color: var(--ghibli-dark-button-text);
+}
+body.dark-mode #chapter-menu button:nth-child(even):hover {
+    background-color: var(--ghibli-dark-button-alt-hover);
+}
+body.dark-mode .user-message {
+    background-color: var(--ghibli-dark-user-msg-bg);
+    color: var(--ghibli-dark-text);
+}
+body.dark-mode .ai-message {
+    background-color: var(--ghibli-dark-ai-msg-bg);
+    color: var(--ghibli-dark-text);
+}
+body.dark-mode .loading-indicator {
+    background-color: rgba(93, 173, 226, 0.2); /* Semi-transparent darker blue */
+    color: var(--ghibli-dark-text);
+}
+body.dark-mode .paragraph-separator {
+    color: var(--ghibli-dark-button-alt-bg);
+}
+body.dark-mode footer {
+    color: var(--ghibli-dark-text);
+}
+body.dark-mode footer a {
+    color: var(--ghibli-dark-link);
+}
+
+/* --- 響應式設計 --- */
 @media (max-width: 768px) {
-    body { padding: 0; }
-    main { padding: 0 0.5rem; }
-    h1 { font-size: 1.5em; }
-    #dialogue-box { padding: 1rem; }
-    #input-area { gap: 0.5rem; }
-    #input-area button { padding: 0.8rem; font-size: 0.95rem; min-width: 150px; }
-    #answer-section textarea { height: 6rem; }
-}
-
-/* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
-    body { background: #1a1a1a; color: #f0f0f0; }
-    #dialogue-box { background: #2a2a2a; border-color: #444; }
-    button {
-        background: #1a3d66;
-        border-color: #2a5a8a;
-        color: #f0f0f0;
+    #container {
+        flex-direction: column; /* Stack sidebar and main content vertically */
+        padding: 5px;
+        gap: 10px;
+        height: auto; /* Allow content to determine height */
     }
-    button:hover { background-color: #2a5a8a; }
-    #answer-section textarea {
-        background: #333;
-        color: #f0f0f0;
-        border-color: #555;
+    #sidebar {
+        width: 100%; /* Full width */
+        height: auto; /* Auto height */
+        max-height: 40vh; /* Limit height, allow scroll */
+        flex-shrink: 1; /* Allow shrinking now */
+        overflow-y: hidden; /* Hide main scroll, rely on #chapter-menu */
+    }
+    #chapter-menu {
+        max-height: calc(40vh - 60px); /* Adjust max height considering button */
+        /* Change to horizontal scroll or grid if needed */
+        /* display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+           gap: 5px; */
+    }
+    #main-content {
+        width: 100%;
+        height: auto; /* Auto height */
+        min-height: 60vh; /* Ensure minimum height */
+    }
+    #main-content header h1 {
+        font-size: 1.5em;
+    }
+     #input-area {
+        padding: 10px;
+    }
+    #user-input {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+    .ghibli-button {
+        padding: 8px 15px;
+        font-size: 0.95rem;
+    }
+    .chat {
+        padding: 8px 20px;
+    }
+    #messages {
+        padding: 15px;
+    }
+    .message-bubble {
+        max-width: 90%;
     }
 }
