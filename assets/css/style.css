@@ -11,41 +11,43 @@
    全局樣式
    ======================================= */
 :root {
-    /* Ghibli 風格顏色 (調整後) */
-    --ghibli-bg: #F3EFE0;         /* 主背景 (稍暖米白) */
-    --ghibli-text: #5C4033;       /* 主要文字 (保持深棕) */
-    --ghibli-panel-bg: #FAF0E6;   /* 面板背景 (亞麻色，更柔和) */
-    --ghibli-panel-border: #E1D6C6;/* 面板邊框 (配合亞麻色) */
-    --ghibli-button-text: #4A3C31; /* 按鈕文字 (深一點的棕色，更清晰) */
-    --ghibli-link: #006699;      /* 鏈接顏色 (稍深藍) */
+    /* Ghibli 風格顏色 */
+    --ghibli-bg: #F3EFE0;
+    --ghibli-text: #5C4033;
+    --ghibli-panel-bg: #FAF0E6;
+    --ghibli-panel-border: #E1D6C6;
+    --ghibli-button-text: #4A3C31;
+    --ghibli-link: #006699;
 
     /* 按鈕漸變色 */
-    --ghibli-button-odd-start: #C1D8C1;  /* 淡綠 */
-    --ghibli-button-odd-end: #AECBDA;    /* 淡藍 */
-    --ghibli-button-even-start: #F5E6CC; /* 淡米黃 */
-    --ghibli-button-even-end: #E8D9C4;   /* 稍深米 */
+    --ghibli-button-odd-start: #C1D8C1;
+    --ghibli-button-odd-end: #AECBDA;
+    --ghibli-button-even-start: #F5E6CC;
+    --ghibli-button-even-end: #E8D9C4;
 
-    /* 消息氣泡顏色 (調整後) */
-    --ghibli-user-msg-bg: #D1E7DD; /* 用戶消息背景 (淡綠，保持) */
-    --ghibli-ai-msg-bg: #FFEADD;   /* AI 消息背景 (柔和桃粉) */
+    /* 消息氣泡顏色 */
+    --ghibli-user-msg-bg: #D1E7DD;
+    --ghibli-ai-msg-bg: #FFEADD; /* AI 常規回覆背景 */
+    --ghibli-chapter-bg: #E9F5E3; /* 正文顯示背景 (淡雅綠) */
 
-    /* Dark Mode Colors (調整後) */
-    --ghibli-dark-bg: #2A313A;        /* 暗模式主背景 (深藍灰) */
-    --ghibli-dark-text: #EAEAEA;      /* 暗模式主要文字 (灰白) */
-    --ghibli-dark-panel-bg: #3E4A53;   /* 暗模式面板背景 (深石板灰) */
-    --ghibli-dark-panel-border: #5A6A78; /* 暗模式面板邊框 */
-    --ghibli-dark-button-text: #EAEAEA; /* 暗模式按鈕文字 (亮) */
-    --ghibli-dark-link: #77B6E2;      /* 暗模式鏈接 (亮藍) */
+    /* Dark Mode Colors */
+    --ghibli-dark-bg: #2A313A;
+    --ghibli-dark-text: #EAEAEA;
+    --ghibli-dark-panel-bg: #3E4A53;
+    --ghibli-dark-panel-border: #5A6A78;
+    --ghibli-dark-button-text: #EAEAEA;
+    --ghibli-dark-link: #77B6E2;
 
     /* 暗模式按鈕漸變 */
-    --ghibli-dark-button-odd-start: #558B7B;  /* 深綠 */
-    --ghibli-dark-button-odd-end: #527A9B;    /* 深藍 */
-    --ghibli-dark-button-even-start: #635C51; /* 深米棕 */
-    --ghibli-dark-button-even-end: #554C41;   /* 更深米棕 */
+    --ghibli-dark-button-odd-start: #558B7B;
+    --ghibli-dark-button-odd-end: #527A9B;
+    --ghibli-dark-button-even-start: #635C51;
+    --ghibli-dark-button-even-end: #554C41;
 
     /* 暗模式消息氣泡 */
-    --ghibli-dark-user-msg-bg: #2E6B4E;/* 暗模式用戶消息 (保持) */
-    --ghibli-dark-ai-msg-bg: #6A4C4C; /* 暗模式AI消息 (深紅棕) */
+    --ghibli-dark-user-msg-bg: #2E6B4E;
+    --ghibli-dark-ai-msg-bg: #6A4C4C; /* AI 常規回覆背景 */
+    --ghibli-dark-chapter-bg: #3E5A3B; /* 正文顯示背景 (深綠) */
 }
 
 body {
@@ -55,15 +57,11 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.7;
-
-    /* --- Background image (保持不變) --- */
     background-image: url('../img/bg.webp');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-
-    /* --- Flexbox for footer positioning --- */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -72,11 +70,13 @@ body {
 /* 主容器佈局 */
 #container {
     display: flex;
-    flex: 1; /* Take remaining vertical space */
+    flex: 1;
     padding: 10px;
     gap: 15px;
     max-width: 1600px;
     margin: 0 auto;
+    /* 確保容器不會因側邊欄固定高度而溢出 */
+    overflow: hidden;
 }
 
 /* 側邊欄 (目錄) */
@@ -86,7 +86,8 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    height: calc(100vh - 60px); /* Adjust height based on body padding and footer */
+    /* 移除固定高度，讓flex佈局決定 */
+    /* height: calc(100vh - 60px); */
 }
 
 /* 主內容區域 */
@@ -94,8 +95,10 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 60px); /* Match sidebar height */
-    overflow: hidden;
+    /* 移除固定高度 */
+    /* height: calc(100vh - 60px); */
+    overflow: hidden; /* 防止內部元素撐開 */
+    min-width: 0; /* flex item 內元素過多時防止溢出 */
 }
 
 /* 固定頭部 */
@@ -104,24 +107,24 @@ body {
     color: var(--ghibli-text);
     padding: 10px 20px;
     display: flex;
-    justify-content: space-between; /* Keep space between */
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--ghibli-panel-border);
     position: sticky;
     top: 0;
     z-index: 10;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0; /* 防止頭部被壓縮 */
 }
 
 #main-content header h1 {
     font-size: 1.8em;
     margin: 0;
     color: var(--ghibli-text);
-    /* --- Center Title --- */
-    flex-grow: 1; /* Allow h1 to take space */
-    text-align: center; /* Center the text within its space */
-    /* Adjust padding/margin if needed to fine-tune centering with the button */
-    margin-left: 50px; /* Add some left margin to offset the button width */
+    flex-grow: 1;
+    text-align: center;
+    /* 微調居中 */
+    padding-left: 40px; /* 補償右側按鈕空間 */
 }
 
 /* --- 按鈕通用 Ghibli 風格 --- */
@@ -132,27 +135,27 @@ body {
     border-radius: 20px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease; /* Smooth background transition */
+    transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    color: var(--ghibli-button-text); /* Use variable for text color */
+    color: var(--ghibli-button-text);
 }
 .ghibli-button:active {
     transform: translateY(1px);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* 目錄切換按鈕 (使用漸變) */
+/* 目錄切換按鈕 */
 .toggle-menu {
     background: linear-gradient(135deg, var(--ghibli-button-odd-start), var(--ghibli-button-odd-end));
     margin-bottom: 15px;
     position: sticky;
     top: 10px;
     z-index: 5;
+    flex-shrink: 0; /* 防止按鈕被壓縮 */
 }
 .toggle-menu:hover {
-     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
-     /* Optionally slightly darken/change gradient on hover */
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
      background: linear-gradient(135deg, hsl(from var(--ghibli-button-odd-start) h s l-5), hsl(from var(--ghibli-button-odd-end) h s l-5));
 }
 
@@ -165,9 +168,9 @@ body {
     box-shadow: none;
     color: var(--ghibli-text);
     transition: transform 0.3s ease;
-    flex-shrink: 0; /* Prevent button from shrinking */
-    width: 50px; /* Explicit width to help layout */
-    text-align: right; /* Align emoji to the right */
+    flex-shrink: 0;
+    width: 40px; /* 保持按鈕寬度一致性 */
+    text-align: right;
 }
 .dark-mode-toggle:hover {
     transform: scale(1.1);
@@ -176,7 +179,7 @@ body {
     transform: scale(1.05);
 }
 
-/* 聊天按鈕 (使用漸變) */
+/* 發送按鈕 */
 .chat {
     background: linear-gradient(135deg, var(--ghibli-button-even-start), var(--ghibli-button-even-end));
     padding: 10px 25px;
@@ -191,10 +194,11 @@ body {
 #chapter-menu {
     background: none;
     border: none;
-    padding: 0 5px 0 0; /* Add padding for scrollbar */
-    overflow-y: auto;
-    flex: 1;
+    padding: 0 5px 0 0;
+    overflow-y: auto; /* 允許目錄滾動 */
+    flex-grow: 1; /* 佔據側邊欄剩餘空間 */
     display: block;
+    min-height: 0; /* 允許在 flex 容器中縮小 */
 }
 #chapter-menu button {
     width: 100%;
@@ -202,16 +206,14 @@ body {
     padding: 12px 15px;
     margin-bottom: 8px;
     border-radius: 10px;
-    border: 1px solid transparent; /* Add transparent border for consistency */
+    border: 1px solid transparent;
     cursor: pointer;
     transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.2s ease;
     font-size: 0.95rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    color: var(--ghibli-button-text); /* Use variable */
-    /* Add subtle text shadow for better readability on gradients */
+    color: var(--ghibli-button-text);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
-/* Alternate button gradients */
 #chapter-menu button:nth-child(odd) {
     background: linear-gradient(135deg, var(--ghibli-button-odd-start), var(--ghibli-button-odd-end));
     border-color: hsl(from var(--ghibli-button-odd-start) h s l-10);
@@ -232,16 +234,17 @@ body {
 
 /* --- 對話框區域 --- */
 #dialogue-box {
-    background: var(--ghibli-panel-bg); /* Use updated variable */
-    border: 1px solid var(--ghibli-panel-border); /* Use updated variable */
+    background: var(--ghibli-panel-bg);
+    border: 1px solid var(--ghibli-panel-border);
     border-radius: 15px;
-    flex: 1;
+    flex: 1; /* 佔據主內容區剩餘空間 */
     display: flex;
     flex-direction: column;
     overflow: hidden;
     padding: 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     position: relative;
+    min-height: 0; /* 允許在 flex 容器中縮小 */
 }
 
 /* 消息顯示區域 */
@@ -252,18 +255,15 @@ body {
     word-wrap: break-word;
 }
 
-/* 消息段落樣式 (增大字號) */
+/* 消息段落樣式 */
 #messages p {
     margin-bottom: 1em;
-    font-size: 1.15rem; /* Increased font size */
+    font-size: 1.15rem;
     line-height: 1.8;
 }
 #messages p:last-child {
     margin-bottom: 0;
 }
-
-/* 移除段落分隔符樣式 (如果之前有定義) */
-/* .paragraph-separator { display: none; } */
 
 /* 用戶和 AI 消息樣式 */
 .message-bubble {
@@ -283,39 +283,47 @@ body {
 }
 
 .ai-message {
-    background-color: var(--ghibli-ai-msg-bg); /* Use updated variable */
+    background-color: var(--ghibli-ai-msg-bg); /* 常規 AI 回覆背景 */
     color: var(--ghibli-text);
     margin-right: auto;
     border-bottom-left-radius: 5px;
     text-align: left;
 }
-/* AI 消息中的標題 (如果有的話) */
+
+/* --- 正文顯示的特殊背景 --- */
+.ai-message.chapter-content-display {
+    background-color: var(--ghibli-chapter-bg); /* 使用專屬正文背景色 */
+}
+
 .ai-message h3 {
     margin-top: 0;
     margin-bottom: 0.8em;
-    font-size: 1.3em; /* Slightly larger for chapter title */
-    color: var(--ghibli-text); /* Ensure consistent text color */
+    font-size: 1.3em;
+    color: var(--ghibli-text);
 }
 
 
 /* 加載指示器樣式 */
 .loading-indicator {
     text-align: center;
-    padding: 10px 15px; /* Slightly smaller padding */
+    padding: 10px 15px;
     margin: 10px auto;
     max-width: 80%;
-    background-color: hsla(206, 50%, 75%, 0.3); /* Semi-transparent blue (adjust if needed) */
-    border-radius: 15px; /* More rounded */
+    background-color: hsla(206, 50%, 75%, 0.3);
+    border-radius: 15px;
     color: var(--ghibli-text);
     font-style: italic;
-    font-size: 0.95rem; /* Slightly smaller font */
+    font-size: 0.95rem;
     animation: blink 1.8s linear infinite;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    /* 添加過渡效果，配合 JS 中的延遲隱藏 */
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
 }
 .loading-indicator strong {
     font-style: normal;
 }
-.loading-indicator span { /* Emoji */
+.loading-indicator span {
     margin-left: 8px;
     display: inline-block;
 }
@@ -332,6 +340,7 @@ body {
     padding: 15px 20px;
     border-top: 1px solid var(--ghibli-panel-border);
     background-color: var(--ghibli-panel-bg);
+    flex-shrink: 0; /* 防止輸入區被壓縮 */
 }
 
 #user-input {
@@ -347,20 +356,21 @@ body {
 }
 #user-input:focus {
     outline: none;
-    border-color: hsl(from var(--ghibli-button-odd-end) h s l-10); /* Use a button color variant */
+    border-color: hsl(from var(--ghibli-button-odd-end) h s l-10);
     box-shadow: 0 0 0 2px hsla(from var(--ghibli-button-odd-end) h s l / 0.3);
 }
 
 /* Footer樣式 */
 footer {
     text-align: center;
-    padding: 15px;
-    /* --- Make footer stick to bottom --- */
-    margin-top: auto;
+    /* --- 降低 Padding --- */
+    padding: 8px 15px;
+    margin-top: auto; /* 保持推到底部 */
     font-size: 0.9em;
     color: var(--ghibli-text);
-    background-color: var(--ghibli-bg); /* Match body background */
-    border-top: 1px solid var(--ghibli-panel-border); /* Optional subtle separator */
+    background-color: var(--ghibli-bg);
+    border-top: 1px solid var(--ghibli-panel-border);
+    flex-shrink: 0; /* 防止 footer 被壓縮 */
 }
 footer a {
     color: var(--ghibli-link);
@@ -374,7 +384,7 @@ footer a:hover {
 body.dark-mode {
     background-color: var(--ghibli-dark-bg);
     color: var(--ghibli-dark-text);
-    background-image: none; /* Hide image in dark mode */
+    background-image: none;
 }
 body.dark-mode #main-content header {
     background-color: var(--ghibli-dark-panel-bg);
@@ -402,8 +412,8 @@ body.dark-mode #user-input:focus {
     box-shadow: 0 0 0 2px hsla(from var(--ghibli-dark-button-odd-end) h s l / 0.4);
 }
 body.dark-mode .ghibli-button {
-     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Stronger shadow */
-     color: var(--ghibli-dark-button-text); /* Use variable */
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+     color: var(--ghibli-dark-button-text);
 }
 body.dark-mode .toggle-menu {
     background: linear-gradient(135deg, var(--ghibli-dark-button-odd-start), var(--ghibli-dark-button-odd-end));
@@ -424,7 +434,7 @@ body.dark-mode .chat:hover {
 }
 body.dark-mode #chapter-menu button {
     color: var(--ghibli-dark-button-text);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Darker shadow */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 body.dark-mode #chapter-menu button:nth-child(odd) {
     background: linear-gradient(135deg, var(--ghibli-dark-button-odd-start), var(--ghibli-dark-button-odd-end));
@@ -447,56 +457,67 @@ body.dark-mode .user-message {
     color: var(--ghibli-dark-text);
 }
 body.dark-mode .ai-message {
-    background-color: var(--ghibli-dark-ai-msg-bg); /* Use updated variable */
+    background-color: var(--ghibli-dark-ai-msg-bg);
     color: var(--ghibli-dark-text);
+}
+/* --- 暗模式正文特殊背景 --- */
+body.dark-mode .ai-message.chapter-content-display {
+    background-color: var(--ghibli-dark-chapter-bg);
 }
 body.dark-mode .ai-message h3 {
      color: var(--ghibli-dark-text);
 }
 body.dark-mode .loading-indicator {
-    background-color: hsla(210, 20%, 55%, 0.3); /* Semi-transparent darker grey-blue */
+    background-color: hsla(210, 20%, 55%, 0.3);
     color: var(--ghibli-dark-text);
 }
 body.dark-mode footer {
     color: var(--ghibli-dark-text);
-    background-color: var(--ghibli-dark-bg); /* Match dark body background */
+    background-color: var(--ghibli-dark-bg);
     border-top-color: var(--ghibli-dark-panel-border);
 }
 body.dark-mode footer a {
     color: var(--ghibli-dark-link);
 }
 
-/* --- 響應式設計 (保持不變) --- */
+/* --- 響應式設計 --- */
 @media (max-width: 768px) {
     body {
-        min-height: unset; /* Override min-height for smaller screens if needed */
+        min-height: unset; /* Allow height to be determined by content */
+         /* Ensure body itself can scroll if needed, though ideally content scrolls */
+        overflow-y: auto;
     }
     #container {
         flex-direction: column;
         padding: 5px;
         gap: 10px;
-        height: auto;
+        height: auto; /* Let content determine height */
+        overflow: visible; /* Allow container to grow */
     }
     #sidebar {
         width: 100%;
+        /* Let content determine height, but set a max */
         height: auto;
-        max-height: 40vh;
-        flex-shrink: 1;
-        overflow-y: hidden;
-        /* Adjust height calculation if footer/padding changes significantly */
-         height: calc(40vh - 40px);
+        max-height: 40vh; /* Keep max height limit */
+        flex-shrink: 0; /* Don't shrink sidebar itself */
+    }
+    #chapter-menu {
+        /* Ensure menu itself scrolls if it exceeds max-height */
+        max-height: calc(40vh - 65px); /* Adjust based on toggle button height + margins */
+        overflow-y: auto;
     }
      #main-content {
         width: 100%;
-        height: auto;
-        min-height: calc(60vh - 40px); /* Adjust min-height considering footer/padding */
+        height: auto; /* Let content determine height */
+        /* Removed min-height, rely on flexbox */
+        flex: 1; /* Allow main content to grow */
     }
     #main-content header h1 {
         font-size: 1.5em;
-        margin-left: 40px; /* Adjust offset for smaller screens */
+        padding-left: 30px; /* Adjust mobile offset */
     }
     .dark-mode-toggle {
-         width: 40px; /* Adjust button width */
+         width: 30px; /* Smaller toggle button */
     }
      #input-area {
         padding: 10px;
@@ -516,13 +537,14 @@ body.dark-mode footer a {
         padding: 15px;
     }
      #messages p {
-        font-size: 1.1rem; /* Slightly smaller on mobile */
+        font-size: 1.1rem;
     }
     .message-bubble {
         max-width: 90%;
     }
      footer {
-        position: relative; /* Ensure footer is not fixed on mobile */
-        margin-top: 10px; /* Add some space */
+        position: relative; /* Ensure footer flows naturally */
+        margin-top: 10px; /* Add space above footer */
+        padding: 6px 10px; /* Further reduce footer padding */
     }
 }
