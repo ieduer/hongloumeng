@@ -49,7 +49,7 @@ function loadChapterMenu() {
     chapterMenu.innerHTML = ''; // 清空目錄內容
     hongloumengData.chapters.forEach(chapter => {
         const btn = document.createElement('button');
-        btn.textContent = `第 ${chapter.chapter} 回 ${chapter.title}`;
+        btn.textContent = ` ${chapter.chapter}  ${chapter.title}`;
         btn.onclick = () => loadChapter(chapter);
         chapterMenu.appendChild(btn);
     });
@@ -72,7 +72,7 @@ function loadInitialContent() {
         const randomChapter = hongloumengData.chapters[randomIndex];
         initialContentChapter = randomChapter; // 記錄下來，用於後續對話上下文
         const chapterContent = randomChapter.content || "";
-        const chapterInfo = `（隨機摘自 第 ${randomChapter.chapter} 回 ${randomChapter.title}）`;
+        const chapterInfo = `（隨機摘自  ${randomChapter.chapter}  ${randomChapter.title}）`;
 
         // 提取詩詞或摘要的邏輯 (保持不變)
         const lines = chapterContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
@@ -128,7 +128,7 @@ function loadInitialContent() {
 
 // 加載選定章節內容到對話框
 function loadChapter(chapter) {
-    console.log(`加載章節: 第 ${chapter.chapter} 回`);
+    console.log(`加載章節:  ${chapter.chapter} `);
     currentChapterData = chapter; // 設置當前章節
     initialContentChapter = null; // 清除初始隨機章節記錄，因為現在有明確章節了
     conversationHistory = []; // 清空對話歷史，開始新的章節對話流
@@ -139,12 +139,12 @@ function loadChapter(chapter) {
 
     // 顯示章節標題和分段後的全文
     // 添加特殊 class 以便應用特定樣式 (如背景色)
-    appendMessageToChat('ai', `<h3>第 ${chapter.chapter} 回 ${chapter.title}</h3>\n${formattedContent}`, ['chapter-content-display']);
+    appendMessageToChat('ai', `<h3> ${chapter.chapter}  ${chapter.title}</h3>\n${formattedContent}`, ['chapter-content-display']);
 
     // 加入對話歷史，標記展示了全文
     conversationHistory.push({
          role: 'ai', // 用 AI role 標記，內容指明系統行為
-         content: `(系統展示了 第 ${chapter.chapter} 回 ${chapter.title} 全文)`
+         content: `(系統展示了  ${chapter.chapter}  ${chapter.title} 全文)`
      });
 
     // 為新章節請求 AI 分析/出題
@@ -233,7 +233,7 @@ function requestInitialAnalysis(chapter) {
         const chapterContentExcerpt = chapter.content.substring(0, 500).replace(/\s+/g, ' ').trim() + "..."; // Trimmed excerpt
         // Find relevant Gaokao question (logic remains the same)
         let relevantQuestions = gaokaoData.data.filter(q => {
-             const chapterNumMatch = chapter.title.match(/第(\s*[一二三四五六七八九十百]+)\s*回/);
+             const chapterNumMatch = chapter.title.match(/(\s*[一二三四五六七八九十百]+)\s*/);
              const chapterNum = chapterNumMatch ? chapterNumMatch[1].replace(/\s/g,'') : null;
              return (chapterNum && q.chapter && q.chapter.includes(chapterNum)) ||
                     (q.originalQuestion && chapter.title.split('').some(char => q.originalQuestion.includes(char))) ||
@@ -243,7 +243,7 @@ function requestInitialAnalysis(chapter) {
         const chosenQuestion = relevantQuestions[Math.floor(Math.random() * relevantQuestions.length)];
 
         // 更新後的 Prompt，指導 AI 先分析再命題
-        const prompt = `吾乃曹雪芹。方纔與客官一同閱覽《紅樓夢》第 ${chapter.chapter} 回：${chapter.title}。\n\n` +
+        const prompt = `吾乃曹雪芹。方纔與客官一同閱覽《紅樓夢》 ${chapter.chapter} ：${chapter.title}。\n\n` +
                        `此回情節撮要（供汝參考，無需複述）：\n“${chapterContentExcerpt}”\n\n` +
                        `老夫聽聞當今有「高考」，常以拙作設題考較學子。老夫亦查閱了相關資料（${gaokaoData.instructions}），見有此類試題與本章或相關，例如：“${chosenQuestion.originalQuestion}”\n\n` +
                        `現請汝：\n` +
@@ -390,10 +390,10 @@ function buildPromptWithHistory(newMessage, chapterContext = null) {
 
     // 添加章節上下文提示（如果有的話）
     if (chapterContext) {
-        prompt += `【當前談論焦點：第 ${chapterContext.chapter} 回 ${chapterContext.title}】\n`;
+        prompt += `【當前談論焦點： ${chapterContext.chapter}  ${chapterContext.title}】\n`;
         // 檢查歷史記錄，看是否是剛加載完章節
         const lastHistoryEntry = conversationHistory[conversationHistory.length - 2]; // 檢查倒數第二條（用戶消息是最後一條）
-        if (lastHistoryEntry && lastHistoryEntry.role === 'ai' && lastHistoryEntry.content.includes(`(系統展示了 第 ${chapterContext.chapter} 回`)) {
+        if (lastHistoryEntry && lastHistoryEntry.role === 'ai' && lastHistoryEntry.content.includes(`(系統展示了  ${chapterContext.chapter} `)) {
              prompt += `（你剛剛展示了此章全文，現在用戶開始提問或評論。）\n\n`;
         } else if (lastHistoryEntry && lastHistoryEntry.role === 'model' && conversationHistory.length > 2) {
              // 如果之前有模型的回覆（比如命題），說明對話已在進行中
