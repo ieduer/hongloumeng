@@ -11,14 +11,14 @@
    全局樣式
    ======================================= */
 :root {
-    /* Ghibli 風格顏色 - 更新 */
-    --ghibli-bg: #F3EFE0; /* 主背景，保持 */
-    --ghibli-text: #5C4033; /* 主文字，保持 */
-    --ghibli-panel-bg: #FDF5E6; /* 更新: 面板/對話框背景 (Old Lace - 更暖的米白) */
-    --ghibli-panel-border: #E1D6C6; /* 邊框，保持 */
-    --ghibli-footer-bg: #E8DDCB; /* 新增: 頁腳背景 (Slightly richer - 稍深的米黃) */
-    --ghibli-button-text: #4A3C31; /* 按鈕文字，保持 */
-    --ghibli-link: #005A8C; /* 鏈接顏色微調 (稍深藍) */
+    /* Ghibli 風格顏色 - 更新 (保持之前的更新) */
+    --ghibli-bg: #F3EFE0;
+    --ghibli-text: #5C4033;
+    --ghibli-panel-bg: #FDF5E6;
+    --ghibli-panel-border: #E1D6C6;
+    --ghibli-footer-bg: #E8DDCB;
+    --ghibli-button-text: #4A3C31;
+    --ghibli-link: #005A8C;
 
     /* 按鈕漸變色 - 保持 */
     --ghibli-button-odd-start: #C1D8C1;
@@ -26,19 +26,21 @@
     --ghibli-button-even-start: #F5E6CC;
     --ghibli-button-even-end: #E8D9C4;
 
-    /* 消息氣泡顏色 - 更新 */
-    --ghibli-user-msg-bg: #D4E8D4; /* 用戶消息背景 (柔和綠) */
-    --ghibli-ai-msg-bg: #FFF8DC; /* 更新: AI 常規回覆背景 (Cornsilk - 淺玉米黃) */
-    --ghibli-chapter-bg: #F0FFF0; /* 更新: 正文顯示背景 (Honeydew - 非常淺的綠) */
+    /* 消息氣泡顏色 - 更新 (保持之前的更新) */
+    --ghibli-user-msg-bg: #D4E8D4;
+    --ghibli-ai-msg-bg: #FFF8DC; /* AI 常規 */
+    --ghibli-chapter-bg: #F0FFF0; /* 紅樓夢正文 */
+    /* 新增: 初始詩詞背景 (可以與 AI 常規相同，或略有區別) */
+    --ghibli-shici-bg: #FFFEEB; /* 比 Cornsilk 更淺一點的黃白 */
 
-    /* Dark Mode Colors - 更新 */
-    --ghibli-dark-bg: #2A313A; /* 暗模式主背景，保持 */
-    --ghibli-dark-text: #EAEAEA; /* 暗模式主文字，保持 */
-    --ghibli-dark-panel-bg: #414B54; /* 更新: 暗模式面板/對話框背景 (Softer dark slate - 稍柔和的暗板岩灰) */
-    --ghibli-dark-panel-border: #5A6A78; /* 邊框，保持 */
-    --ghibli-dark-footer-bg: #313A42; /* 新增: 暗模式頁腳背景 (Slightly distinct dark - 稍區分的暗色) */
-    --ghibli-dark-button-text: #EAEAEA; /* 按鈕文字，保持 */
-    --ghibli-dark-link: #77B6E2; /* 鏈接顏色，保持 */
+    /* Dark Mode Colors - 更新 (保持之前的更新) */
+    --ghibli-dark-bg: #2A313A;
+    --ghibli-dark-text: #EAEAEA;
+    --ghibli-dark-panel-bg: #414B54;
+    --ghibli-dark-panel-border: #5A6A78;
+    --ghibli-dark-footer-bg: #313A42;
+    --ghibli-dark-button-text: #EAEAEA;
+    --ghibli-dark-link: #77B6E2;
 
     /* 暗模式按鈕漸變 - 保持 */
     --ghibli-dark-button-odd-start: #558B7B;
@@ -46,16 +48,18 @@
     --ghibli-dark-button-even-start: #635C51;
     --ghibli-dark-button-even-end: #554C41;
 
-    /* 暗模式消息氣泡 - 更新 */
-    --ghibli-dark-user-msg-bg: #2E5C40; /* 用戶消息背景 (深綠) */
-    --ghibli-dark-ai-msg-bg: #4F565E; /* 更新: AI 常規回覆背景 (Darker slate gray - 較深的板岩灰) */
-    --ghibli-dark-chapter-bg: #3E5046; /* 更新: 正文顯示背景 (Dark, desaturated green - 暗啞綠) */
+    /* 暗模式消息氣泡 - 更新 (保持之前的更新) */
+    --ghibli-dark-user-msg-bg: #2E5C40;
+    --ghibli-dark-ai-msg-bg: #4F565E; /* AI 常規 */
+    --ghibli-dark-chapter-bg: #3E5046; /* 紅樓夢正文 */
+    /* 新增: 暗模式初始詩詞背景 */
+    --ghibli-dark-shici-bg: #4A5058; /* 比 AI 常規稍暗一點的灰 */
 }
 
-/* 更新: 基礎佈局，防止頁面滾動 */
+/* 更新: 基礎佈局，防止頁面滾動 (保持不變) */
 html {
     height: 100%;
-    overflow: hidden; /* 禁止 html 滾動 */
+    overflow: hidden;
 }
 
 body {
@@ -65,6 +69,7 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.7;
+    /* 重要: 保持背景圖片路徑不變 */
     background-image: url('../img/bg.webp');
     background-size: cover;
     background-position: center center;
@@ -73,44 +78,44 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden; /* 禁止 body 滾動 */
+    overflow: hidden;
 }
 
-/* 主容器佈局 */
+/* 主容器佈局 (保持不變) */
 #container {
     display: flex;
-    flex: 1; /* 佔據 body 剩餘空間 */
+    flex: 1;
     padding: 10px;
     gap: 15px;
     max-width: 1600px;
-    width: 100%; /* 確保寬度 */
+    width: 100%;
     margin: 0 auto;
-    overflow: hidden; /* 自身不滾動，由子元素滾動 */
-    box-sizing: border-box; /* 包含 padding */
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
-/* 側邊欄 (目錄) */
+/* 側邊欄 (目錄) (保持不變) */
 #sidebar {
     width: 250px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden; /* 讓內部元素決定高度，但 sidebar 本身不滾動 */
+    overflow: hidden;
 }
 
-/* 主內容區域 */
+/* 主內容區域 (保持不變) */
 #main-content {
-    flex: 1; /* 佔據剩餘寬度 */
+    flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* 防止內部元素撐開 */
-    min-width: 0; /* flex item 內元素過多時防止溢出 */
+    overflow: hidden;
+    min-width: 0;
 }
 
-/* 固定頭部 */
+/* 固定頭部 (保持不變) */
 #main-content header {
-    background-color: var(--ghibli-panel-bg); /* 使用更新後的面板背景色 */
+    background-color: var(--ghibli-panel-bg);
     color: var(--ghibli-text);
     padding: 10px 20px;
     display: flex;
@@ -119,7 +124,7 @@ body {
     border-bottom: 1px solid var(--ghibli-panel-border);
     z-index: 10;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    flex-shrink: 0; /* 防止頭部被壓縮 */
+    flex-shrink: 0;
 }
 
 #main-content header h1 {
@@ -128,10 +133,10 @@ body {
     color: var(--ghibli-text);
     flex-grow: 1;
     text-align: center;
-    padding-left: 40px; /* 補償右側按鈕空間 */
+    padding-left: 40px; /* 保持補償空間 */
 }
 
-/* --- 按鈕通用 Ghibli 風格 --- */
+/* --- 按鈕通用 Ghibli 風格 --- (保持不變) */
 .ghibli-button {
     font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
     padding: 10px 18px;
@@ -149,20 +154,20 @@ body {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* 目錄標籤按鈕 (原 toggle-menu) */
+/* 目錄標籤按鈕 (保持不變) */
 .toggle-menu {
     background: linear-gradient(135deg, var(--ghibli-button-odd-start), var(--ghibli-button-odd-end));
-    margin-bottom: 10px; /* 減少間距 */
+    margin-bottom: 10px;
     z-index: 5;
-    flex-shrink: 0; /* 防止按鈕被壓縮 */
-    cursor: default; /* 因為只是標籤 */
+    flex-shrink: 0;
+    cursor: default;
 }
 .toggle-menu:hover {
-     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 移除 hover 效果 */
-     background: linear-gradient(135deg, var(--ghibli-button-odd-start), var(--ghibli-button-odd-end)); /* 保持原樣 */
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+     background: linear-gradient(135deg, var(--ghibli-button-odd-start), var(--ghibli-button-odd-end));
 }
 
-/* 夜晚模式按鈕 */
+/* 夜晚模式按鈕 (保持不變) */
 .dark-mode-toggle {
     background: none;
     border: none;
@@ -172,9 +177,9 @@ body {
     color: var(--ghibli-text);
     transition: transform 0.3s ease;
     flex-shrink: 0;
-    width: 40px; /* 保持按鈕寬度一致性 */
+    width: 40px;
     text-align: right;
-    cursor: pointer; /* 確保可點擊 */
+    cursor: pointer;
 }
 .dark-mode-toggle:hover {
     transform: scale(1.1);
@@ -183,7 +188,7 @@ body {
     transform: scale(1.05);
 }
 
-/* 發送按鈕 */
+/* 發送按鈕 (保持不變) */
 .chat {
     background: linear-gradient(135deg, var(--ghibli-button-even-start), var(--ghibli-button-even-end));
     padding: 10px 25px;
@@ -194,39 +199,35 @@ body {
     background: linear-gradient(135deg, hsl(from var(--ghibli-button-even-start) h s l-5), hsl(from var(--ghibli-button-even-end) h s l-5));
 }
 
-/* --- 章節目錄樣式 --- */
-/* 包裹目錄的容器，使其滾動 */
+/* --- 章節目錄樣式 --- (保持不變) */
 #chapter-menu-container {
-    flex-grow: 1; /* 佔據側邊欄剩餘空間 */
-    overflow-y: auto; /* 允許容器內部滾動 */
-    min-height: 0; /* 允許在 flex 容器中縮小 */
-    padding-right: 5px; /* 給滾動條留空間 */
-    background: none; /* 容器本身透明 */
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 5px;
+    background: none;
     border: none;
 }
-
-/* 具體的目錄列表 */
 #chapter-menu {
     background: none;
     border: none;
-    padding: 0; /* 內部列表不需要 padding */
+    padding: 0;
 }
-
 #chapter-menu button {
     width: 100%;
     text-align: left;
-    padding: 10px 12px; /* 微調 padding */
-    margin-bottom: 6px; /* 減少間距 */
-    border-radius: 8px; /* 圓角微調 */
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border-radius: 8px;
     border: 1px solid transparent;
     cursor: pointer;
     transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.2s ease;
-    font-size: 0.9rem; /* 字號微調 */
+    font-size: 0.9rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     color: var(--ghibli-button-text);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    display: block; /* 確保是塊級元素 */
-    box-sizing: border-box; /* 包含 padding 和 border */
+    display: block;
+    box-sizing: border-box;
 }
 #chapter-menu button:nth-child(odd) {
     background: linear-gradient(135deg, var(--ghibli-button-odd-start), var(--ghibli-button-odd-end));
@@ -246,31 +247,30 @@ body {
 }
 
 
-/* --- 對話框區域 --- */
+/* --- 對話框區域 --- (保持不變) */
 #dialogue-box {
-    background: var(--ghibli-panel-bg); /* 使用更新後的面板背景色 */
+    background: var(--ghibli-panel-bg);
     border: 1px solid var(--ghibli-panel-border);
     border-radius: 15px;
-    flex: 1; /* 佔據主內容區剩餘空間 */
+    flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* 自身不滾動，由 #messages 滾動 */
+    overflow: hidden;
     padding: 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     position: relative;
-    min-height: 0; /* 允許在 flex 容器中縮小 */
+    min-height: 0;
 }
 
-/* 消息顯示區域 */
+/* 消息顯示區域 (保持不變) */
 #messages {
-    flex: 1; /* 佔據對話框剩餘空間 */
-    overflow-y: auto; /* 允許消息區域滾動 */
+    flex: 1;
+    overflow-y: auto;
     padding: 20px;
     word-wrap: break-word;
 }
 
-/* 消息段落樣式 */
-/* 更新：應用於消息氣泡內的 p, li, h 等標籤 */
+/* 消息段落樣式 (保持不變) */
 #messages .message-bubble p,
 #messages .message-bubble li,
 #messages .message-bubble h1,
@@ -279,20 +279,18 @@ body {
 #messages .message-bubble h4,
 #messages .message-bubble h5,
 #messages .message-bubble h6 {
-    margin-bottom: 0.8em; /* 統一塊級元素下邊距 */
-    font-size: 1.1rem; /* 基本字號 */
+    margin-bottom: 0.8em;
+    font-size: 1.1rem;
     line-height: 1.8;
 }
 #messages .message-bubble *:last-child {
-    margin-bottom: 0; /* 移除氣泡內最後元素的下邊距 */
+    margin-bottom: 0;
 }
-/* 列表樣式 */
 #messages .message-bubble ul,
 #messages .message-bubble ol {
-    padding-left: 2em; /* 列表縮進 */
+    padding-left: 2em;
     margin-bottom: 0.8em;
 }
-/* 標題樣式 */
 #messages .message-bubble h3 {
     font-size: 1.3em;
     margin-top: 0.5em;
@@ -308,7 +306,7 @@ body {
 }
 
 
-/* 用戶和 AI 消息樣式 */
+/* 用戶和 AI 消息樣式 (保持不變) */
 .message-bubble {
     max-width: 85%;
     padding: 12px 18px;
@@ -316,43 +314,41 @@ body {
     margin-bottom: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
     position: relative;
-    /* 確保內部元素繼承顏色 */
-    color: inherit;
+    color: inherit; /* 繼承顏色 */
 }
 
 .user-message {
-    background-color: var(--ghibli-user-msg-bg); /* 使用更新後用戶消息背景 */
-    color: var(--ghibli-text); /* 確保文字顏色正確 */
+    background-color: var(--ghibli-user-msg-bg);
+    color: var(--ghibli-text);
     margin-left: auto;
     border-bottom-right-radius: 5px;
-    text-align: left; /* 內部文字左對齊 */
+    text-align: left;
 }
 
 .ai-message {
-    background-color: var(--ghibli-ai-msg-bg); /* 使用更新後 AI 常規回覆背景 */
-    color: var(--ghibli-text); /* 確保文字顏色正確 */
+    background-color: var(--ghibli-ai-msg-bg); /* 默認 AI 背景 */
+    color: var(--ghibli-text);
     margin-right: auto;
     border-bottom-left-radius: 5px;
-    text-align: left; /* 內部文字左對齊 */
+    text-align: left;
 }
 
-/* 正文顯示的特殊背景 */
+/* 紅樓夢正文顯示的特殊背景 (保持不變) */
 .ai-message.chapter-content-display {
-    background-color: var(--ghibli-chapter-bg); /* 使用更新後正文背景色 */
-    max-width: 95%; /* 正文可以更寬一些 */
+    background-color: var(--ghibli-chapter-bg);
+    max-width: 95%;
 }
 
-/* 章節標題在 chapter-content-display 內的特殊處理 */
+/* 章節標題在 chapter-content-display 內的特殊處理 (保持不變) */
 .ai-message.chapter-content-display h3 {
-    margin-top: 0; /* 頂部無邊距 */
+    margin-top: 0;
     margin-bottom: 0.8em;
-    font-size: 1.4em; /* 稍微大一點 */
+    font-size: 1.4em;
     color: var(--ghibli-text);
-    text-align: center; /* 標題居中 */
+    text-align: center;
     border-bottom: 1px dashed var(--ghibli-panel-border);
     padding-bottom: 0.5em;
 }
-
 
 /* 加載指示器樣式 (保持不變) */
 .loading-indicator {
@@ -364,7 +360,7 @@ body {
     padding: 10px 15px;
     margin: 10px auto 10px 20%;
     max-width: fit-content;
-    background-color: hsla(from var(--ghibli-ai-msg-bg) h s l / 0.7); /* 基於AI消息背景色 */
+    background-color: hsla(from var(--ghibli-ai-msg-bg) h s l / 0.7);
     border-radius: 15px;
     color: var(--ghibli-text);
     font-style: italic;
@@ -390,14 +386,14 @@ body {
 }
 
 
-/* 輸入區域 */
+/* 輸入區域 (保持不變) */
 #input-area {
     display: flex;
     gap: 10px;
     padding: 15px 20px;
     border-top: 1px solid var(--ghibli-panel-border);
-    background-color: var(--ghibli-panel-bg); /* 使用更新後的面板背景色 */
-    flex-shrink: 0; /* 防止輸入區被壓縮 */
+    background-color: var(--ghibli-panel-bg);
+    flex-shrink: 0;
 }
 
 #user-input {
@@ -407,9 +403,11 @@ body {
     border-radius: 20px;
     font-size: 1rem;
     font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
-    background-color: #fff; /* 輸入框背景保持白色 */
+    background-color: #fff;
     color: var(--ghibli-text);
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    resize: none; /* 防止 textare 拖動大小 */
+    line-height: 1.5; /* 文本框內行高 */
 }
 #user-input:focus {
     outline: none;
@@ -417,51 +415,48 @@ body {
     box-shadow: 0 0 0 2px hsla(from var(--ghibli-button-odd-end) h s l / 0.3);
 }
 
-/* Footer樣式 - 更新 */
+/* Footer樣式 (保持不變) */
 footer {
     text-align: center;
     padding: 8px 15px;
     font-size: 0.9em;
-    color: var(--ghibli-text); /* 確保文字顏色 */
-    background-color: var(--ghibli-footer-bg); /* 使用新的頁腳背景色 */
+    color: var(--ghibli-text);
+    background-color: var(--ghibli-footer-bg);
     border-top: 1px solid var(--ghibli-panel-border);
     flex-shrink: 0;
     position: relative;
     z-index: 1;
 }
 footer a {
-    color: var(--ghibli-link); /* 使用更新的鏈接顏色 */
+    color: var(--ghibli-link);
     text-decoration: none;
 }
 footer a:hover {
     text-decoration: underline;
 }
 
-/* --- 夜晚模式 --- */
+/* --- 夜晚模式 --- (保持之前的更新，並為新 shici 背景添加規則) */
 body.dark-mode {
     background-color: var(--ghibli-dark-bg);
     color: var(--ghibli-dark-text);
-    background-image: none; /* 暗模式下移除背景圖 */
+    background-image: none;
 }
-
 body.dark-mode #main-content header {
-    background-color: var(--ghibli-dark-panel-bg); /* 使用暗模式面板背景 */
+    background-color: var(--ghibli-dark-panel-bg);
     color: var(--ghibli-dark-text);
     border-bottom-color: var(--ghibli-dark-panel-border);
 }
-body.dark-mode #main-content header h1 {
-    color: var(--ghibli-dark-text);
-}
+body.dark-mode #main-content header h1 { color: var(--ghibli-dark-text); }
 body.dark-mode #dialogue-box {
-    background-color: var(--ghibli-dark-panel-bg); /* 使用暗模式面板背景 */
+    background-color: var(--ghibli-dark-panel-bg);
     border-color: var(--ghibli-dark-panel-border);
 }
 body.dark-mode #input-area {
-    background-color: var(--ghibli-dark-panel-bg); /* 使用暗模式面板背景 */
+    background-color: var(--ghibli-dark-panel-bg);
     border-top-color: var(--ghibli-dark-panel-border);
 }
 body.dark-mode #user-input {
-    background-color: #495057; /* 暗模式輸入框背景 */
+    background-color: #495057;
     color: var(--ghibli-dark-text);
     border-color: var(--ghibli-dark-panel-border);
 }
@@ -473,208 +468,194 @@ body.dark-mode .ghibli-button {
      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
      color: var(--ghibli-dark-button-text);
 }
-body.dark-mode .toggle-menu {
-    background: linear-gradient(135deg, var(--ghibli-dark-button-odd-start), var(--ghibli-dark-button-odd-end));
-}
-body.dark-mode .toggle-menu:hover {
-     background: linear-gradient(135deg, var(--ghibli-dark-button-odd-start), var(--ghibli-dark-button-odd-end));
-     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-body.dark-mode .dark-mode-toggle {
-    color: var(--ghibli-dark-text);
-}
-body.dark-mode .chat {
-    background: linear-gradient(135deg, var(--ghibli-dark-button-even-start), var(--ghibli-dark-button-even-end));
-}
-body.dark-mode .chat:hover {
-    background: linear-gradient(135deg, hsl(from var(--ghibli-dark-button-even-start) h s l+5), hsl(from var(--ghibli-dark-button-even-end) h s l+5));
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-}
-body.dark-mode #chapter-menu button {
-    color: var(--ghibli-dark-button-text);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
-}
-body.dark-mode #chapter-menu button:nth-child(odd) {
-    background: linear-gradient(135deg, var(--ghibli-dark-button-odd-start), var(--ghibli-dark-button-odd-end));
-    border-color: hsl(from var(--ghibli-dark-button-odd-start) h s l-10);
-}
-body.dark-mode #chapter-menu button:nth-child(odd):hover {
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, hsl(from var(--ghibli-dark-button-odd-start) h s l+5), hsl(from var(--ghibli-dark-button-odd-end) h s l+5));
-}
-body.dark-mode #chapter-menu button:nth-child(even) {
-    background: linear-gradient(135deg, var(--ghibli-dark-button-even-start), var(--ghibli-dark-button-even-end));
-    border-color: hsl(from var(--ghibli-dark-button-even-start) h s l-10);
-}
-body.dark-mode #chapter-menu button:nth-child(even):hover {
-     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-     background: linear-gradient(135deg, hsl(from var(--ghibli-dark-button-even-start) h s l+5), hsl(from var(--ghibli-dark-button-even-end) h s l+5));
-}
+body.dark-mode .toggle-menu { background: linear-gradient(135deg, var(--ghibli-dark-button-odd-start), var(--ghibli-dark-button-odd-end)); }
+body.dark-mode .toggle-menu:hover { background: linear-gradient(135deg, var(--ghibli-dark-button-odd-start), var(--ghibli-dark-button-odd-end)); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
+body.dark-mode .dark-mode-toggle { color: var(--ghibli-dark-text); }
+body.dark-mode .chat { background: linear-gradient(135deg, var(--ghibli-dark-button-even-start), var(--ghibli-dark-button-even-end)); }
+body.dark-mode .chat:hover { background: linear-gradient(135deg, hsl(from var(--ghibli-dark-button-even-start) h s l+5), hsl(from var(--ghibli-dark-button-even-end) h s l+5)); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); }
+body.dark-mode #chapter-menu button { color: var(--ghibli-dark-button-text); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); }
+body.dark-mode #chapter-menu button:nth-child(odd) { background: linear-gradient(135deg, var(--ghibli-dark-button-odd-start), var(--ghibli-dark-button-odd-end)); border-color: hsl(from var(--ghibli-dark-button-odd-start) h s l-10); }
+body.dark-mode #chapter-menu button:nth-child(odd):hover { box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); background: linear-gradient(135deg, hsl(from var(--ghibli-dark-button-odd-start) h s l+5), hsl(from var(--ghibli-dark-button-odd-end) h s l+5)); }
+body.dark-mode #chapter-menu button:nth-child(even) { background: linear-gradient(135deg, var(--ghibli-dark-button-even-start), var(--ghibli-dark-button-even-end)); border-color: hsl(from var(--ghibli-dark-button-even-start) h s l-10); }
+body.dark-mode #chapter-menu button:nth-child(even):hover { box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); background: linear-gradient(135deg, hsl(from var(--ghibli-dark-button-even-start) h s l+5), hsl(from var(--ghibli-dark-button-even-end) h s l+5)); }
 
-/* 暗模式消息氣泡 */
-body.dark-mode .user-message {
-    background-color: var(--ghibli-dark-user-msg-bg); /* 使用暗模式用戶消息背景 */
-    color: var(--ghibli-dark-text);
-}
-body.dark-mode .ai-message {
-    background-color: var(--ghibli-dark-ai-msg-bg); /* 使用暗模式 AI 常規回覆背景 */
-    color: var(--ghibli-dark-text);
-}
-body.dark-mode .ai-message.chapter-content-display {
-    background-color: var(--ghibli-dark-chapter-bg); /* 使用暗模式正文背景 */
+/* 暗模式消息氣泡 (保持之前的更新) */
+body.dark-mode .user-message { background-color: var(--ghibli-dark-user-msg-bg); color: var(--ghibli-dark-text); }
+body.dark-mode .ai-message { background-color: var(--ghibli-dark-ai-msg-bg); color: var(--ghibli-dark-text); }
+body.dark-mode .ai-message.chapter-content-display { background-color: var(--ghibli-dark-chapter-bg); color: var(--ghibli-dark-text); }
+
+/* 新增: 暗模式初始詩詞背景 */
+body.dark-mode .ai-message.initial-shici-display {
+    background-color: var(--ghibli-dark-shici-bg);
     color: var(--ghibli-dark-text);
 }
 
-/* 暗模式標題和邊框 */
+/* 暗模式標題和邊框 (保持之前的更新) */
 body.dark-mode .ai-message h3,
-body.dark-mode .ai-message.chapter-content-display h3 {
-     color: var(--ghibli-dark-text);
-     border-bottom-color: var(--ghibli-dark-panel-border); /* 更新分隔線顏色 */
-}
-body.dark-mode .ai-message h1,
-body.dark-mode .ai-message h2 {
-     color: var(--ghibli-dark-text);
-     border-bottom-color: var(--ghibli-dark-panel-border);
-}
+body.dark-mode .ai-message.chapter-content-display h3 { color: var(--ghibli-dark-text); border-bottom-color: var(--ghibli-dark-panel-border); }
+body.dark-mode .ai-message h1, body.dark-mode .ai-message h2 { color: var(--ghibli-dark-text); border-bottom-color: var(--ghibli-dark-panel-border); }
 
-
-/* 暗模式加載提示 */
-body.dark-mode .loading-indicator {
-    background-color: hsla(from var(--ghibli-dark-ai-msg-bg) h s l / 0.7); /* 基於暗模式AI背景 */
-    color: var(--ghibli-dark-text);
-}
-/* 暗模式頁腳 */
-body.dark-mode footer {
-    color: var(--ghibli-dark-text);
-    background-color: var(--ghibli-dark-footer-bg); /* 使用暗模式頁腳背景 */
-    border-top-color: var(--ghibli-dark-panel-border);
-}
-body.dark-mode footer a {
-    color: var(--ghibli-dark-link);
-}
+/* 暗模式加載提示 (保持不變) */
+body.dark-mode .loading-indicator { background-color: hsla(from var(--ghibli-dark-ai-msg-bg) h s l / 0.7); color: var(--ghibli-dark-text); }
+/* 暗模式頁腳 (保持不變) */
+body.dark-mode footer { color: var(--ghibli-dark-text); background-color: var(--ghibli-dark-footer-bg); border-top-color: var(--ghibli-dark-panel-border); }
+body.dark-mode footer a { color: var(--ghibli-dark-link); }
 
 /* --- 響應式設計 --- (保持不變) */
 @media (max-width: 768px) {
-    /* 在移動端允許 body 滾動，因為很難完全避免 */
-    html, body {
-        height: auto;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch; /* 平滑滾動 on iOS */
-    }
-    body {
-         min-height: 100vh; /* 確保至少填滿屏幕 */
-    }
-
-    #container {
-        flex-direction: column;
-        padding: 5px;
-        gap: 10px;
-        height: auto; /* Let content determine height */
-        overflow: visible; /* Allow container to grow */
-        flex: 1; /* 仍然嘗試佔滿空間 */
-    }
-    #sidebar {
-        width: 100%;
-        height: auto; /* Let content determine height */
-        max-height: 35vh; /* 限制側邊欄最大高度 */
-        flex-shrink: 0; /* Don't shrink sidebar itself */
-        overflow: hidden; /* Sidebar 自身不滾動 */
-    }
-    #menu-label-btn {
-        margin-bottom: 5px; /* 減少按鈕下方間距 */
-    }
-    #chapter-menu-container {
-        overflow-y: auto; /* 確保滾動 */
-        -webkit-overflow-scrolling: touch;
-    }
-
-     #main-content {
-        width: 100%;
-        height: auto; /* Let content determine height */
-        flex: 1; /* 佔據剩餘垂直空間 */
-        min-height: 0; /* 確保可以縮小 */
-        overflow: hidden; /* 保持內部滾動 */
-    }
-     #dialogue-box {
-        flex: 1; /* 佔滿 main-content 剩餘空間 */
-        min-height: 300px; /* 給對話框一個最小高度 */
-     }
-
-    #main-content header h1 {
-        font-size: 1.5em;
-        padding-left: 30px; /* Adjust mobile offset */
-        padding-right: 30px; /* Add right padding too */
-    }
-    .dark-mode-toggle {
-         width: 30px; /* Smaller toggle button */
-    }
-     #input-area {
-        padding: 10px;
-    }
-    #user-input {
-        padding: 10px 12px;
-        font-size: 0.95rem;
-    }
-    .ghibli-button {
-        padding: 8px 15px;
-        font-size: 0.95rem;
-    }
-    .chat {
-        padding: 8px 20px;
-    }
-    #messages {
-        padding: 15px;
-    }
-    /* 更新：移動端消息內文字 */
-     #messages .message-bubble p,
-     #messages .message-bubble li,
-     #messages .message-bubble h1,
-     #messages .message-bubble h2,
-     #messages .message-bubble h3,
-     #messages .message-bubble h4,
-     #messages .message-bubble h5,
-     #messages .message-bubble h6 {
-        font-size: 1rem; /* 稍微縮小移動端字號 */
-        line-height: 1.7;
-    }
-    .message-bubble {
-        max-width: 90%;
-    }
-    .ai-message.chapter-content-display {
-       max-width: 98%; /* 移動端正文可以更寬 */
-    }
-     footer {
-        position: relative; /* Flow normally */
-        margin-top: 10px;
-        padding: 6px 10px;
-    }
+    html, body { height: auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    body { min-height: 100vh; }
+    #container { flex-direction: column; padding: 5px; gap: 10px; height: auto; overflow: visible; flex: 1; }
+    #sidebar { width: 100%; height: auto; max-height: 35vh; flex-shrink: 0; overflow: hidden; }
+    #menu-label-btn { margin-bottom: 5px; }
+    #chapter-menu-container { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    #main-content { width: 100%; height: auto; flex: 1; min-height: 0; overflow: hidden; }
+    #dialogue-box { flex: 1; min-height: 300px; }
+    #main-content header h1 { font-size: 1.5em; padding-left: 30px; padding-right: 30px; }
+    .dark-mode-toggle { width: 30px; }
+    #input-area { padding: 10px; }
+    #user-input { padding: 10px 12px; font-size: 0.95rem; }
+    .ghibli-button { padding: 8px 15px; font-size: 0.95rem; }
+    .chat { padding: 8px 20px; }
+    #messages { padding: 15px; }
+    #messages .message-bubble p, #messages .message-bubble li, #messages .message-bubble h1, #messages .message-bubble h2, #messages .message-bubble h3, #messages .message-bubble h4, #messages .message-bubble h5, #messages .message-bubble h6 { font-size: 1rem; line-height: 1.7; }
+    .message-bubble { max-width: 90%; }
+    .ai-message.chapter-content-display { max-width: 98%; }
+    footer { position: relative; margin-top: 10px; padding: 6px 10px; }
 }
 
-/* 微調滾動條樣式 (可選) */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* 微調滾動條樣式 (保持不變) */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background-color: var(--ghibli-panel-border); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background-color: #b0a090; }
+body.dark-mode ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); }
+body.dark-mode ::-webkit-scrollbar-thumb { background-color: var(--ghibli-dark-panel-border); }
+body.dark-mode ::-webkit-scrollbar-thumb:hover { background-color: #7a8a98; }
+
+/* === 初始詩詞顯示樣式 (新增和調整) === */
+
+/* 應用於包含初始詩詞的整個 AI 消息氣泡 */
+.ai-message.initial-shici-display {
+    background-color: var(--ghibli-shici-bg); /* 使用詩詞專用背景色 */
+    max-width: 90%; /* 可以稍微寬一點 */
 }
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
+
+/* 詩詞標題 (H3) */
+.initial-shici-display h3 {
+    font-size: 1.2em; /* 標題字號稍大 */
+    font-weight: bold;
+    margin-top: 0; /* 移除頂部外邊距 */
+    margin-bottom: 0.8em;
+    text-align: center;
+    border-bottom: 1px dashed var(--ghibli-panel-border);
+    padding-bottom: 0.4em;
+    color: var(--ghibli-text); /* 確保顏色 */
 }
-::-webkit-scrollbar-thumb {
-  background-color: var(--ghibli-panel-border);
-  border-radius: 10px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+
+/* 包含詩詞正文的塊 (div.poem-like-block) */
+.initial-shici-display .poem-like-block {
+    font-size: 1.15rem; /* 詩詞正文字號 */
+    line-height: 1.9; /* 詩詞行間距加大 */
+    margin-bottom: 1.5em; /* 與註解間距拉開 */
+    text-align: center; /* 詩詞居中 */
+    white-space: pre-line; /* 保留換行符 */
+    color: var(--ghibli-text); /* 確保顏色 */
 }
-::-webkit-scrollbar-thumb:hover {
-  background-color: #b0a090; /* Ghibli風格的懸停色 */
+
+/* 註解標題 (strong) */
+.initial-shici-display strong {
+    display: block;
+    margin-top: 1.5em;
+    margin-bottom: 0.6em;
+    font-size: 1rem; /* 註解標題字號 */
+    font-weight: bold;
+    text-align: left; /* 註解標題靠左 */
+    color: var(--ghibli-text);
 }
-/* 暗模式滾動條 */
-body.dark-mode ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+
+/* 註解文字 (會被 formatContentForDisplay 處理成 p 標籤) */
+.initial-shici-display p:not(:first-of-type) { /* 選擇非第一個 p (通常是引導語) 的 p */
+    font-size: 1rem; /* 註解文字字號 */
+    line-height: 1.7;
+    color: var(--ghibli-text);
+    opacity: 0.9; /* 註解文字稍透明 */
+    text-align: left; /* 註解靠左 */
+    margin-bottom: 0.6em; /* 段落間距 */
 }
-body.dark-mode ::-webkit-scrollbar-thumb {
-  background-color: var(--ghibli-dark-panel-border);
+
+/* 引導語的樣式 (第一個 p) */
+.initial-shici-display p:first-of-type {
+    font-size: 1.05rem; /* 引導語字號 */
+    font-style: italic; /* 斜體 */
+    margin-bottom: 1em;
+    text-align: left;
+    color: var(--ghibli-text);
+    opacity: 0.8;
 }
-body.dark-mode ::-webkit-scrollbar-thumb:hover {
-  background-color: #7a8a98; /* 暗模式懸停色 */
+
+
+/* --- 暗模式下的初始詩詞樣式 --- */
+
+body.dark-mode .ai-message.initial-shici-display {
+    background-color: var(--ghibli-dark-shici-bg); /* 暗模式詩詞背景 */
+    color: var(--ghibli-dark-text);
+}
+
+body.dark-mode .initial-shici-display h3 {
+    border-bottom-color: var(--ghibli-dark-panel-border); /* 暗模式分隔線 */
+    color: var(--ghibli-dark-text);
+}
+
+body.dark-mode .initial-shici-display .poem-like-block {
+    color: var(--ghibli-dark-text);
+}
+
+body.dark-mode .initial-shici-display strong {
+    color: var(--ghibli-dark-text);
+}
+
+body.dark-mode .initial-shici-display p:not(:first-of-type) {
+    color: var(--ghibli-dark-text);
+    opacity: 0.85; /* 暗模式下透明度可能需要調整 */
+}
+
+body.dark-mode .initial-shici-display p:first-of-type {
+     color: var(--ghibli-dark-text);
+     opacity: 0.75;
+}
+
+/* 修正：確保 chapter-content-display 中的 H3 樣式優先級高於普通 .message-bubble h3 */
+.ai-message.chapter-content-display h3 {
+    font-size: 1.4em !important; /* 使用 !important 確保覆蓋 */
+    text-align: center !important;
+    margin-top: 0 !important;
+    border-bottom: 1px dashed var(--ghibli-panel-border) !important; /* 確保樣式一致 */
+}
+body.dark-mode .ai-message.chapter-content-display h3 {
+    border-bottom-color: var(--ghibli-dark-panel-border) !important;
+}
+
+/* 修正：暗模式下消息氣泡內代碼塊 pre 的樣式 */
+body.dark-mode .message-bubble pre {
+    background-color: rgba(0, 0, 0, 0.2); /* 稍微深一點的背景 */
+    color: #f0f0f0; /* 亮一點的文字 */
+    border: 1px solid var(--ghibli-dark-panel-border);
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto; /* 水平滾動 */
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+/* 亮模式下的 pre 樣式 (如果需要) */
+.message-bubble pre {
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--ghibli-panel-border);
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: monospace;
+    font-size: 0.9em;
+    color: #333;
 }
