@@ -495,7 +495,7 @@ function trimConversationHistory(maxLength = 20) {
 
 // 調用 Gemini API 的函數 (保持不變)
 function callGeminiAPI(prompt, callback) {
-  fetch('https://apis.bdfz.workers.dev', {
+  fetch('https://ai.bdfz.net/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: prompt })
