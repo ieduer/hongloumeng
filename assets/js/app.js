@@ -1,325 +1,230 @@
 /* ==============================================================
-   《紅樓夢》章節 + 海龜湯互動遊戲  —  全量腳本
-   2025-06-13 版（保留原有首頁詩詞、黑暗模式、格式化排版等功能，
-   將「高考題」改為「海龜湯」謎題）
+   《紅樓夢》章節 + 海龜湯互動腳本 2025-06-13 修正版
    ============================================================== */
 
-/* ---------- 全局變量 ---------- */
-let conversationHistory   = [];
-let currentChapterData    = null;   // 目前選定章節
-let initialContentInfo    = null;   // 首頁隨機詩詞資訊
-let hongloumengData       = null;   // 《紅樓夢》全文
-let shiciData             = null;   // 詩詞資料
+/* ---------- 全局狀態 ---------- */
+let conversationHistory = [];
+let currentChapterData  = null;
+let initialContentInfo  = null;
+let hongloumengData     = null;
+let shiciData           = null;
 
-// 海龜湯遊戲狀態
-let currentTurtleSoup = null;       // { question, answer }
-let puzzleSolved      = false;      // 是否已解謎
+let currentTurtleSoup = null;   // {question, answer}
+let puzzleSolved      = false;
 
 /* ---------- DOM ---------- */
-const messagesContainer = document.getElementById('messages');
-const userInput         = document.getElementById('user-input');
-const chatButton        = document.getElementById('chat-button');
-const chapterMenu       = document.getElementById('chapter-menu');
-const toggleDarkBtn     = document.getElementById('toggle-dark-btn');
-const animalEmojis      = ['😼','🐶','🦊','🐻','🐼','🐰','🐯','🦉','🍁','🏮'];
+const $msg   = document.getElementById('messages');
+const $in    = document.getElementById('user-input');
+const $send  = document.getElementById('chat-button');
+const $menu  = document.getElementById('chapter-menu');
+const $dark  = document.getElementById('toggle-dark-btn');
+const emojis = ['😼','🐶','🦊','🐻','🐼','🐰','🐯','🦉','🍁','🏮'];
 
 /* ---------- 初始化 ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   Promise.all([
-    fetch('data/hongloumeng.json').then(r => r.ok ? r.json()
-                                                  : Promise.reject(`紅樓夢載入失敗 ${r.status}`)),
-    fetch('data/shici.json')      .then(r => r.ok ? r.json()
-                                                  : Promise.reject(`詩詞載入失敗 ${r.status}`))
+    fetch('data/hongloumeng.json').then(r=>r.ok?r.json():Promise.reject(r.status)),
+    fetch('data/shici.json').then(r=>r.ok?r.json():Promise.reject(r.status))
   ])
-  .then(([hlm, sc]) => {
-    hongloumengData = hlm;
-    shiciData       = sc;
-    loadInitialContent();  // 首頁隨機詩詞
-    loadChapterMenu();     // 章節選單
-  })
-  .catch(err => {
-    console.error('初始化錯誤:', err);
-    messagesContainer.innerHTML =
-      `<p style="color:red;">初始化資料失敗：${err}</p>`;
-    chatButton.disabled = true;
-  });
+  .then(([hlm, sc]) => { hongloumengData=hlm; shiciData=sc;
+    loadInitialPoem(); loadChapterMenu(); })
+  .catch(e => { console.error(e);
+    append('ai',`<p style="color:red;">初始化錯誤：${e}</p>`); $send.disabled=true; });
 
-  if (localStorage.getItem('theme') === 'dark') {
+  if(localStorage.getItem('theme')==='dark')
     document.body.classList.add('dark-mode');
-  }
 });
 
 /* ==============================================================
-   章節選單
+   章節目錄
    ============================================================== */
-function loadChapterMenu() {
-  if (!hongloumengData?.chapters) {
-    chapterMenu.innerHTML = '<p style="color:red;">無法加載章節列表</p>';
-    return;
-  }
-  chapterMenu.innerHTML = '';
-  hongloumengData.chapters.forEach(ch => {
-    const btn = document.createElement('button');
-    btn.textContent = `${ch.chapter}  ${ch.title}`;
-    btn.onclick = () => loadChapter(ch);
-    chapterMenu.appendChild(btn);
+function loadChapterMenu(){
+  if(!hongloumengData?.chapters){
+    $menu.innerHTML='<p style="color:red;">目錄載入失敗</p>'; return; }
+  $menu.innerHTML='';
+  hongloumengData.chapters.forEach(ch=>{
+    const b=document.createElement('button');
+    b.textContent=`${ch.chapter}  ${ch.title}`;
+    b.onclick=()=>loadChapter(ch);
+    $menu.appendChild(b);
   });
 }
 
 /* ==============================================================
    首頁隨機詩詞
    ============================================================== */
-function loadInitialContent() {
-  if (!Array.isArray(shiciData) || !shiciData.length) {
-    appendMessageToChat('ai','歡迎，暫無詩詞可顯示，請從目錄選章節閱讀《紅樓夢》。');
-    return;
-  }
+function loadInitialPoem(){
   resetState();
-
-  const entry = shiciData[Math.floor(Math.random() * shiciData.length)];
-  const { title, poem_text, explanation } = entry.details;
-
-  const html = `<h3>${title}</h3>
-                <div class="poem-like-block">${poem_text.join('<br>')}</div>` +
-               (explanation ? `<strong>【註解】</strong>${formatContentForDisplay(explanation)}` : '');
-
-  appendMessageToChat('ai',
-    `偶隨書頁翻，拾得片語詩箋，錄之以饗客官：\n\n${html}`,
-    ['initial-poem']);
-
-  initialContentInfo = { title };
+  const list=shiciData;
+  if(!list?.length){ append('ai','暫無詩詞'); return;}
+  const e=list[Math.floor(Math.random()*list.length)];
+  const {title,poem_text,explanation}=e.details;
+  const html=`<h3>${title}</h3>
+<div class="poem-like-block">${poem_text.join('<br>')}</div>`+
+(explanation?`<strong>【註解】</strong>${formatDisplay(explanation,false)}`:'');
+  append('ai',`偶隨書頁翻，拾得片語詩箋：\n\n${html}`,['initial-poem']);
+  initialContentInfo={title};
 }
 
 /* ==============================================================
-   加載章節 → 顯示全文 → 生成海龜湯
+   顯示章節 ⇒ 產生海龜湯
    ============================================================== */
-function loadChapter(chapter) {
-  resetState();
-  currentChapterData = chapter;
-
-  /* —— 顯示章節正文 —— */
-  const formatted = formatContentForDisplay(chapter.content);
-  appendMessageToChat('ai',
-    `<h3>${chapter.chapter}  ${chapter.title}</h3>\n${formatted}`,
-    ['chapter-content-display']);
-
-  conversationHistory.push({
-    role:'ai',
-    content:`(系統展示 《紅樓夢》${chapter.chapter}  ${chapter.title} 全文)`
-  });
-
-  /* —— 生成海龜湯謎題 —— */
-  requestTurtleSoup(chapter);
+function loadChapter(ch){
+  resetState(); currentChapterData=ch;
+  append('ai',`<h3>${ch.chapter}  ${ch.title}</h3>\n${formatDisplay(ch.content,true)}`,['chapter-display']);
+  conversationHistory.push({role:'ai',content:`(展示${ch.chapter}${ch.title}全文)`});
+  genTurtleSoup(ch);
 }
+function genTurtleSoup(ch){
+  loading('Gemini 正烹製海龜湯…');
+  const prompt=`
+你是曹雪芹。請依據《紅樓夢》${ch.chapter} ${ch.title} 的情節，設計一題海龜湯：
+【謎面】模糊描述
+【謎底】完整情節（僅供你判斷）
 
-function requestTurtleSoup(chapter) {
-  showLoadingIndicator('Gemini 正烹製海龜湯…');
-
-  const prompt = `
-你是曹雪芹。依據《紅樓夢》${chapter.chapter} ${chapter.title} 的情節，
-設計一題「海龜湯」謎題，並按下列格式輸出：
-
-【謎面】
-（模糊且引人好奇的描述，不可暴露答案）
-
-【謎底】
-（完整真實情節，供你內部判斷）
-
-規則：之後用戶只能提問可回答「是」「否」「無關」的問題，
-你也僅能以此三詞作答。當用戶猜中謎底核心，
-回覆「恭喜你解開謎題！」並簡短解釋原情節。`;
-
-  callGeminiAPI(prompt, res => {
-    removeLoadingIndicator();
-    currentTurtleSoup = parseTurtleSoup(res);
-    if (!currentTurtleSoup) {
-      appendMessageToChat('ai','謎題生成失敗，請重選章節再試。');
-      return;
-    }
-    appendMessageToChat('ai',
-      `<strong>🌊 海龜湯謎題：</strong><br>${currentTurtleSoup.question}`);
-    conversationHistory.push({
-      role:'ai',
-      content:`(海龜湯謎面：${currentTurtleSoup.question}；謎底：${currentTurtleSoup.answer})`
-    });
+之後「客官」可提出 *能以「是／否／無關」回答* 的問題，
+你只能回答「是」「否」「無關」。
+當對方猜中謎底，回覆「恭喜你解開謎題！」並簡短解釋。`;
+  askLLM(prompt,false,res=>{
+    loading(false);
+    currentTurtleSoup=parsePuzzle(res);
+    if(!currentTurtleSoup){ append('ai','謎題生成失敗'); return;}
+    append('ai',`<strong>🌊 海龜湯謎題：</strong><br>${currentTurtleSoup.question}<br><small style="color:#888;">（請提出能以「是／否／無關」回答的問題）</small>`);
+    conversationHistory.push({role:'ai',content:`(謎面:${currentTurtleSoup.question};謎底:${currentTurtleSoup.answer})`});
   });
 }
-
-function parseTurtleSoup(text){
-  const m = text.match(/【謎面】\s*([\s\S]*?)\s*【謎底】\s*([\s\S]*)/);
-  return m ? { question: m[1].trim(), answer: m[2].trim() } : null;
+function parsePuzzle(t){
+  const m=t.match(/【謎面】\s*([\s\S]*?)\s*【謎底】\s*([\s\S]*)/);
+  return m?{question:m[1].trim(),answer:m[2].trim()}:null;
 }
 
 /* ==============================================================
-   用戶互動
+   用戶訊息
    ============================================================== */
-chatButton.addEventListener('click', sendChatMessage);
-userInput.addEventListener('keypress', e=>{
-  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendChatMessage(); }
-});
+$send.addEventListener('click',sendMsg);
+$in.addEventListener('keypress',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMsg(); }});
 
-function sendChatMessage() {
-  const text = userInput.value.trim();
-  if (!text) return;
+function sendMsg(){
+  const txt=$in.value.trim(); if(!txt) return;
+  append('user',txt); $in.value='';
+  conversationHistory.push({role:'user',content:txt}); trimHist(20);
 
-  appendMessageToChat('user', text);
-  userInput.value = '';
-  conversationHistory.push({ role:'user', content:text });
-  trimConversationHistory();
-
-  /* —— 若正在海龜湯遊戲 —— */
-  if (currentTurtleSoup && !puzzleSolved) {
-    showLoadingIndicator('思索中…');
-
-    const puzzlePrompt = `
-【謎面】${currentTurtleSoup.question}
+  /* —— 海龜湯互動 —— */
+  if(currentTurtleSoup&&!puzzleSolved){
+    loading('思索中…');
+    const puzzlePrompt=`【謎面】${currentTurtleSoup.question}
 【謎底】${currentTurtleSoup.answer}
-
-用戶提問：「${text}」
-
-僅以「是」「否」「無關」回答。
-若用戶已猜出謎底，回覆：
-「恭喜你解開謎題！」並附簡短情節解釋。`;
-
-    callGeminiAPI(puzzlePrompt, res => {
-      removeLoadingIndicator();
-      appendMessageToChat('ai', res);
-      conversationHistory.push({ role:'model', content:res });
-      if (res.includes('恭喜你解開謎題')) puzzleSolved = true;
+客官問題：「${txt}」
+僅回答「是」「否」「無關」。若對方已猜中則祝賀並解釋。`;
+    askLLM(puzzlePrompt,true,res=>{
+      loading(false);
+      const ok=/^(是|否|無關)/.test(res.trim())||res.includes('恭喜你解開謎題');
+      append('ai',res + (ok?'':`<br><small style="color:#888;">（請僅回答「是／否／無關」）</small>`));
+      conversationHistory.push({role:'model',content:res});
+      if(res.includes('恭喜你解開謎題')) puzzleSolved=true;
     });
     return;
   }
 
-  /* —— 普通對話（海龜湯結束後才會用到） —— */
-  showLoadingIndicator('Gemini 回覆中…');
-  const prompt = buildPromptWithHistory(text, currentChapterData);
-  callGeminiAPI(prompt, res => {
-    removeLoadingIndicator();
-    appendMessageToChat('ai', res);
-    conversationHistory.push({ role:'model', content:res });
-    trimConversationHistory();
+  /* —— 普通對話 —— */
+  loading('Gemini 回覆中…');
+  askLLM(buildPrompt(txt),false,res=>{
+    loading(false); append('ai',res);
+    conversationHistory.push({role:'model',content:res}); trimHist(20);
   });
 }
 
 /* ==============================================================
-   格式化顯示
+   格式化
    ============================================================== */
-function formatContentForDisplay(text){
+function formatDisplay(text,isChapter){
   if(!text) return '';
-  let t = text.replace(/\r\n?/g,'\n').trim();
+  let t=text.replace(/\r\n?/g,'\n').trim();
 
-  // Markdown 轉換
-  t = t.replace(/^### (.*)$/gim,'<h3>$1</h3>')
-       .replace(/^## (.*)$/gim,'<h2>$1</h2>')
-       .replace(/^# (.*)$/gim ,'<h1>$1</h1>')
-       .replace(/\*\*\*(.*?)\*\*\*/g,'<strong><em>$1</em></strong>')
-       .replace(/\*\*(.*?)\*\*/g   ,'<strong>$1</strong>')
-       .replace(/\*(.*?)\*/g       ,'<em>$1</em>');
+  // Markdown
+  t=t.replace(/^### (.*)$/gim,'<h3>$1</h3>')
+     .replace(/^## (.*)$/gim,'<h2>$1</h2>')
+     .replace(/^# (.*)$/gim ,'<h1>$1</h1>')
+     .replace(/\*\*\*(.*?)\*\*\*/g,'<strong><em>$1</em></strong>')
+     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+     .replace(/\*(.*?)\*/g,'<em>$1</em>');
 
-  // 清單
-  t = t.replace(/^(?:[\*\-]\s+.*(?:\n|$))+/gm, m=>{
-    return `<ul>${m.trim().split('\n')
-             .map(l=>`<li>${l.replace(/^[\*\-]\s+/,'')}</li>`).join('')}</ul>`;
-  });
-  t = t.replace(/^(?:\d+\.\s+.*(?:\n|$))+/gm, m=>{
-    return `<ol>${m.trim().split('\n')
-             .map(l=>`<li>${l.replace(/^\d+\.\s+/,'')}</li>`).join('')}</ol>`;
-  });
+  // list
+  t=t.replace(/^(?:[\*\-]\s+.*(?:\n|$))+/gm,m=>`<ul>${m.trim().split('\n').map(l=>`<li>${l.replace(/^[\*\-]\s+/,'')}</li>`).join('')}</ul>`);
+  t=t.replace(/^(?:\d+\.\s+.*(?:\n|$))+/gm,m=>`<ol>${m.trim().split('\n').map(l=>`<li>${l.replace(/^\d+\.\s+/,'')}</li>`).join('')}</ol>`);
 
-  // 段落與首行縮排；中文句號、問號、驚嘆號後自動換行
-  const blocks = t.split(/\n\s*\n+/).map(b=>b.trim()).filter(Boolean);
-  const html   = blocks.map(b=>{
+  const blocks=t.split(/\n\s*\n+/).map(b=>b.trim()).filter(Boolean);
+  const html=blocks.map(b=>{
     if(/^<(h[1-6]|ul|ol|blockquote|pre)/i.test(b)) return b;
-    const p = b.replace(/([。？！])/g,'$1<br>').replace(/<br>$/,'');
-    return `<p style="text-indent:2em;">${p}</p>`;
+    if(isChapter){
+      const p=b.replace(/([。？！])/g,'$1<br>').replace(/<br>$/,'');
+      return `<p style="text-indent:2em;">${p}</p>`;
+    }
+    return `<p>${b.replace(/\n/g,'<br>')}</p>`;
   }).join('');
   return html.replace(/<p>\s*<\/p>/g,'');
 }
 
 /* ==============================================================
-   輔助：聊天框、Loading、Prompt 與歷史
+   UI 輔助
    ============================================================== */
-function appendMessageToChat(sender, message, classes = []) {
-  const msgEl = document.createElement('div');
-  msgEl.classList.add('message-bubble', sender==='user'?'user-message':'ai-message', ...classes);
-
-  if (sender === 'ai' && /<[a-z][\s\S]*>/i.test(message)){
-    msgEl.innerHTML = message;
-  } else {
-    msgEl.innerHTML = `<p>${message
-        .replace(/</g,"<").replace(/>/g,">").replace(/\n/g,'<br>')}</p>`;
-  }
-  messagesContainer.appendChild(msgEl);
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-
-function showLoadingIndicator(text){
-  removeLoadingIndicator();
+function append(role,html,cls=[]){
   const d=document.createElement('div');
-  d.id='loading-indicator';
-  d.className='loading-indicator';
-  d.innerHTML=`<strong>${text}</strong><span>${animalEmojis[Math.floor(Math.random()*animalEmojis.length)]}</span>`;
-  messagesContainer.appendChild(d);
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  d.classList.add('message-bubble',role==='user'?'user-message':'ai-message',...cls);
+  d.innerHTML=html.includes('<')?html:`<p>${html.replace(/</g,'<').replace(/>/g,'>').replace(/\n/g,'<br>')}</p>`;
+  $msg.appendChild(d); $msg.scrollTop=$msg.scrollHeight;
 }
-function removeLoadingIndicator(){
-  document.getElementById('loading-indicator')?.remove();
+function loading(txt){ txt?show(txt):hide(); }
+function show(txt){
+  hide(); const s=document.createElement('div');
+  s.id='load'; s.className='loading-indicator';
+  s.innerHTML=`<strong>${txt}</strong><span>${emojis[Math.floor(Math.random()*emojis.length)]}</span>`;
+  $msg.appendChild(s); $msg.scrollTop=$msg.scrollHeight;
 }
+function hide(){ document.getElementById('load')?.remove(); }
 
-function buildPromptWithHistory(newMessage, chapterCtx=null){
-  let p = '你是曹雪芹，古雅口吻應答。\n\n';
-  if (chapterCtx) p += `【章節】${chapterCtx.chapter} ${chapterCtx.title}\n\n`;
-
-  const turns = conversationHistory.filter(x=>x.role==='user'||x.role==='model').slice(-10);
-  if (turns.length){
-    p += '【對話】\n';
-    turns.forEach(t=>{
-      const who = t.role==='user'?'客官':'老夫';
-      const c   = t.content.replace(/<[^>]*>/g,' ').slice(0,180);
-      p += `${who}: ${c}${t.content.length>180?'…':''}\n`;
-    });
-    p += '\n';
-  }
-  p += `客官: ${newMessage}\n\n曹雪芹:`;
-  return p;
+function buildPrompt(newMsg){
+  let p='你是曹雪芹，古雅口吻應答。\n\n';
+  if(currentChapterData) p+=`【章節】${currentChapterData.chapter} ${currentChapterData.title}\n\n`;
+  const hist=conversationHistory.filter(x=>x.role!=='ai').slice(-8);
+  if(hist.length) p+='【對話】\n'+hist.map(h=>`${h.role==='user'?'客官':'老夫'}: ${h.content.replace(/<[^>]*>/g,' ').slice(0,120)}\n`).join('')+'\n';
+  return p+`客官: ${newMsg}\n\n曹雪芹:`;
 }
-
-function trimConversationHistory(max=20){
-  if(conversationHistory.length>max)
-    conversationHistory.splice(0,conversationHistory.length-max);
-}
-
+function trimHist(n){ if(conversationHistory.length>n) conversationHistory.splice(0,conversationHistory.length-n);}
 function resetState(){
-  messagesContainer.innerHTML = '';
-  conversationHistory = [];
-  currentChapterData  = null;
-  currentTurtleSoup   = null;
-  puzzleSolved        = false;
-  initialContentInfo  = null;
+  $msg.innerHTML='';
+  conversationHistory=[]; currentChapterData=null;
+  currentTurtleSoup=null; puzzleSolved=false; initialContentInfo=null;
 }
 
 /* ==============================================================
-   Gemini API
+   Gemini API — expectYN=true 代表海龜湯回答
    ============================================================== */
-function callGeminiAPI(prompt, callback){
+function askLLM(prompt, expectYN, cb){
   fetch('https://ai.bdfz.net/',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({ prompt })
+    body:JSON.stringify({prompt})
   })
-  .then(res => res.ok ? res.json() : res.text().then(t=>{ throw new Error(t||res.status); }))
-  .then(j  => callback(j.answer || '…老夫一時語塞。'))
-  .catch(e => {
-    console.error('API 錯誤:', e);
-    callback(`<span style="color:red;">後端錯誤：${e.message}</span>`);
+  .then(r=>r.ok?r.json():r.text().then(t=>{throw new Error(t||r.status);}))
+
+  .then(j=>{
+    let ans=j.answer?.trim()||'';
+    if(expectYN && !ans) ans='無關';          // 被過濾 ⇒ 自動『無關』
+    cb(ans||'…老夫一時語塞。');
+  })
+  .catch(e=>{
+    console.error(e);
+    cb(expectYN ? '無關' : `<span style="color:red;">後端錯誤：${e.message}</span>`);
   });
 }
 
 /* ==============================================================
    黑暗模式
    ============================================================== */
-toggleDarkBtn.addEventListener('click',()=>{
+$dark.addEventListener('click',()=>{
   document.body.classList.toggle('dark-mode');
   localStorage.setItem('theme',
-    document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    document.body.classList.contains('dark-mode')?'dark':'light');
 });
