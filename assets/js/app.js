@@ -51,7 +51,7 @@ function loadChapterMenu(){
 }
 
 /* ==============================================================
-   首頁隨機詩詞 — 以舊版格式化
+   首頁隨機詩詞（恢復原 350 行格式）
    ============================================================== */
 function loadInitialPoem(){
   resetState();
@@ -60,10 +60,12 @@ function loadInitialPoem(){
   const e = shiciData[Math.floor(Math.random()*shiciData.length)];
   const { title, poem_text, explanation } = e.details;
 
-  const poemHTML        = formatContentForDisplay(poem_text.join('\n'));
-  const explanationHTML = explanation ? `<strong>【註解】</strong>${formatContentForDisplay(explanation)}` : '';
+  const formattedPoem = poem_text.join('<br>');
+  const html =
+    `<h3>${title}</h3>`+
+    `<div class="poem-like-block">${formattedPoem}</div>`+
+    (explanation?`<strong>【註解】</strong>${formatContentForDisplay(explanation)}`:'');
 
-  const html = `<h3>${title}</h3>${poemHTML}${explanationHTML}`;
   append('ai',`偶隨書頁翻，拾得片語詩箋：\n\n${html}`,['initial-poem']);
   initialContentInfo={title};
 }
@@ -80,12 +82,12 @@ function loadChapter(ch){
 function genTurtleSoup(ch){
   loading('Gemini 正烹製海龜湯…');
   const prompt = `
-你是曹雪芹。請依據《紅樓夢》${ch.chapter} ${ch.title} 的情節，設計一題*有趣且易懂*的海龜湯：
-【謎面】用簡潔、現代讀者一看就能理解的描述（尊重原文情節，但避免過度隱晦）
+你是曹雪芹。依據《紅樓夢》${ch.chapter} ${ch.title} 的情節，設計海龜湯：
+【謎面】用簡潔、現代讀者易懂且有趣的描述（尊重原文）
 【謎底】完整情節（僅供你判斷）
-之後「客官」可提出 *能以「是／否／無關」回答* 的問題，
-你只能回答「是」「否」「無關」。
-若對方猜中謎底，回覆「恭喜你解開謎題！」並簡短解釋。`;
+之後「客官」只能問 *能以「是／否／無關」回答* 的問題，
+你僅回答「是」「否」「無關」。
+猜中後回覆「恭喜你解開謎題！」並簡短解釋。`;
   askLLM(prompt,res=>{
     loading(false);
     currentTurtleSoup=parsePuzzle(res);
@@ -114,13 +116,13 @@ function sendMsg(){
   append('user',txt); $in.value='';
   conversationHistory.push({role:'user',content:txt}); trimHist(20);
 
-  /* 若用戶要求再來海龜湯 */
+  /* 用戶要求再來海龜湯 */
   if(/海龜湯|再來|再做/.test(txt) && currentChapterData){
     puzzleSolved=false; currentTurtleSoup=null; genTurtleSoup(currentChapterData); return;
   }
 
   /* 海龜湯進行中 */
-  if(currentTurtleSoup && !puzzleSolved){
+  if(currentTurtleSoup){          // 若為 null 則直接普通對話
     loading('思索中…');
     const puzzlePrompt = `【謎面】${currentTurtleSoup.question}
 【謎底】${currentTurtleSoup.answer}
@@ -131,7 +133,8 @@ function sendMsg(){
       append('ai',res);
       conversationHistory.push({role:'model',content:res});
       if(res.includes('恭喜你解開謎題')){
-        puzzleSolved=true; currentTurtleSoup=null;         // 轉入正常對話
+        /* —— 用戶猜中：轉入普通對話 —— */
+        puzzleSolved=true; currentTurtleSoup=null;
       }
     });
     return;
