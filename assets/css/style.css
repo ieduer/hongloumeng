@@ -396,6 +396,46 @@ body {
     flex-shrink: 0;
 }
 
+/* --- 章回謎題區域 --- */
+#riddle-area {
+    background: var(--ghibli-panel-bg);
+    border: 1px solid var(--ghibli-panel-border);
+    border-radius: 15px;
+    padding: 15px 20px;
+    margin-top: 15px;
+}
+
+#riddle-area.hidden { display: none; }
+
+#riddle-hints button {
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
+#riddle-input-box {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#riddle-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--ghibli-panel-border);
+    border-radius: 20px;
+    font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
+}
+
+body.dark-mode #riddle-area {
+    background: var(--ghibli-dark-panel-bg);
+    border-color: var(--ghibli-dark-panel-border);
+}
+
+body.dark-mode #riddle-input {
+    background-color: #333;
+    color: var(--ghibli-dark-text);
+}
+
 #user-input {
     flex-grow: 1;
     padding: 12px 15px;

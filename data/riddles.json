@@ -1,0 +1,22 @@
+[
+  {
+    "chapter": "第32章",
+    "scenario": "一位年輕丫鬟不堪主母的斥責與羞辱，最終投井自盡，究竟發生什麼？",
+    "answer": "金釧兒之死源於王夫人誤會她與寶玉親密，逼迫之下投井而亡。",
+    "hints": [
+      {"keyword": "少爺", "response": "否"},
+      {"keyword": "夫人", "response": "是"},
+      {"keyword": "香囊", "response": "是"}
+    ]
+  },
+  {
+    "chapter": "第44章",
+    "scenario": "府中醋意翻湧，一場嫉妒幾乎導致家宅不寧，其關鍵人物是誰？",
+    "answer": "王熙鳳因吃醋懷疑平兒，鬧出一場風波。",
+    "hints": [
+      {"keyword": "鳳姐", "response": "是"},
+      {"keyword": "平兒", "response": "是"},
+      {"keyword": "寶玉", "response": "否"}
+    ]
+  }
+]
