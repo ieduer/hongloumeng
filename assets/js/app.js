@@ -6,6 +6,18 @@ let initialContentInfo = null;
 let hongloumengData = null;
 let gaokaoData = null;
 let shiciData = null; // 新增: 存儲詩詞數據
+let riddlesData = null; // 新增: 謎題數據
+let currentRiddle = null;
+let riddleScore = { solved: 0, solvedChapters: [] };
+
+const riddleArea = document.getElementById('riddle-area');
+const riddleScenario = document.getElementById('riddle-scenario');
+const riddleHints = document.getElementById('riddle-hints');
+const riddleInput = document.getElementById('riddle-input');
+const riddleAskBtn = document.getElementById('riddle-ask-btn');
+const riddleRevealBtn = document.getElementById('riddle-reveal-btn');
+const riddleResponse = document.getElementById('riddle-response');
+const riddleScoreboard = document.getElementById('riddle-scoreboard');
 
 const messagesContainer = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
@@ -21,12 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('data/hongloumeng.json').then(res => res.ok ? res.json() : Promise.reject(`紅樓夢數據加載失敗: ${res.status}`)),
         fetch('data/gaokao.json').then(res => res.ok ? res.json() : Promise.reject(`高考數據加載失敗: ${res.status}`)),
         // 新增: 加載 shici.json
-        fetch('data/shici.json').then(res => res.ok ? res.json() : Promise.reject(`詩詞數據加載失敗: ${res.status}`))
+        fetch('data/shici.json').then(res => res.ok ? res.json() : Promise.reject(`詩詞數據加載失敗: ${res.status}`)),
+        fetch('data/riddles.json').then(res => res.ok ? res.json() : Promise.reject(`謎題數據加載失敗: ${res.status}`))
     ])
-    .then(([hlmData, gkData, scData]) => { // 更新: 接收 shici 數據
+    .then(([hlmData, gkData, scData, rdData]) => { // 更新: 接收謎題數據
         hongloumengData = hlmData;
         gaokaoData = gkData;
         shiciData = scData; // 新增: 存儲詩詞數據
+        riddlesData = rdData;
         loadInitialContent(); // 加載初始詩詞內容
         loadChapterMenu(); // 加載紅樓夢章節目錄
         // 目錄始終顯示，不需要額外操作
@@ -46,6 +60,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
+    }
+
+    const savedScore = localStorage.getItem('riddleScore');
+    if (savedScore) {
+        try { riddleScore = JSON.parse(savedScore); } catch(e) { riddleScore = { solved: 0, solvedChapters: [] }; }
+    }
+    updateRiddleScoreboard();
+
+    if (riddleAskBtn) {
+        riddleAskBtn.addEventListener('click', () => {
+            const kw = riddleInput.value.trim();
+            if (kw) handleRiddleQuestion(kw);
+        });
+    }
+    if (riddleInput) {
+        riddleInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                riddleAskBtn.click();
+            }
+        });
+    }
+    if (riddleRevealBtn) {
+        riddleRevealBtn.addEventListener('click', revealRiddleAnswer);
     }
 });
 
@@ -79,6 +117,8 @@ function loadInitialContent() {
     conversationHistory = []; // 清空歷史記錄
     currentChapterData = null; // 清除選定的紅樓夢章節
     initialContentInfo = null; // 重置初始內容記錄
+    currentRiddle = null;
+    if (riddleArea) riddleArea.classList.add('hidden');
 
     try {
         // 隨機選取一個詩詞條目
@@ -159,6 +199,7 @@ function loadChapter(chapter) {
      });
 
     requestInitialAnalysis(chapter); // 為紅樓夢章節請求 AI 分析/出題 (保持不變)
+    displayRiddleForChapter(chapter.chapter);
 }
 
 // 更新：格式化文本內容（分段、基礎Markdown轉HTML）(保持不變，因其通用性)
@@ -490,6 +531,66 @@ function trimConversationHistory(maxLength = 20) {
     if (conversationHistory.length > maxLength) {
         conversationHistory.splice(0, conversationHistory.length - maxLength);
     }
+}
+
+// 顯示對應章節的謎題
+function displayRiddleForChapter(chapterId) {
+    if (!riddlesData) return;
+    const riddle = riddlesData.find(r => r.chapter === chapterId);
+    currentRiddle = riddle || null;
+    riddleHints.innerHTML = '';
+    riddleResponse.textContent = '';
+    riddleInput.value = '';
+
+    if (!riddle) {
+        riddleArea.classList.add('hidden');
+        return;
+    }
+
+    riddleScenario.textContent = riddle.scenario;
+    riddle.hints.forEach(h => {
+        const btn = document.createElement('button');
+        btn.textContent = h.keyword;
+        btn.className = 'ghibli-button';
+        btn.addEventListener('click', () => handleRiddleQuestion(h.keyword));
+        riddleHints.appendChild(btn);
+    });
+
+    riddleArea.classList.remove('hidden');
+    if (riddleScore.solvedChapters.includes(chapterId)) {
+        riddleRevealBtn.disabled = true;
+        riddleResponse.textContent = riddle.answer;
+    } else {
+        riddleRevealBtn.disabled = false;
+    }
+}
+
+function handleRiddleQuestion(keyword) {
+    if (!currentRiddle) return;
+    const hint = currentRiddle.hints.find(h => keyword.includes(h.keyword));
+    riddleResponse.textContent = hint ? hint.response : '無相關線索';
+}
+
+function revealRiddleAnswer() {
+    if (!currentRiddle) return;
+    riddleResponse.textContent = currentRiddle.answer;
+    if (!riddleScore.solvedChapters.includes(currentRiddle.chapter)) {
+        riddleScore.solved++;
+        riddleScore.solvedChapters.push(currentRiddle.chapter);
+        saveRiddleScore();
+        updateRiddleScoreboard();
+    }
+    riddleRevealBtn.disabled = true;
+}
+
+function updateRiddleScoreboard() {
+    if (riddleScoreboard) {
+        riddleScoreboard.textContent = `已解謎題：${riddleScore.solved}`;
+    }
+}
+
+function saveRiddleScore() {
+    localStorage.setItem('riddleScore', JSON.stringify(riddleScore));
 }
 
 
