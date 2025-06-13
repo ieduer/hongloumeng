@@ -1,5 +1,5 @@
 /* ==============================================================
-   《紅樓夢》章節 + 海龜湯互動腳本  2025-06-13
+   《紅樓夢》章節 + 海龜湯互動腳本  2025-06-14
    ============================================================== */
 
 /* ---------- 全局狀態 ---------- */
@@ -9,7 +9,7 @@ let initialContentInfo  = null;
 let hongloumengData     = null;
 let shiciData           = null;
 
-let currentTurtleSoup = null;   // { question, answer }
+let currentTurtleSoup = null;      // { question, answer }
 let puzzleSolved      = false;
 
 /* ---------- DOM ---------- */
@@ -51,7 +51,7 @@ function loadChapterMenu(){
 }
 
 /* ==============================================================
-   首頁隨機詩詞
+   首頁隨機詩詞 — 以舊版格式化
    ============================================================== */
 function loadInitialPoem(){
   resetState();
@@ -59,10 +59,11 @@ function loadInitialPoem(){
     append('ai','暫無詩詞'); return; }
   const e = shiciData[Math.floor(Math.random()*shiciData.length)];
   const { title, poem_text, explanation } = e.details;
-  const html =
-    `<h3>${title}</h3>
-     <div class="poem-like-block">${poem_text.join('<br>')}</div>`+
-    (explanation?`<strong>【註解】</strong>${formatContentForDisplay(explanation)}`:'');
+
+  const poemHTML        = formatContentForDisplay(poem_text.join('\n'));
+  const explanationHTML = explanation ? `<strong>【註解】</strong>${formatContentForDisplay(explanation)}` : '';
+
+  const html = `<h3>${title}</h3>${poemHTML}${explanationHTML}`;
   append('ai',`偶隨書頁翻，拾得片語詩箋：\n\n${html}`,['initial-poem']);
   initialContentInfo={title};
 }
@@ -79,8 +80,8 @@ function loadChapter(ch){
 function genTurtleSoup(ch){
   loading('Gemini 正烹製海龜湯…');
   const prompt = `
-你是曹雪芹。依據《紅樓夢》${ch.chapter} ${ch.title} 的情節，設計海龜湯：
-【謎面】模糊描述
+你是曹雪芹。請依據《紅樓夢》${ch.chapter} ${ch.title} 的情節，設計一題*有趣且易懂*的海龜湯：
+【謎面】用簡潔、現代讀者一看就能理解的描述（尊重原文情節，但避免過度隱晦）
 【謎底】完整情節（僅供你判斷）
 之後「客官」可提出 *能以「是／否／無關」回答* 的問題，
 你只能回答「是」「否」「無關」。
@@ -88,7 +89,10 @@ function genTurtleSoup(ch){
   askLLM(prompt,res=>{
     loading(false);
     currentTurtleSoup=parsePuzzle(res);
-    if(!currentTurtleSoup){ append('ai','謎題生成失敗'); return;}
+    if(!currentTurtleSoup){
+      append('ai','謎題生成失敗，請刷新頁面再試。');
+      return;
+    }
     append('ai',`<strong>🌊 海龜湯謎題：</strong><br>${currentTurtleSoup.question}<br><small style="color:#888;">（請提出能以「是／否／無關」回答的問題）</small>`);
     conversationHistory.push({role:'ai',content:`(謎面:${currentTurtleSoup.question};謎底:${currentTurtleSoup.answer})`});
   });
@@ -110,7 +114,7 @@ function sendMsg(){
   append('user',txt); $in.value='';
   conversationHistory.push({role:'user',content:txt}); trimHist(20);
 
-  /* 如果用戶要求再來海龜湯 */
+  /* 若用戶要求再來海龜湯 */
   if(/海龜湯|再來|再做/.test(txt) && currentChapterData){
     puzzleSolved=false; currentTurtleSoup=null; genTurtleSoup(currentChapterData); return;
   }
@@ -126,7 +130,9 @@ function sendMsg(){
       loading(false);
       append('ai',res);
       conversationHistory.push({role:'model',content:res});
-      if(res.includes('恭喜你解開謎題')){ puzzleSolved=true; currentTurtleSoup=null; }
+      if(res.includes('恭喜你解開謎題')){
+        puzzleSolved=true; currentTurtleSoup=null;         // 轉入正常對話
+      }
     });
     return;
   }
@@ -139,7 +145,7 @@ function sendMsg(){
 }
 
 /* ==============================================================
-   排版 — 直接用原本函式
+   舊版 formatContentForDisplay
    ============================================================== */
 function formatContentForDisplay(text){
   if (!text) return "";
@@ -198,7 +204,8 @@ function buildPrompt(newMsg){
   let p='你是曹雪芹，古雅口吻應答。\n\n';
   if(currentChapterData) p+=`【章節】${currentChapterData.chapter} ${currentChapterData.title}\n\n`;
   const hist=conversationHistory.filter(x=>x.role!=='ai').slice(-8);
-  if(hist.length) p+='【對話】\n'+hist.map(h=>`${h.role==='user'?'客官':'老夫'}: ${h.content.replace(/<[^>]*>/g,' ').slice(0,120)}\n`).join('')+'\n';
+  if(hist.length)
+    p+='【對話】\n'+hist.map(h=>`${h.role==='user'?'客官':'老夫'}: ${h.content.replace(/<[^>]*>/g,' ').slice(0,120)}\n`).join('')+'\n';
   return p+`客官: ${newMsg}\n\n曹雪芹:`;
 }
 function trimHist(n){ if(conversationHistory.length>n) conversationHistory.splice(0,conversationHistory.length-n);}
