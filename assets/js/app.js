@@ -1,5 +1,5 @@
 /* ==============================================================
-   《紅樓夢》章節 + 海龜湯互動腳本 2025-06-13 修正版
+   《紅樓夢》章節 + 海龜湯互動腳本  2025-06-13
    ============================================================== */
 
 /* ---------- 全局狀態 ---------- */
@@ -9,7 +9,7 @@ let initialContentInfo  = null;
 let hongloumengData     = null;
 let shiciData           = null;
 
-let currentTurtleSoup = null;   // {question, answer}
+let currentTurtleSoup = null;   // { question, answer }
 let puzzleSolved      = false;
 
 /* ---------- DOM ---------- */
@@ -24,7 +24,7 @@ const emojis = ['😼','🐶','🦊','🐻','🐼','🐰','🐯','🦉','🍁','
 document.addEventListener('DOMContentLoaded', () => {
   Promise.all([
     fetch('data/hongloumeng.json').then(r=>r.ok?r.json():Promise.reject(r.status)),
-    fetch('data/shici.json').then(r=>r.ok?r.json():Promise.reject(r.status))
+    fetch('data/shici.json')      .then(r=>r.ok?r.json():Promise.reject(r.status))
   ])
   .then(([hlm, sc]) => { hongloumengData=hlm; shiciData=sc;
     loadInitialPoem(); loadChapterMenu(); })
@@ -55,37 +55,37 @@ function loadChapterMenu(){
    ============================================================== */
 function loadInitialPoem(){
   resetState();
-  const list=shiciData;
-  if(!list?.length){ append('ai','暫無詩詞'); return;}
-  const e=list[Math.floor(Math.random()*list.length)];
-  const {title,poem_text,explanation}=e.details;
-  const html=`<h3>${title}</h3>
-<div class="poem-like-block">${poem_text.join('<br>')}</div>`+
-(explanation?`<strong>【註解】</strong>${formatDisplay(explanation,false)}`:'');
+  if(!Array.isArray(shiciData)||!shiciData.length){
+    append('ai','暫無詩詞'); return; }
+  const e = shiciData[Math.floor(Math.random()*shiciData.length)];
+  const { title, poem_text, explanation } = e.details;
+  const html =
+    `<h3>${title}</h3>
+     <div class="poem-like-block">${poem_text.join('<br>')}</div>`+
+    (explanation?`<strong>【註解】</strong>${formatContentForDisplay(explanation)}`:'');
   append('ai',`偶隨書頁翻，拾得片語詩箋：\n\n${html}`,['initial-poem']);
   initialContentInfo={title};
 }
 
 /* ==============================================================
-   顯示章節 ⇒ 產生海龜湯
+   顯示章節 ⇒ 生成海龜湯
    ============================================================== */
 function loadChapter(ch){
   resetState(); currentChapterData=ch;
-  append('ai',`<h3>${ch.chapter}  ${ch.title}</h3>\n${formatDisplay(ch.content,true)}`,['chapter-display']);
+  append('ai',`<h3>${ch.chapter}  ${ch.title}</h3>\n${formatContentForDisplay(ch.content)}`,['chapter-display']);
   conversationHistory.push({role:'ai',content:`(展示${ch.chapter}${ch.title}全文)`});
   genTurtleSoup(ch);
 }
 function genTurtleSoup(ch){
   loading('Gemini 正烹製海龜湯…');
-  const prompt=`
-你是曹雪芹。請依據《紅樓夢》${ch.chapter} ${ch.title} 的情節，設計一題海龜湯：
+  const prompt = `
+你是曹雪芹。依據《紅樓夢》${ch.chapter} ${ch.title} 的情節，設計海龜湯：
 【謎面】模糊描述
 【謎底】完整情節（僅供你判斷）
-
 之後「客官」可提出 *能以「是／否／無關」回答* 的問題，
 你只能回答「是」「否」「無關」。
-當對方猜中謎底，回覆「恭喜你解開謎題！」並簡短解釋。`;
-  askLLM(prompt,false,res=>{
+若對方猜中謎底，回覆「恭喜你解開謎題！」並簡短解釋。`;
+  askLLM(prompt,res=>{
     loading(false);
     currentTurtleSoup=parsePuzzle(res);
     if(!currentTurtleSoup){ append('ai','謎題生成失敗'); return;}
@@ -110,60 +110,70 @@ function sendMsg(){
   append('user',txt); $in.value='';
   conversationHistory.push({role:'user',content:txt}); trimHist(20);
 
-  /* —— 海龜湯互動 —— */
-  if(currentTurtleSoup&&!puzzleSolved){
+  /* 如果用戶要求再來海龜湯 */
+  if(/海龜湯|再來|再做/.test(txt) && currentChapterData){
+    puzzleSolved=false; currentTurtleSoup=null; genTurtleSoup(currentChapterData); return;
+  }
+
+  /* 海龜湯進行中 */
+  if(currentTurtleSoup && !puzzleSolved){
     loading('思索中…');
-    const puzzlePrompt=`【謎面】${currentTurtleSoup.question}
+    const puzzlePrompt = `【謎面】${currentTurtleSoup.question}
 【謎底】${currentTurtleSoup.answer}
-客官問題：「${txt}」
-僅回答「是」「否」「無關」。若對方已猜中則祝賀並解釋。`;
-    askLLM(puzzlePrompt,true,res=>{
+客官：「${txt}」
+僅回答「是」「否」「無關」。猜中則祝賀並解釋。`;
+    askLLM(puzzlePrompt,res=>{
       loading(false);
-      const ok=/^(是|否|無關)/.test(res.trim())||res.includes('恭喜你解開謎題');
-      append('ai',res + (ok?'':`<br><small style="color:#888;">（請僅回答「是／否／無關」）</small>`));
+      append('ai',res);
       conversationHistory.push({role:'model',content:res});
-      if(res.includes('恭喜你解開謎題')) puzzleSolved=true;
+      if(res.includes('恭喜你解開謎題')){ puzzleSolved=true; currentTurtleSoup=null; }
     });
     return;
   }
 
-  /* —— 普通對話 —— */
+  /* 普通對話 */
   loading('Gemini 回覆中…');
-  askLLM(buildPrompt(txt),false,res=>{
-    loading(false); append('ai',res);
-    conversationHistory.push({role:'model',content:res}); trimHist(20);
+  askLLM(buildPrompt(txt),res=>{
+    loading(false); append('ai',res); conversationHistory.push({role:'model',content:res}); trimHist(20);
   });
 }
 
 /* ==============================================================
-   格式化
+   排版 — 直接用原本函式
    ============================================================== */
-function formatDisplay(text,isChapter){
-  if(!text) return '';
-  let t=text.replace(/\r\n?/g,'\n').trim();
+function formatContentForDisplay(text){
+  if (!text) return "";
+  text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').replace(/\(本[章回]完\)$/gm,'').trim();
 
-  // Markdown
-  t=t.replace(/^### (.*)$/gim,'<h3>$1</h3>')
-     .replace(/^## (.*)$/gim,'<h2>$1</h2>')
-     .replace(/^# (.*)$/gim ,'<h1>$1</h1>')
+  let e=text.replace(/</g,"<").replace(/>/g,">");
+
+  e=e.replace(/^### (.*$)/gim,'<h3>$1</h3>')
+     .replace(/^## (.*$)/gim,'<h2>$1</h2>')
+     .replace(/^# (.*$)/gim ,'<h1>$1</h1>')
      .replace(/\*\*\*(.*?)\*\*\*/g,'<strong><em>$1</em></strong>')
-     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-     .replace(/\*(.*?)\*/g,'<em>$1</em>');
+     .replace(/\*\*(.*?)\*\*/g   ,'<strong>$1</strong>')
+     .replace(/\*(.*?)\*/g       ,'<em>$1</em>');
 
-  // list
-  t=t.replace(/^(?:[\*\-]\s+.*(?:\n|$))+/gm,m=>`<ul>${m.trim().split('\n').map(l=>`<li>${l.replace(/^[\*\-]\s+/,'')}</li>`).join('')}</ul>`);
-  t=t.replace(/^(?:\d+\.\s+.*(?:\n|$))+/gm,m=>`<ol>${m.trim().split('\n').map(l=>`<li>${l.replace(/^\d+\.\s+/,'')}</li>`).join('')}</ol>`);
+  e=e.replace(/^(?:[\*\-]\s+.*(?:\n|$))+/gm,m=>{
+    const items=m.trim().split('\n').map(l=>`<li>${l.replace(/^[\*\-]\s+/,'').trim()}</li>`).join('');
+    return `<ul>${items}</ul>`;});
+  e=e.replace(/^(?:\d+\.\s+.*(?:\n|$))+/gm,m=>{
+    const items=m.trim().split('\n').map(l=>`<li>${l.replace(/^\d+\.\s+/,'').trim()}</li>`).join('');
+    return `<ol>${items}</ol>`;});
 
-  const blocks=t.split(/\n\s*\n+/).map(b=>b.trim()).filter(Boolean);
-  const html=blocks.map(b=>{
-    if(/^<(h[1-6]|ul|ol|blockquote|pre)/i.test(b)) return b;
-    if(isChapter){
-      const p=b.replace(/([。？！])/g,'$1<br>').replace(/<br>$/,'');
-      return `<p style="text-indent:2em;">${p}</p>`;
-    }
-    return `<p>${b.replace(/\n/g,'<br>')}</p>`;
-  }).join('');
-  return html.replace(/<p>\s*<\/p>/g,'');
+  const blocks=e.split(/\n\s*\n+/g).map(b=>b.trim()).filter(Boolean);
+  let html="";
+  if(blocks.length){
+    html=blocks.map(b=>{
+      if(/^<(?:h[1-6]|ul|ol|p|blockquote|pre)/i.test(b))
+        return b.replace(/\n/g,'<br>');
+      return `<p>${b.replace(/\n/g,'<br>')}</p>`;
+    }).join('');
+  }else html=`<p>${e.replace(/\n/g,'<br>')}</p>`;
+
+  html=html.replace(/<p>\s*<\/p>/gi,'');
+  if(html.replace(/<p>|<br>|<\/p>|\s/g,'')==='') return "";
+  return html;
 }
 
 /* ==============================================================
@@ -199,9 +209,9 @@ function resetState(){
 }
 
 /* ==============================================================
-   Gemini API — expectYN=true 代表海龜湯回答
+   Gemini API
    ============================================================== */
-function askLLM(prompt, expectYN, cb){
+function askLLM(prompt,cb){
   fetch('https://ai.bdfz.net/',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
@@ -209,15 +219,8 @@ function askLLM(prompt, expectYN, cb){
   })
   .then(r=>r.ok?r.json():r.text().then(t=>{throw new Error(t||r.status);}))
 
-  .then(j=>{
-    let ans=j.answer?.trim()||'';
-    if(expectYN && !ans) ans='無關';          // 被過濾 ⇒ 自動『無關』
-    cb(ans||'…老夫一時語塞。');
-  })
-  .catch(e=>{
-    console.error(e);
-    cb(expectYN ? '無關' : `<span style="color:red;">後端錯誤：${e.message}</span>`);
-  });
+  .then(j=>cb(j.answer?.trim()||'…老夫一時語塞。'))
+  .catch(e=>{ console.error(e); cb(`<span style="color:red;">後端錯誤：${e.message}</span>`); });
 }
 
 /* ==============================================================
