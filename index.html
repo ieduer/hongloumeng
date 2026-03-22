@@ -9,6 +9,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <title>AI红楼梦</title>
+    <meta name="description" content="與 AI 曹雪芹對話，探索《紅樓夢》的詩詞、章節與海龜湯互動遊戲。體驗經典文學與現代 AI 的結合。">
+    <meta name="keywords" content="紅樓夢,AI,曹雪芹,詩詞,海龜湯,經典文學,高考">
+    <meta name="author" content="Suen">
     <link rel="stylesheet" href="assets/css/style.css" />
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
@@ -30,7 +33,7 @@
         <div id="main-content">
             <header>
                 <h1>AI红楼梦</h1>
-                <button id="toggle-dark-btn" title="切換夜晚模式" class="ghibli-button dark-mode-toggle">🌓</button>
+                <button id="toggle-dark-btn" title="切換夜晚模式" aria-label="切換深色模式" class="ghibli-button dark-mode-toggle">🌓</button>
             </header>
 
             <section id="dialogue-box">
@@ -39,7 +42,7 @@
                 </div>
                 <div id="input-area">
                     <input type="text" id="user-input" placeholder="與曹雪芹聊聊紅樓夢..." aria-label="在此輸入訊息">
-                    <button id="chat-button" class="ghibli-button chat">發送</button>
+                    <button id="chat-button" class="ghibli-button chat" aria-label="發送訊息">發送</button>
                 </div>
             </section>
         </div>
@@ -52,5 +55,6 @@
     </footer>
 
     <script src="assets/js/app.js"></script>
+    <script src="https://nav.bdfz.net/bdfz-nav.js" async></script>
 </body>
 </html>
