@@ -14,6 +14,7 @@ let puzzleSolved = false;
 let lastPrompt = null;      // 用於重試
 let lastCallback = null;      // 用於重試
 const SITE_KEY = 'hlm';
+let conversationSessionKey = '';
 
 /* ---------- DOM ---------- */
 const $msg = document.getElementById('messages');
@@ -65,12 +66,45 @@ function trackChapterDiscussion(ch, message) {
       chapter: ch.chapter || '',
       messageLength: String(message).length,
     },
+    }).catch(() => {});
+}
+
+function resetConversationSession() {
+  conversationSessionKey = getIdentity()?.createSessionKey?.(`${SITE_KEY}-chat`) || `${SITE_KEY}-chat-${Date.now().toString(36)}`;
+}
+
+function syncConversationArchive(reason = 'update') {
+  if (!conversationHistory.length) return;
+  if (!conversationSessionKey) resetConversationSession();
+  getIdentity()?.recordConversation({
+    siteKey: SITE_KEY,
+    sessionKey: conversationSessionKey,
+    title: (currentChapterData?.title || currentChapterData?.chapter || '紅樓夢').slice(0, 80),
+    summary: conversationHistory[conversationHistory.length - 1]?.content?.slice(0, 120) || '紅樓夢對話',
+    sourceUrl: window.location.href,
+    messages: conversationHistory.map((message, index) => ({
+      id: String(index + 1),
+      role: message.role === 'user' ? 'user' : 'assistant',
+      content: message.content,
+    })),
+    meta: {
+      reason,
+      chapter: currentChapterData?.chapter || '',
+      turtleSoup: Boolean(currentTurtleSoup),
+    },
   }).catch(() => {});
+}
+
+function addConversationEntry(role, content, reason = 'update') {
+  conversationHistory.push({ role, content });
+  trimHist(20);
+  syncConversationArchive(reason);
 }
 
 /* ---------- 初始化 ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   mountIdentity();
+  resetConversationSession();
   Promise.all([
     fetch('data/hongloumeng.json').then(r => r.ok ? r.json() : Promise.reject(r.status)),
     fetch('data/shici.json').then(r => r.ok ? r.json() : Promise.reject(r.status))
@@ -90,7 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // 恢復對話歷史
   try {
     const saved = localStorage.getItem('chatHistory');
-    if (saved) conversationHistory = JSON.parse(saved);
+    if (saved) {
+      conversationHistory = JSON.parse(saved);
+      syncConversationArchive('hydrate-local');
+    }
   } catch (e) { console.warn('無法恢復對話歷史:', e); }
 });
 
@@ -137,7 +174,7 @@ function loadInitialPoem() {
 function loadChapter(ch) {
   resetState(); currentChapterData = ch;
   append('ai', `<h3>${ch.chapter}  ${ch.title}</h3>\n${formatContentForDisplay(ch.content)}`, ['chapter-content-display']);
-  conversationHistory.push({ role: 'ai', content: `(展示${ch.chapter}${ch.title}全文)` });
+  addConversationEntry('ai', `(展示${ch.chapter}${ch.title}全文)`, 'chapter-open');
   trackChapterReading(ch);
   genTurtleSoup(ch);
 }
@@ -158,7 +195,7 @@ function genTurtleSoup(ch) {
       return;
     }
     append('ai', `<strong>🌊 海龜湯謎題：</strong><br>${currentTurtleSoup.question}<br><small style="color:#888;">（請提出能以「是／否／無關」回答的問題）</small>`);
-    conversationHistory.push({ role: 'ai', content: `(謎面:${currentTurtleSoup.question};謎底:${currentTurtleSoup.answer})` });
+    addConversationEntry('ai', `(謎面:${currentTurtleSoup.question};謎底:${currentTurtleSoup.answer})`, 'turtle-puzzle');
   });
 }
 function parsePuzzle(t) {
@@ -177,7 +214,7 @@ $in.addEventListener('keypress', e => {
 function sendMsg() {
   const txt = $in.value.trim(); if (!txt) return;
   append('user', txt); $in.value = '';
-  conversationHistory.push({ role: 'user', content: txt }); trimHist(20);
+  addConversationEntry('user', txt, 'user-message');
   trackChapterDiscussion(currentChapterData, txt);
 
   /* 用戶要求再來海龜湯 */
@@ -195,7 +232,7 @@ function sendMsg() {
     askLLM(puzzlePrompt, res => {
       loading(false);
       append('ai', res);
-      conversationHistory.push({ role: 'model', content: res });
+      addConversationEntry('model', res, 'assistant-message');
       if (res.includes('恭喜你解開謎題')) {
         /* —— 用戶猜中：轉入普通對話 —— */
         puzzleSolved = true; currentTurtleSoup = null;
@@ -207,7 +244,7 @@ function sendMsg() {
   /* 普通對話 */
   loading('Gemini 回覆中…');
   askLLM(buildPrompt(txt), res => {
-    loading(false); append('ai', res); conversationHistory.push({ role: 'model', content: res }); trimHist(20);
+    loading(false); append('ai', res); addConversationEntry('model', res, 'assistant-message');
   });
 }
 
@@ -294,7 +331,7 @@ function trimHist(n) {
 }
 function resetState() {
   $msg.innerHTML = '';
-  conversationHistory = []; currentChapterData = null;
+  conversationHistory = []; currentChapterData = null; resetConversationSession();
   currentTurtleSoup = null; puzzleSolved = false; initialContentInfo = null;
 }
 
