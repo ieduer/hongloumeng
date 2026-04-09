@@ -150,6 +150,21 @@ function loadChapterMenu() {
 /* ==============================================================
    首頁隨機詩詞（恢復原 350 行格式）
    ============================================================== */
+function normalizePoemLines(poemText) {
+  if (Array.isArray(poemText)) {
+    return poemText.map(line => String(line || '').trim()).filter(Boolean);
+  }
+  if (typeof poemText === 'string') {
+    return poemText
+      .replace(/\r\n/g, '\n')
+      .replace(/\r/g, '\n')
+      .split('\n')
+      .map(line => line.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
 function loadInitialPoem() {
   resetState();
   if (!Array.isArray(shiciData) || !shiciData.length) {
@@ -157,8 +172,9 @@ function loadInitialPoem() {
   }
   const e = shiciData[Math.floor(Math.random() * shiciData.length)];
   const { title, poem_text, explanation } = e.details;
+  const poemLines = normalizePoemLines(poem_text);
 
-  const formattedPoem = poem_text.join('<br>');
+  const formattedPoem = poemLines.length ? poemLines.join('<br>') : '暫無內容';
   const html =
     `<h3>${title}</h3>` +
     `<div class="poem-like-block">${formattedPoem}</div>` +
