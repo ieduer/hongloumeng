@@ -1,5 +1,5 @@
 /* ==============================================================
-   《紅樓夢》章節 + 海龜湯互動腳本  2025-06-14
+   《紅樓夢》章節 + AI 人物情節分析  2025-06-14
    ============================================================== */
 
 /* ---------- 全局狀態 ---------- */
@@ -9,8 +9,6 @@ let initialContentInfo = null;
 let hongloumengData = null;
 let shiciData = null;
 
-let currentTurtleSoup = null;      // { question, answer }
-let puzzleSolved = false;
 let lastPrompt = null;      // 用於重試
 let lastCallback = null;      // 用於重試
 const SITE_KEY = 'hlm';
@@ -22,6 +20,7 @@ const $in = document.getElementById('user-input');
 const $send = document.getElementById('chat-button');
 const $menu = document.getElementById('chapter-menu');
 const $dark = document.getElementById('toggle-dark-btn');
+const $analyzeBtn = document.getElementById('ai-analyze-btn');
 const emojis = ['😼', '🐶', '🦊', '🐻', '🐼', '🐰', '🐯', '🦉', '🍁', '🏮'];
 
 function getIdentity() {
@@ -90,7 +89,6 @@ function syncConversationArchive(reason = 'update') {
     meta: {
       reason,
       chapter: currentChapterData?.chapter || '',
-      turtleSoup: Boolean(currentTurtleSoup),
     },
   }).catch(() => {});
 }
@@ -188,39 +186,60 @@ function loadInitialPoem() {
 }
 
 /* ==============================================================
-   顯示章節 ⇒ 生成海龜湯
+   顯示章節（不再自動觸發 AI）
    ============================================================== */
 function loadChapter(ch) {
   resetState(); currentChapterData = ch;
   append('ai', `<h3>${ch.chapter}  ${ch.title}</h3>\n${formatContentForDisplay(ch.content)}`, ['chapter-content-display']);
+  append('ai', `<p style="color:#888; font-size:0.9em;">💡 點擊下方「📖 AI分析」按鈕，可獲得本章人物、情節與高考考點的深度解析。</p>`);
   addConversationEntry('ai', `(展示${ch.chapter}${ch.title}全文)`, 'chapter-open');
   markHlmChapterRead(ch);
   trackChapterReading(ch);
-  genTurtleSoup(ch);
+  // 顯示 AI 分析按鈕
+  if ($analyzeBtn) $analyzeBtn.style.display = '';
 }
-function genTurtleSoup(ch) {
-  loading('Gemini 正烹製海龜湯…');
-  const prompt = `
-你是曹雪芹。依據《紅樓夢》${ch.chapter} ${ch.title} 的情節，設計海龜湯：
-【謎面】用簡潔、現代讀者易懂且有趣的描述（尊重原文）
-【謎底】完整情節（僅供你判斷）
-之後「客官」只能問 *能以「是／否／無關」回答* 的問題，
-你僅回答「是」「否」「無關」。
-猜中後回覆「恭喜你解開謎題！」並簡短解釋。`;
+
+/* ==============================================================
+   AI 章節分析（用戶手動觸發）
+   ============================================================== */
+function analyzeChapter(ch) {
+  if (!ch) {
+    append('ai', '請先選擇一個章節。');
+    return;
+  }
+  loading('Gemini 正在分析本章人物與情節…');
+  const prompt = `你是一位精通《紅樓夢》的語文教師兼高考閱卷專家，同時保持曹雪芹的文學視角。
+請對《紅樓夢》${ch.chapter}「${ch.title}」進行深度分析，依序回答以下五個板塊：
+
+**一、章節概要**
+用 3-5 句話概括本章核心情節和在全書結構中的位置。
+
+**二、人物分析**
+列出本章出場的主要人物（3-5人），針對每一位：
+- 在本章的行為和語言特點
+- 性格體現和心理動機
+- 與其他人物的關係變化
+
+**三、情節與文學技巧**
+- 本章運用了哪些敘事手法（如伏筆、對比、象徵、諷刺等）？
+- 關鍵場景的藝術效果分析
+
+**四、高考考點解讀**
+結合中國高考語文對《紅樓夢》的考查方向，分析本章可能涉及的考點：
+- 名著閱讀題常見角度（人物形象、情節概括、主題理解）
+- 微寫作和大作文中可能引用本章內容的方向
+- 1-2 道模擬簡答題及參考要點
+
+**五、經典名句與點評**
+摘錄本章 2-3 句具有深意的經典語句，並簡析其文學價值。
+
+輸出要求：全程使用繁體中文，語言學術嚴謹但生動易懂。`;
   askLLM(prompt, res => {
     loading(false);
-    currentTurtleSoup = parsePuzzle(res);
-    if (!currentTurtleSoup) {
-      append('ai', '謎題生成失敗，請刷新頁面再試。');
-      return;
-    }
-    append('ai', `<strong>🌊 海龜湯謎題：</strong><br>${currentTurtleSoup.question}<br><small style="color:#888;">（請提出能以「是／否／無關」回答的問題）</small>`);
-    addConversationEntry('ai', `(謎面:${currentTurtleSoup.question};謎底:${currentTurtleSoup.answer})`, 'turtle-puzzle');
+    const formatted = formatContentForDisplay(res);
+    append('ai', `<strong>📖 ${ch.chapter}「${ch.title}」深度分析</strong><br>${formatted}`);
+    addConversationEntry('ai', `(AI 分析 ${ch.chapter} ${ch.title})`, 'chapter-analysis');
   });
-}
-function parsePuzzle(t) {
-  const m = t.match(/【謎面】\s*([\s\S]*?)\s*【謎底】\s*([\s\S]*)/);
-  return m ? { question: m[1].trim(), answer: m[2].trim() } : null;
 }
 
 /* ==============================================================
@@ -231,34 +250,22 @@ $in.addEventListener('keypress', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
 });
 
+/* AI 分析按鈕 */
+if ($analyzeBtn) {
+  $analyzeBtn.addEventListener('click', () => {
+    analyzeChapter(currentChapterData);
+  });
+}
+
 function sendMsg() {
   const txt = $in.value.trim(); if (!txt) return;
   append('user', txt); $in.value = '';
   addConversationEntry('user', txt, 'user-message');
   trackChapterDiscussion(currentChapterData, txt);
 
-  /* 用戶要求再來海龜湯 */
-  if (/海龜湯|再來|再做/.test(txt) && currentChapterData) {
-    puzzleSolved = false; currentTurtleSoup = null; genTurtleSoup(currentChapterData); return;
-  }
-
-  /* 海龜湯進行中 */
-  if (currentTurtleSoup) {          // 若為 null 則直接普通對話
-    loading('思索中…');
-    const puzzlePrompt = `【謎面】${currentTurtleSoup.question}
-【謎底】${currentTurtleSoup.answer}
-客官：「${txt}」
-僅回答「是」「否」「無關」。猜中則祝賀並解釋。`;
-    askLLM(puzzlePrompt, res => {
-      loading(false);
-      append('ai', res);
-      addConversationEntry('model', res, 'assistant-message');
-      if (res.includes('恭喜你解開謎題')) {
-        /* —— 用戶猜中：轉入普通對話 —— */
-        puzzleSolved = true; currentTurtleSoup = null;
-      }
-    });
-    return;
+  /* 用戶輸入「分析」觸發章節分析 */
+  if (/^分析|^AI分析|^考點/.test(txt) && currentChapterData) {
+    analyzeChapter(currentChapterData); return;
   }
 
   /* 普通對話 */
@@ -352,7 +359,9 @@ function trimHist(n) {
 function resetState() {
   $msg.innerHTML = '';
   conversationHistory = []; currentChapterData = null; resetConversationSession();
-  currentTurtleSoup = null; puzzleSolved = false; initialContentInfo = null;
+  initialContentInfo = null;
+  // 隱藏 AI 分析按鈕
+  if ($analyzeBtn) $analyzeBtn.style.display = 'none';
 }
 
 /* ==============================================================

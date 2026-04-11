@@ -386,7 +386,7 @@ body {
 }
 
 
-/* 輸入區域 (保持不變) */
+/* 輸入區域 */
 #input-area {
     display: flex;
     gap: 10px;
@@ -394,6 +394,37 @@ body {
     border-top: 1px solid var(--ghibli-panel-border);
     background-color: var(--ghibli-panel-bg);
     flex-shrink: 0;
+    align-items: center;
+}
+
+/* AI 分析按鈕 */
+#ai-analyze-btn {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #d4a574, #c4956a);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(180, 140, 90, 0.25);
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+#ai-analyze-btn:hover {
+    background: linear-gradient(135deg, #c4956a, #b4855a);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(180, 140, 90, 0.35);
+}
+#ai-analyze-btn:active {
+    transform: translateY(0);
+}
+body.dark-mode #ai-analyze-btn {
+    background: linear-gradient(135deg, #8b6914, #a07828);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+body.dark-mode #ai-analyze-btn:hover {
+    background: linear-gradient(135deg, #a07828, #b8903c);
 }
 
 #user-input {
