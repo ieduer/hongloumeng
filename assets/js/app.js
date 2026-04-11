@@ -105,6 +105,7 @@ function addConversationEntry(role, content, reason = 'update') {
 document.addEventListener('DOMContentLoaded', () => {
   mountIdentity();
   resetConversationSession();
+  loadLocalHlmReadProgress();
   Promise.all([
     fetch('data/hongloumeng.json').then(r => r.ok ? r.json() : Promise.reject(r.status)),
     fetch('data/shici.json').then(r => r.ok ? r.json() : Promise.reject(r.status))
@@ -112,6 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(([hlm, sc]) => {
       hongloumengData = hlm; shiciData = sc;
       loadInitialPoem(); loadChapterMenu();
+      // 菜單渲染完成後，從用戶系統拉一次遠端進度並合併
+      hydrateReadProgressFromIdentity();
     })
     .catch(e => {
       console.error(e);
@@ -191,6 +194,7 @@ function loadChapter(ch) {
   resetState(); currentChapterData = ch;
   append('ai', `<h3>${ch.chapter}  ${ch.title}</h3>\n${formatContentForDisplay(ch.content)}`, ['chapter-content-display']);
   addConversationEntry('ai', `(展示${ch.chapter}${ch.title}全文)`, 'chapter-open');
+  markHlmChapterRead(ch);
   trackChapterReading(ch);
   genTurtleSoup(ch);
 }
@@ -386,3 +390,84 @@ $dark.addEventListener('click', () => {
   localStorage.setItem('theme',
     document.body.classList.contains('dark-mode') ? 'dark' : 'light');
 });
+
+/* ==============================================================
+   已讀進度追蹤/顯示 (Read Progress Visual Indicator)
+   ============================================================== */
+
+// 本地已讀進度 Set
+let hlmReadSet = new Set();
+let hlmInProgressSet = new Set();
+
+function loadLocalHlmReadProgress() {
+  try {
+    const stored = localStorage.getItem('hlm_read_progress');
+    hlmReadSet = stored ? new Set(JSON.parse(stored)) : new Set();
+  } catch (e) { hlmReadSet = new Set(); }
+}
+
+function saveLocalHlmReadProgress() {
+  try {
+    localStorage.setItem('hlm_read_progress', JSON.stringify([...hlmReadSet]));
+  } catch (e) { /* quota */ }
+}
+
+function markHlmChapterRead(ch) {
+  if (!ch) return;
+  const key = chapterItemKey(ch);
+  hlmReadSet.add(key);
+  hlmInProgressSet.delete(key);
+  saveLocalHlmReadProgress();
+  updateChapterMenuReadStatus();
+}
+
+// 更新目錄中已讀/進行中狀態
+function updateChapterMenuReadStatus() {
+  if (!hongloumengData?.chapters) return;
+  const buttons = $menu.querySelectorAll('button');
+  hongloumengData.chapters.forEach((ch, idx) => {
+    const btn = buttons[idx];
+    if (!btn) return;
+    const key = chapterItemKey(ch);
+    btn.classList.remove('read', 'reading');
+    if (hlmReadSet.has(key)) {
+      btn.classList.add('read');
+    } else if (hlmInProgressSet.has(key)) {
+      btn.classList.add('reading');
+    }
+  });
+}
+
+// 從 BdfzIdentity 拉取遠端進度，與本地合併
+async function hydrateReadProgressFromIdentity() {
+  const identity = getIdentity();
+  if (!identity || typeof identity.api !== 'function') {
+    console.debug('[hlm] hydrateReadProgressFromIdentity skipped: no identity or API');
+    updateChapterMenuReadStatus();
+    return;
+  }
+  try {
+    const payload = await identity.api(`/api/progress?site=${encodeURIComponent(SITE_KEY)}`);
+    const items = Array.isArray(payload?.items) ? payload.items : [];
+    if (!items.length) { updateChapterMenuReadStatus(); return; }
+
+    items.forEach(item => {
+      const key = String(item?.itemKey || '');
+      if (!key.startsWith('chapter-')) return;
+      const isDone = item.state === 'done' || Number(item.progressPercent) >= 100;
+      const isInProgress = item.state === 'in_progress';
+      if (isDone) {
+        hlmReadSet.add(key);
+        hlmInProgressSet.delete(key);
+      } else if (isInProgress && !hlmReadSet.has(key)) {
+        hlmInProgressSet.add(key);
+      }
+    });
+
+    saveLocalHlmReadProgress();
+    updateChapterMenuReadStatus();
+  } catch (e) {
+    console.debug('[hlm] hydrateReadProgressFromIdentity skipped:', e?.message || e);
+    updateChapterMenuReadStatus();
+  }
+}

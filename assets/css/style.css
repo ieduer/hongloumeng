@@ -659,3 +659,167 @@ body.dark-mode .message-bubble pre {
     font-size: 0.9em;
     color: #333;
 }
+
+/* =======================================
+   骨架屏加載動畫
+   ======================================= */
+.skeleton-bubble {
+    max-width: 60%;
+    padding: 18px 22px;
+    border-radius: 18px;
+    margin-bottom: 12px;
+    background-color: var(--ghibli-ai-msg-bg);
+    margin-right: auto;
+}
+.skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 7px;
+    margin-bottom: 10px;
+}
+.skeleton-line.short {
+    width: 60%;
+}
+.skeleton-line:last-child {
+    margin-bottom: 0;
+    width: 80%;
+}
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+body.dark-mode .skeleton-bubble {
+    background-color: var(--ghibli-dark-ai-msg-bg);
+}
+body.dark-mode .skeleton-line {
+    background: linear-gradient(90deg, #3a3a3a 25%, #4a4a4a 50%, #3a3a3a 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* =======================================
+   重試按鈕樣式
+   ======================================= */
+.retry-btn {
+    font-family: 'HuWenMingChaoTi', "Noto Serif TC", serif;
+    background: linear-gradient(135deg, var(--ghibli-button-even-start), var(--ghibli-button-even-end));
+    border: none;
+    border-radius: 15px;
+    padding: 6px 14px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--ghibli-button-text);
+    transition: transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.retry-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+.retry-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+body.dark-mode .retry-btn {
+    background: linear-gradient(135deg, var(--ghibli-dark-button-even-start), var(--ghibli-dark-button-even-end));
+    color: var(--ghibli-dark-button-text);
+}
+
+/* =======================================
+   移動端觸摸優化
+   ======================================= */
+#chapter-menu button,
+.ghibli-button,
+.retry-btn {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 按鈕觸摸反饋 */
+#chapter-menu button:active,
+.ghibli-button:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+}
+
+/* 防止移動端意外縮放 */
+@media (max-width: 768px) {
+    input, button, select, textarea {
+        font-size: 16px; /* 防止 iOS 自動縮放 */
+    }
+    
+    #user-input:focus {
+        font-size: 16px;
+    }
+}
+
+/* =======================================
+   已讀狀態徽章 (Chapter Button Read Status)
+   ======================================= */
+/* 已讀：左側綠色強調條 + 右側圓形勾選徽章 */
+#chapter-menu button.read {
+    position: relative;
+    border-left: 3px solid #556B2F !important;
+    padding-right: 2.2rem;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9) !important;
+    border-color: #556B2F !important;
+    color: #33691e !important;
+}
+
+#chapter-menu button.read::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='9' fill='%23556B2F'/><path d='M6 10.2 L8.6 12.8 L14 7.6' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
+    transition: transform 0.15s ease;
+}
+
+#chapter-menu button.read:hover::after {
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* 進行中（打開過但未完成對話）：空心環 */
+#chapter-menu button.reading {
+    position: relative;
+    border-left: 3px solid #4a90c2 !important;
+    padding-right: 2.2rem;
+}
+
+#chapter-menu button.reading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='8' fill='none' stroke='%234a90c2' stroke-width='2'/><circle cx='10' cy='10' r='3' fill='%234a90c2'/></svg>") center/contain no-repeat;
+}
+
+/* 深色模式已讀章節按鈕 */
+body.dark-mode #chapter-menu button.read {
+    background: linear-gradient(135deg, #2a5a3a, #3a6a4a) !important;
+    border-color: #8bc48b !important;
+    border-left-color: #c8e6c9 !important;
+    color: #c8e6c9 !important;
+}
+
+body.dark-mode #chapter-menu button.read::after {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='9' fill='%23b5d89a'/><path d='M6 10.2 L8.6 12.8 L14 7.6' fill='none' stroke='%231f2b16' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+}
+
+body.dark-mode #chapter-menu button.reading {
+    border-left-color: #5a8ab5 !important;
+}
+
+body.dark-mode #chapter-menu button.reading::after {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='8' fill='none' stroke='%235a8ab5' stroke-width='2'/><circle cx='10' cy='10' r='3' fill='%235a8ab5'/></svg>") center/contain no-repeat;
+}
