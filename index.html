@@ -1,61 +1,77 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-theme="light">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="https://raw.githubusercontent.com/gptv/suen/main/images/Avatar-small.jpeg" type="image/jpeg">
-    <!-- Favicon links -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <title>AI红楼梦</title>
-    <meta name="description" content="與 AI 曹雪芹對話，探索《紅樓夢》的章節人物、情節分析與高考考點解讀。體驗經典文學與現代 AI 的結合。">
-    <meta name="keywords" content="紅樓夢,AI,曹雪芹,詩詞,人物分析,高考,經典文學">
-    <meta name="author" content="Suen">
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "qylogg7onq");
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>紅樓夢 · 整本書閱讀與北京卷真題</title>
+  <meta name="description"
+    content="《紅樓夢》一百二十回全文閱讀，北京高考歷年《紅樓夢》真題全編（2005—2026）、人物分析、詩詞判詞索引、每日進度計畫與日常閱讀方法建議。" />
+  <meta name="keywords" content="紅樓夢,北京高考,名著閱讀,整本書閱讀,判詞,金陵十二釵,微寫作,人物分析,曹雪芹" />
+  <meta name="author" content="Suen" />
+  <meta name="theme-color" content="#f6f1e7" />
+  <link rel="icon" href="https://raw.githubusercontent.com/gptv/suen/main/images/Avatar-small.jpeg" type="image/jpeg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="preload" href="assets/fonts/HuWenMingChaoTi.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/study.css?v=2026090905" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('hlm_theme');
+        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+      } catch (e) { }
+    })();
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "qylogg7onq");
+  </script>
 </head>
+
 <body>
-    <div id="container">
-        <aside id="sidebar">
-            <button id="menu-label-btn" class="ghibli-button toggle-menu">目錄</button>
-            <div id="chapter-menu-container">
-                 <nav id="chapter-menu"></nav>
-            </div>
-        </aside>
-
-        <div id="main-content">
-            <header>
-                <h1>AI红楼梦</h1>
-                <button id="toggle-dark-btn" title="切換夜晚模式" aria-label="切換深色模式" class="ghibli-button dark-mode-toggle">🌓</button>
-            </header>
-
-            <section id="dialogue-box">
-                <div id="messages">
-                    <!-- 內容由 JS 加載 -->
-                </div>
-                <div id="input-area">
-                    <button id="ai-analyze-btn" class="ghibli-button analyze" title="AI 分析本章人物與高考考點" aria-label="AI 分析本章" style="display:none;">📖 AI分析</button>
-                    <input type="text" id="user-input" placeholder="與曹雪芹聊聊紅樓夢..." aria-label="在此輸入訊息">
-                    <button id="chat-button" class="ghibli-button chat" aria-label="發送訊息">發送</button>
-                </div>
-            </section>
-        </div>
+  <header class="top">
+    <div class="top-in">
+      <a class="brand" href="#/"><b>紅樓夢</b><span>整本書閱讀 · 北京卷</span></a>
+      <nav class="tabs" id="tabs"></nav>
+      <div class="top-tools">
+        <button class="icon-btn" id="btn-search" title="全站搜尋（按 /）" aria-label="搜尋">⌕</button>
+        <button class="icon-btn" id="btn-theme" title="切換深淺色" aria-label="切換深淺色">◐</button>
+      </div>
     </div>
+  </header>
 
-    <!-- Footer -->
-    <footer>
-        <!-- target="_blank" and rel="noopener noreferrer" ensure link opens in new tab securely -->
-        <p>© Suen <a href="https://bdfz.net/posts/hlm" target="_blank" rel="noopener noreferrer">About</a></p>
-    </footer>
+  <main id="view" class="wrap" role="main"></main>
 
-    <script src="https://my.bdfz.net/site-auth.js"></script>
-    <script src="assets/js/app.js"></script>
+  <footer class="foot">
+    《紅樓夢》正文為公有領域文本；詩詞註釋採自公開的《紅樓夢》詩詞鑑賞資料。
+    真題題面據北京卷原卷／解析卷校訂，答案來源逐題標註。<br>
+    © Suen · <a href="https://bdfz.net/posts/hlm" target="_blank" rel="noopener noreferrer">關於本站</a>
+  </footer>
+
+  <button class="ai-fab" id="ai-fab" title="問一問（AI 助讀）" aria-label="AI 助讀">問</button>
+  <div class="scrim" id="scrim"></div>
+  <aside class="ai-panel" id="ai-panel" aria-label="AI 助讀">
+    <div class="ai-head">
+      <h3 id="ai-title">問一問</h3>
+      <button class="icon-btn" id="ai-clear" title="清空對話">↺</button>
+      <button class="icon-btn" id="ai-close" title="關閉">✕</button>
+    </div>
+    <div class="ai-log" id="ai-log"></div>
+    <div class="ai-quick" id="ai-quick"></div>
+    <div class="ai-in">
+      <input id="ai-input" type="text" placeholder="就眼前這一段問點什麼…" aria-label="輸入問題">
+      <button class="btn primary" id="ai-send">送出</button>
+    </div>
+  </aside>
+
+  <script defer src="https://my.bdfz.net/site-auth.js" data-site-key="hlm" data-position="left"></script>
+  <script src="assets/js/app.js?v=2026090905"></script>
 </body>
+
 </html>
