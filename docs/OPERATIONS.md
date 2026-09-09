@@ -77,8 +77,12 @@ category and order across all of them:
 
 1. `services/bdfz-nav/sites.json` — 操練 · 答題
 2. `sites/tools/allinone-pages/public/index.html` `#portalGroups` — `drill`
-3. `apps/bdfz-companion/constants/sites.ts` `SERVICES`
-4. `bdfz-user-center/src/index.js` `SITE_REGISTRY` (key `hlm`)
+3. `apps/bdfz-companion/constants/sites.ts` `SERVICES` — **not yet added**; that
+   checkout sits on someone else's in-flight branch and the entry only takes
+   effect with an APK rebuild. Handle it inside the Companion's own release.
+4. `bdfz-user-center/src/index.js` `SITE_REGISTRY` (key `hlm`) — already present
+   and untouched; its display title still reads `AI 红楼梦`. That repo has
+   fingerprint interlocks and its own release gate, so do not edit it casually.
 
 It also appears on the shared bookshelf `coread.bdfz.net`
 (`sites/reading/bookshelf/public/books.js`, key `hlm`).

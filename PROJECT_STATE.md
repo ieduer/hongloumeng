@@ -44,8 +44,32 @@ Operations authority: [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
 - 本機驗證：七個分頁、閱讀器、真題展開、搜尋、深色、行動端、AI 抽屜（實測一次成功回答）
   皆通過；`node --check` 通過；`scripts/build_study.py` 產出穩定（120／130／44／3）。
-- 部署：見下方 action log。
-- 導航回掛：`hlm.bdfz.net` 需同時出現在四個導航面（見 OPERATIONS）與共讀書架。
+
+### 部署記錄 2026-09-09
+
+| 項目 | 動作 | 結果 |
+|---|---|---|
+| Pages `hongloumeng` | push `main` → `4c2b563` 觸發 Git 整合建置 | production `c6983950-76ce-441e-b473-3c074474d010`，deploy success |
+| 線上驗證 | `/`、`data/study/{exams,chapters,people,poems,plans}.json`、`data/authored/method.json`、`data/text/ch001.json`、css/js | 全 200，型別正確；exams 17／people 44／poems 130／plans 100·60·30 |
+| 瀏覽器驗證 | 首頁、`#/read/74`（正文 23 段實際渲染）、`#/exam/bj2026-15`（材料＋題幹＋答案解析） | 通過；主控台僅有 my.bdfz.net 未登入的 401 |
+| Pages `allinone`（i.rdfzer.com） | 加入門戶 drill 組末位，push `ad96d69` → `npm run deploy` | 已上線，`npm run verify:live` result=pass |
+| Pages `bdfz-nav`（nav.bdfz.net） | sites.json 操練·答題 加 `紅樓夢`，catalog 14 → 15，push `2c0372e` → wrangler pages deploy | 線上 `sites.json` version=15，drill 21 項含 hlm |
+
+回滾錨點：Pages `hongloumeng` 前一個 production 部署
+`c7237604-c369-4524-b5c0-fe6632c47e2d`（commit `afac37e86d`）。
+`allinone` 與 `bdfz-nav` 的回滾為各自 repo 的前一提交（`3b3acc5` / `2f1da77`）。
+
+### 導航登記狀態（四個面）
+
+| 面 | 狀態 |
+|---|---|
+| `services/bdfz-nav/sites.json`（導航 js 的站點清單） | ✅ 已加、已發佈、已驗證 |
+| `sites/tools/allinone-pages/public/index.html#portalGroups`（i.rdfzer.com） | ✅ 已加、已發佈、已驗證 |
+| `bdfz-user-center/src/index.js` `SITE_REGISTRY` | ✅ key `hlm` 本來就在，未改動（該倉庫有指紋互鎖與獨立發佈閘；僅標題字樣仍是舊的「AI 红楼梦」） |
+| `apps/bdfz-companion/constants/sites.ts` `SERVICES` | ⏸ **未加**：該倉庫目前 checkout 在他人進行中的分支 `codex/my-fleet-companion-verification-20260902`，且改動須配 APK 重新建置才生效。已把工作區還原為原狀，留待 Companion 自己的發佈交易處理 |
+
+`coread.bdfz.net` 共讀書架的 `hlm` 條目本來就在，本次未動（其書卡文案仍寫「AI精讀專題」，
+可在書架自己的發佈中順手更新為「北京卷真題全編」）。
 
 ## 未決 / 風險
 
