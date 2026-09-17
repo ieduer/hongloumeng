@@ -376,3 +376,9 @@ mark { background: color-mix(in srgb, var(--gold) 35%, transparent); color: inhe
   body { background: #fff; }
   .card { box-shadow: none; border-color: #ccc; }
 }
+
+/* Keep mobile controls within the viewport; visible keyboard focus. */
+.tabs, .ai-in input, .reader { min-width: 0; }
+:focus-visible { outline: 2px solid var(--qing); outline-offset: 3px; }
+.research-links h3 { font-size: 15px; }
+.research-item h2 { font-size: 21px; }

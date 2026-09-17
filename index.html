@@ -11,15 +11,13 @@
   <meta name="author" content="Suen" />
   <meta name="theme-color" content="#f6f1e7" />
   <link rel="icon" href="https://raw.githubusercontent.com/gptv/suen/main/images/Avatar-small.jpeg" type="image/jpeg">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="preload" href="assets/fonts/HuWenMingChaoTi.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/study.css?v=2026090905" />
+  <link rel="stylesheet" href="assets/css/study.css?v=2026091701" />
   <script>
     (function () {
       try {
-        var t = localStorage.getItem('hlm_theme');
+        var t = JSON.parse(localStorage.getItem('hlm_theme') || 'null');
+        if (t !== 'dark' && t !== 'light') t = null;
         if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = t;
       } catch (e) { }
@@ -71,7 +69,7 @@
   </aside>
 
   <script defer src="https://my.bdfz.net/site-auth.js" data-site-key="hlm" data-position="left"></script>
-  <script src="assets/js/app.js?v=2026090905"></script>
+  <script src="assets/js/app.js?v=2026091701"></script>
 </body>
 
 </html>

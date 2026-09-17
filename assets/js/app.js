@@ -5,7 +5,7 @@
 'use strict';
 
 const SITE_KEY = 'hlm';
-const V = 'v=2026090905';
+const V = 'v=2026091701';
 
 /* ---------------- 小工具 ---------------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -48,6 +48,7 @@ const D = {
   method: () => getJSON('data/authored/method.json'),
   text: (n) => getJSON('data/text/ch' + String(n).padStart(3, '0') + '.json'),
   full: () => getJSON('data/hongloumeng.json'),
+  research: () => getJSON('data/authored/research.json'),
 };
 
 /* ---------------- 進度（沿用舊版 itemKey 契約） ---------------- */
@@ -93,7 +94,7 @@ async function hydrateProgress() {
 }
 
 /* ---------------- 全域狀態 ---------------- */
-const state = { chapters: null, route: null, peopleNames: null };
+const state = { chapters: null, route: null, peopleNames: null, renderId: 0 };
 const prefs = Object.assign({ size: 19, lh: 2.05, width: 34 }, store.get('hlm_reader_prefs', {}));
 function applyPrefs() {
   const r = document.documentElement.style;
@@ -133,6 +134,7 @@ function parseRoute() {
 }
 
 async function render() {
+  const renderId = ++state.renderId;
   const r = parseRoute();
   state.route = r;
   renderTabs();
@@ -149,13 +151,15 @@ async function render() {
     else if (page === 'plan') await viewPlan(view, r);
     else if (page === 'method') await viewMethod(view);
     else if (page === 'search') await viewSearch(view, r);
+    else if (page === 'research') await viewResearch(view, r);
     else view.innerHTML = '<p class="muted">找不到這一頁。<a href="#/">回首頁</a></p>';
   } catch (e) {
+    if (renderId !== state.renderId) return;
     console.error(e);
     view.innerHTML = `<div class="card pad"><h3>載入失敗</h3><p class="muted small">${esc(e.message || e)}</p>
       <p><button class="btn" onclick="location.reload()">重新載入</button></p></div>`;
   }
-  updateAIContext();
+  if (renderId === state.renderId) updateAIContext();
 }
 
 function skeleton(view, n = 6) {
@@ -170,16 +174,22 @@ function skeleton(view, n = 6) {
 function planState() {
   return Object.assign({ paceId: null, start: null }, store.get('hlm_plan', {}));
 }
-function planDayNumber(ps) {
-  if (!ps.start) return null;
-  const a = new Date(ps.start + 'T00:00:00');
-  const b = new Date(); b.setHours(0, 0, 0, 0);
-  return Math.floor((b - a) / 86400000) + 1;
+function localDate(date = new Date()) {
+  return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+}
+function planDayNumber(ps, today = new Date()) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ps.start || '')) return null;
+  const start = Date.parse(ps.start + 'T00:00:00Z');
+  if (!Number.isFinite(start)) return null;
+  const now = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+  return Math.floor((now - start) / 86400000) + 1;
 }
 
 async function viewHome(view) {
+  const renderId = state.renderId;
   skeleton(view, 5);
   const [chs, plans, poems, exams] = await Promise.all([D.chapters(), D.plans(), D.poems(), D.exams()]);
+  if (renderId !== state.renderId) return;
   state.chapters = chs;
   const done = chs.items.filter(c => isRead(c.n)).length;
   const pct = Math.round(done / 120 * 100);
@@ -251,6 +261,7 @@ async function viewHome(view) {
     <div class="lines">${esc(pick.lines.join('\n'))}</div>
     <p class="small muted" style="margin:0">${esc((pick.explanation || '').slice(0, 130))}${(pick.explanation || '').length > 130 ? '…' : ''}
       <a href="#/poems?q=${encodeURIComponent(pick.title)}">全文與註釋</a></p>
+    ${pick.qualityNote ? `<p class="tiny muted">${esc(pick.qualityNote)}</p>` : ''}
   </div>` : ''}
 
   <div class="grid g4">
@@ -261,12 +272,12 @@ async function viewHome(view) {
     <a class="entry" href="#/poems"><div class="num">${poems.items.length}</div><h3>詩詞與判詞</h3>
       <p>依回目、人物、類別（判詞／十二支曲／詩社／燈謎／對聯）交叉檢索。</p></a>
     <a class="entry" href="#/method"><div class="num">七</div><h3>日常閱讀方法</h3>
-      <p>從「人名記不住」到答題模板：每天四十分鐘的標準動作與四張必備的表。</p></a>
+      <p>日常閱讀、證據組織與十項自查，附論文導讀考點卡。</p></a>
   </div>`;
 
   $$('[data-pace]', view).forEach(b => b.onclick = () => {
     const today = new Date();
-    store.set('hlm_plan', { paceId: b.dataset.pace, start: today.toISOString().slice(0, 10) });
+    store.set('hlm_plan', { paceId: b.dataset.pace, start: localDate(today) });
     render();
   });
   $$('#today-tasks li', view).forEach(li => li.onclick = () => {
@@ -297,7 +308,9 @@ function tocHTML(chs, cur, filter) {
 }
 
 async function viewRead(view, r) {
+  const renderId = state.renderId;
   const chs = await D.chapters();
+  if (renderId !== state.renderId) return;
   state.chapters = chs;
   const n = Math.min(120, Math.max(1, parseInt(r.seg[1] || (store.get('hlm_last', {}).n) || 1, 10) || 1));
   const meta = chs.items[n - 1];
@@ -363,7 +376,8 @@ async function viewRead(view, r) {
   };
 
   // 側欄
-  const [poems, exams, people] = await Promise.all([D.poems(), D.exams(), D.people()]);
+  const [poems, exams, people, research] = await Promise.all([D.poems(), D.exams(), D.people(), D.research()]);
+  if (renderId !== state.renderId) return;
   const sideParts = [];
   if (meta.exams.length) {
     sideParts.push(`<div class="card pad side-box"><h4>本回真題</h4><ul>${meta.exams.map(id => {
@@ -387,11 +401,13 @@ async function viewRead(view, r) {
   sideParts.push(`<div class="card pad side-box"><h4>助讀</h4>
     <p class="tiny muted" style="margin:0 0 8px">讀完寫三行：本回發生了什麼／誰變了／埋了什麼。</p>
     <button class="btn" id="ai-chapter" style="width:100%">請 AI 解讀本回</button></div>`);
+  sideParts.push(researchLinks(research, 'chapters', n));
   $('#side').innerHTML = sideParts.join('');
   $('#ai-chapter').onclick = () => { openAI(); askChapter(n, meta.title); };
 
   // 正文
   const doc = await D.text(n);
+  if (renderId !== state.renderId) return;
   const marks = new Set(store.get('hlm_marks_' + n, []));
   const paras = doc.content.split(/\n+/).map(s => s.trim()).filter(Boolean);
   $('#body').innerHTML = paras.map((p, i) =>
@@ -431,7 +447,7 @@ function examCardHTML(it, open) {
           ${it.chapters.length ? `<span>涉及 ${it.chapters.slice(0, 4).map(chLabel).join('、')}${it.chapters.length > 4 ? '等' : ''}</span>` : ''}
         </span>
       </span>
-      <span class="muted">${open ? '收合 ▴' : '展開 ▾'}</span>
+      <span class="muted exam-toggle">${open ? '收合 ▴' : '展開 ▾'}</span>
     </button>
     ${open ? examBodyHTML(it) : ''}
   </article>`;
@@ -462,6 +478,7 @@ function examBodyHTML(it) {
       </div>
       ${it.tips ? `<div class="ans"><h4>備考提示</h4><div class="body">${esc(it.tips)}</div></div>` : ''}
     </details>
+    ${researchLinks(state.research, 'examIds', it.id)}
 
     <div class="filters" style="margin:14px 0 0">
       ${it.points.map(p => `<span class="chip">${esc(p)}</span>`).join('')}
@@ -475,8 +492,11 @@ function examBodyHTML(it) {
 }
 
 async function viewExam(view, r) {
-  const [exams, people] = await Promise.all([D.exams(), D.people()]);
+  const renderId = state.renderId;
+  const [exams, people, research] = await Promise.all([D.exams(), D.people(), D.research()]);
+  if (renderId !== state.renderId) return;
   state.peopleNames = new Set(people.items.map(x => x.name));
+  state.research = research;
   const single = r.seg[1];
   if (single) {
     const it = exams.items.find(x => x.id === single);
@@ -503,8 +523,8 @@ async function viewExam(view, r) {
   <div class="card pad" style="margin-bottom:16px">
     <div class="small" style="line-height:1.9">
       <b>二十年一條線。</b>2005、2009 年只是題面出現書名；2014 年考一句詩對一個人；2017 年進入文學類文本末題與微寫作；
-      2020 年起固定為「一段原文 ＋ 兩問」的名著閱讀專題題，分值由 5 分加到 10 分。
-      近六年的固定結構是：<b class="zhu">第一問就材料讀人物，第二問跳出材料串情節</b>——前者考細讀，後者考通讀，缺一半失一半分。
+      2020 年以來，名著閱讀更重視材料分析與全書聯繫，具體題型、設問和分值以各年題面為準。
+      備考要兼顧<b class="zhu">材料細讀與全書情節印證</b>；先看題幹要求，再決定使用哪些證據，不能預設每題都有相同的兩問結構。
     </div>
   </div>
   <div class="filters">
@@ -520,10 +540,10 @@ function bindExam(root, exams) {
     const art = h.parentElement;
     const it = exams.items.find(x => x.id === h.dataset.id);
     const isOpen = !!$('.exam-body', art);
-    if (isOpen) { $('.exam-body', art).remove(); $('.muted', h).textContent = '展開 ▾'; }
+    if (isOpen) { $('.exam-body', art).remove(); $('.exam-toggle', h).textContent = '展開 ▾'; }
     else {
       art.insertAdjacentHTML('beforeend', examBodyHTML(it));
-      $('.muted', h).textContent = '收合 ▴';
+      $('.exam-toggle', h).textContent = '收合 ▴';
       bindExamBody(art, it);
     }
   });
@@ -543,7 +563,9 @@ function bindExamBody(art, it) {
    人物
    ============================================================= */
 async function viewPeople(view, r) {
-  const [people, exams, poems] = await Promise.all([D.people(), D.exams(), D.poems()]);
+  const renderId = state.renderId;
+  const [people, exams, poems, research] = await Promise.all([D.people(), D.exams(), D.poems(), D.research()]);
+  if (renderId !== state.renderId) return;
   const name = r.seg[1] ? decodeURIComponent(r.seg[1]) : null;
 
   if (name) {
@@ -601,6 +623,7 @@ async function viewPeople(view, r) {
       <ul class="bullet" style="margin-top:10px">${p.pitfalls.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
     </div>
 
+    ${researchLinks(research, 'people', p.name)}
     ${p.examIds.length ? `<div class="card pad">
       <h3 style="font-size:17px">關聯真題</h3>
       <ul class="bullet" style="margin-top:10px">${p.examIds.map(id => {
@@ -638,21 +661,24 @@ async function viewPeople(view, r) {
    詩詞
    ============================================================= */
 async function viewPoems(view, r) {
+  const renderId = state.renderId;
   const [poems, chs, people] = await Promise.all([D.poems(), D.chapters(), D.people()]);
+  if (renderId !== state.renderId) return;
   state.peopleNames = new Set(people.items.map(x => x.name));
-  const kind = r.q.get('kind') || 'all';
+  const kind = (r.q.get('kind') || 'all').replace('判詞', '判词');
   const q = (r.q.get('q') || '').trim();
   const kinds = ['判词', '红楼梦十二支曲', '诗词', '对联匾额', '灯谜谶语', '诔赋', '歌谣曲词'];
   let items = poems.items.filter(p => kind === 'all' || p.kind === kind);
   if (q) items = items.filter(p => p.title.includes(q) || p.lines.join('').includes(q)
-    || (p.explanation || '').includes(q) || p.people.some(n => n.includes(q)));
+    || [p.explanation, p.annotations, p.appreciation].some(t => (t || '').includes(q)) || p.people.some(n => n.includes(q)));
 
   view.innerHTML = `
   <div class="page-head">
     <h1>詩詞與判詞</h1>
-    <p>全書 ${poems.items.length} 篇詩詞曲賦、判詞、對聯與燈謎，附原註與鑑賞，並標明所在回目與歸屬人物。
+    <p>現收 ${poems.items.length} 篇詩詞曲賦、判詞、對聯與燈謎，附原註與鑑賞，並標明所在回目與歸屬人物。
       第五回的判詞與《紅樓夢》十二支曲是全書的「壓縮檔案」，也是北京卷 2020 年真題的直接出處。</p>
   </div>
+  ${kind === '判词' ? `<p class="plan-note">${esc(poems.meta.verdictNote)}</p><p class="small"><a href="#/research/method-8">怎樣讀判詞：圖像、字詞、人物與後文互證</a></p>` : ''}
   <div class="filters">
     <a class="chip ${kind === 'all' ? 'on' : ''}" href="#/poems">全部 ${poems.items.length}</a>
     ${kinds.map(k => {
@@ -661,11 +687,11 @@ async function viewPoems(view, r) {
   }).join('')}
   </div>
   <div class="card pad" style="margin-bottom:16px">
-    <input class="toc-search" id="pq" type="search" placeholder="搜詩題、詩句、人物或註解…" value="${esc(q)}" />
+    <input class="toc-search" id="pq" type="search" aria-label="搜尋詩詞與判詞" placeholder="搜詩題、詩句、人物或註解…" value="${esc(q)}" />
   </div>
   <div>${items.length ? items.map(p => `
     <article class="card poem-item">
-      <h3>${esc(p.title)}</h3>
+      <h3>${esc(p.title)}${p.kind === '判词' ? ' · ' + p.people.map(esc).join('、') : ''}</h3>
       <div class="filters" style="margin:6px 0 0">
         <span class="chip">${esc(p.kind)}</span>
         ${p.chapters.map(c => `<a class="chip qing" href="#/read/${c}">${chLabel(c)}</a>`).join('')}
@@ -674,8 +700,13 @@ async function viewPoems(view, r) {
           : `<span class="chip gold">${esc(n)}</span>`).join('')}
       </div>
       ${p.lines.length ? `<div class="lines">${esc(p.lines.join('\n'))}</div>` : ''}
-      ${p.text ? `<p class="note">${esc(p.text.slice(0, 400))}${p.text.length > 400 ? '…' : ''}</p>` : ''}
-      ${p.explanation ? `<p class="note"><b>【鑑賞】</b>${esc(p.explanation)}</p>` : ''}
+      ${p.painting ? `<p class="note"><b>【畫面】</b>${esc(p.painting)}</p>` : ''}
+      ${p.text ? `<details class="anno"><summary>原資料全文</summary><p class="note">${esc(p.text)}</p></details>` : ''}
+      ${p.explanation ? `<p class="note"><b>【說明】</b>${esc(p.explanation)}</p>` : ''}
+      ${p.appreciation ? `<details class="anno"><summary>鑑賞</summary><p class="note">${esc(p.appreciation)}</p></details>` : ''}
+      ${p.sourceNote ? `<p class="note">${esc(p.sourceNote)}</p>` : ''}
+      ${p.qualityNote ? `<p class="tiny muted">${esc(p.qualityNote)}</p>` : ''}
+      ${p.source && /^https?:\/\//.test(p.source) ? `<p class="tiny"><a href="${esc(p.source)}" target="_blank" rel="noopener noreferrer">詩詞來源</a></p>` : ''}
       ${p.annotations ? `<details class="anno"><summary>註釋</summary><p class="note">${esc(p.annotations)}</p></details>` : ''}
     </article>`).join('') : '<p class="muted">沒有符合的詩詞。</p>'}</div>`;
 
@@ -687,7 +718,9 @@ async function viewPoems(view, r) {
    進度
    ============================================================= */
 async function viewPlan(view, r) {
+  const renderId = state.renderId;
   const [plans, chs] = await Promise.all([D.plans(), D.chapters()]);
+  if (renderId !== state.renderId) return;
   state.chapters = chs;
   const ps = planState();
   const pid = r.q.get('pace') || ps.paceId || 'steady60';
@@ -738,12 +771,12 @@ async function viewPlan(view, r) {
   </div>`;
 
   $$('[data-start]', view).forEach(b => b.onclick = () => {
-    store.set('hlm_plan', { paceId: b.dataset.start, start: new Date().toISOString().slice(0, 10) });
+    store.set('hlm_plan', { paceId: b.dataset.start, start: localDate() });
     location.hash = '#/plan?pace=' + b.dataset.start;
     render();
   });
   const rp = $('#reset-plan');
-  if (rp) rp.onclick = () => { store.set('hlm_plan', { paceId: plan.id, start: new Date().toISOString().slice(0, 10) }); render(); };
+  if (rp) rp.onclick = () => { store.set('hlm_plan', { paceId: plan.id, start: localDate() }); render(); };
   $$('[data-done]', view).forEach(b => b.onclick = () => {
     const d = +b.dataset.done;
     if (doneDays.has(d)) doneDays.delete(d); else doneDays.add(d);
@@ -760,7 +793,9 @@ async function viewPlan(view, r) {
    讀法
    ============================================================= */
 async function viewMethod(view) {
-  const m = await D.method();
+  const renderId = state.renderId;
+  const [m, research] = await Promise.all([D.method(), D.research()]);
+  if (renderId !== state.renderId) return;
   view.className = 'wrap narrow';
   view.innerHTML = `
   <div class="page-head"><h1>${esc(m.meta.title)}</h1><p>${esc(m.meta.lead)}</p></div>
@@ -773,6 +808,10 @@ async function viewMethod(view) {
       </div>`).join('')}
     </section>`).join('')}
   <div class="card pad">
+    <h3 style="font-size:17px">論文導讀：十項閱讀自查</h3>
+    <p class="small muted">依漆永祥「十宜十忌」整理，逐項附論文頁碼、閱讀任務與自查問題。</p>
+    ${research.items.filter(x => x.sourceId === 'qi-method-2025').map(x => `<p class="small"><a href="#/research/${x.id}">${esc(x.title)}</a></p>`).join('')}
+    <p><a class="btn" href="#/research">閱讀兩篇論文的全部考點卡</a></p>
     <h3 style="font-size:17px">接下來</h3>
     <p class="small muted" style="margin:8px 0 12px">方法要落到具體的一天上才有用。</p>
     <a class="btn primary" href="#/plan">挑一個進度計畫</a>
@@ -791,6 +830,7 @@ function hl(text, q) {
 }
 
 async function viewSearch(view, r) {
+  const renderId = state.renderId;
   const q = (r.q.get('q') || '').trim();
   const withText = r.q.get('t') === '1';
   view.className = 'wrap narrow';
@@ -806,7 +846,8 @@ async function viewSearch(view, r) {
   sq.onkeydown = (e) => { if (e.key === 'Enter' && sq.value.trim()) location.hash = '#/search?q=' + encodeURIComponent(sq.value.trim()) + (withText ? '&t=1' : ''); };
   if (!q) return;
 
-  const [chs, exams, people, poems] = await Promise.all([D.chapters(), D.exams(), D.people(), D.poems()]);
+  const [chs, exams, people, poems, research] = await Promise.all([D.chapters(), D.exams(), D.people(), D.poems(), D.research()]);
+  if (renderId !== state.renderId) return;
   const out = [];
   chs.items.forEach(c => {
     const s = c.title + ' ' + (c.focus || '');
@@ -825,8 +866,14 @@ async function viewSearch(view, r) {
     if (s.includes(q)) out.push(`<a class="card hit" href="#/poems?q=${encodeURIComponent(p.title)}"><div class="where">詩詞 · ${esc(p.title)}</div><div class="txt">${hl(s, q)}</div></a>`);
   });
 
+  research.items.forEach(it => {
+    const text = [it.title, it.summary, it.task, it.question].join(' ');
+    if (text.includes(q)) out.push(`<a class="card hit" href="#/research/${it.id}"><div class="where">論文導讀 · ${esc(it.title)}</div><div class="txt">${hl(text, q)}</div></a>`);
+  });
+
   if (withText) {
     const full = await D.full();
+    if (renderId !== state.renderId) return;
     full.chapters.forEach((c, i) => {
       const t = c.content;
       let from = 0, hits = 0;
@@ -842,6 +889,42 @@ async function viewSearch(view, r) {
   $('#sr').innerHTML = out.length
     ? `<p class="small muted">共 ${out.length} 條${withText ? '（含正文）' : ''}</p>` + out.join('')
     : `<p class="muted">沒有找到「${esc(q)}」。${withText ? '' : `試試 <a href="#/search?q=${encodeURIComponent(q)}&t=1">同時搜正文</a>。`}`;
+}
+
+/* ---------------- 論文導讀：與真題答案分層 ---------------- */
+function researchLinks(research, key, value) {
+  const items = (research?.items || []).filter(x => (x[key] || []).includes(value));
+  if (!items.length) return '';
+  return `<section class="card pad research-links" style="margin:14px 0"><h3>論文延伸與練習</h3>
+    <p class="tiny muted">學術觀點與本站練習，非真題答案。</p>
+    <ul class="bullet">${items.map(x => `<li><a href="#/research/${x.id}">${esc(x.title)}</a></li>`).join('')}</ul></section>`;
+}
+
+async function viewResearch(view, r) {
+  const renderId = state.renderId;
+  const research = await D.research();
+  if (renderId !== state.renderId) return;
+  const items = r.seg[1] ? research.items.filter(x => x.id === r.seg[1]) : research.items;
+  view.className = 'wrap narrow';
+  view.innerHTML = `<div class="page-head"><h1>${esc(research.meta.title)}</h1><p>${esc(research.meta.note)}</p></div>
+    <p><a href="#/method">← 日常讀法</a> · <a href="#/research">全部 ${research.items.length} 張考點卡</a></p>
+    ${items.length ? items.map(x => {
+      const source = research.sources.find(s => s.id === x.sourceId);
+      return `<article class="card pad research-item" style="margin:16px 0">
+        <h2>${esc(x.title)}</h2>
+        <p class="tiny muted">${esc(source.author)}〈${esc(source.title)}〉，${esc(source.publication)}，第 ${esc(x.pages)} 頁。</p>
+        <p><b>論文觀點（轉述）</b></p><p>${esc(x.summary)}</p>
+        <p><b>回到原著</b></p><p>${esc(x.task)}</p>
+        <div class="filters">${x.chapters.map(n => `<a class="chip qing" href="#/read/${n}">${chLabel(n)}</a>`).join('')}
+          ${x.people.map(n => `<a class="chip" href="#/people/${encodeURIComponent(n)}">${esc(n)}</a>`).join('')}</div>
+        <details class="anno"><summary>本站練習與自查（非高考原題）</summary>
+          <p>${esc(x.question)}</p><ul class="bullet">${x.checks.map(c => `<li>${esc(c)}</li>`).join('')}</ul></details>
+        ${x.caveat ? `<p class="plan-note">使用限度：${esc(x.caveat)}</p>` : ''}
+        ${x.examIds.length ? `<p class="small">可遷移到：${x.examIds.map(id => `<a href="#/exam/${id}">${esc(id.replace('bj', '北京卷 '))}</a>`).join(' · ')}（依各題要求選用）</p>` : ''}
+      </article>`;
+    }).join('') : '<p class="muted">找不到這張考點卡。</p>'}
+    <section class="card pad"><h2>論文來源</h2>${research.sources.map(s => `<p class="small">${esc(s.author)}：〈${esc(s.title)}〉，${esc(s.publication)}，第 ${esc(s.pages)} 頁。${s.doi ? ` DOI：<a href="https://doi.org/${esc(s.doi)}">${esc(s.doi)}</a>` : ''}</p>`).join('')}
+    <p class="tiny muted">引用按原刊頁碼標註。本站提供教學轉述；原文、作者推論與練習請分開使用。</p></section>`;
 }
 
 /* =============================================================
@@ -872,14 +955,15 @@ function md(t) {
 
 async function callAI(prompt) {
   const res = await fetch('https://ai.bdfz.net/', {
+    signal: AbortSignal.timeout(25000),
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt }),
   });
   const raw = await res.text();
-  if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + raw.slice(0, 400));
+  if (!res.ok) { const error = new Error('AI 服務暫時無法回應（HTTP ' + res.status + '）'); error.status = res.status; throw error; }
   let j;
   try { j = JSON.parse(raw); } catch (e) { throw new Error('回應格式異常'); }
-  const a = (j.answer || '').trim();
+  const a = typeof j?.answer === 'string' ? j.answer.trim() : '';
   if (!a) throw new Error('空回應');
   return a;
 }
@@ -887,27 +971,29 @@ async function callAI(prompt) {
 async function ask(prompt, label) {
   if (aiBusy) return;
   aiBusy = true;
+  $('#ai-send').disabled = true;
   const b = bubble('ai', '<p class="muted">' + esc(label || '想一想…') + '</p>');
   try {
     let answer;
     try {
       answer = await callAI(prompt);
     } catch (first) {
-      // 上游金鑰池偶有暫時性失敗，靜默重試一次
-      console.warn('[hlm] AI first attempt failed:', first);
+      if (!(first.status === 429 || first.status >= 500 || ['TypeError', 'TimeoutError', 'AbortError'].includes(first.name))) throw first;
+      console.warn('[hlm] AI retry', first.status || first.name);
       b.innerHTML = '<p class="muted">再試一次…</p>';
       answer = await callAI(prompt);
     }
     b.innerHTML = md(answer);
-    archive(prompt, answer);
+    try { archive(prompt, answer); } catch (_) { /* 回答成功不受歸檔失敗影響 */ }
   } catch (e) {
-    console.error('[hlm] AI failed:', e);
+    console.error('[hlm] AI failed', e.status || e.name);
     b.innerHTML = '<p>這次沒答上來，上游暫時不可用。</p>'
       + '<p><button class="btn" data-retry="1">重試</button></p>';
     const r = b.querySelector('[data-retry]');
     if (r) r.onclick = () => { b.remove(); ask(prompt, label); };
   } finally {
     aiBusy = false;
+    $('#ai-send').disabled = false;
     aiLog().scrollTop = aiLog().scrollHeight;
   }
 }
@@ -925,9 +1011,10 @@ function archive(q, a) {
   })?.catch?.(() => { });
 }
 
-const BASE = '你是一位既熟讀《紅樓夢》原著、又長期研究北京市高考語文命題的教師。回答用繁體中文，樸實準確，引原著時要說出回目，不編造情節與引文。若涉及後四十回，須說明那是通行本續書部分。';
+const BASE = '你是一位既熟讀《紅樓夢》原著、又長期研究北京市高考語文命題的教師。回答用繁體中文，樸實準確，引原著時要說出回目，不編造情節與引文。若涉及後四十回，須說明那是通行本續書部分。依原著情節提出可核對的理由，不把人物簡化成善惡標籤，不臆測諧音密碼或佚稿結局。區分原文事實、論文作者觀點與本站推論；學術解讀不是官方評分標準。';
 
 function askChapter(n, title) {
+  if (aiBusy) return;
   $('#ai-title').textContent = chLabel(n) + ' 助讀';
   bubble('me', esc('請解讀 ' + chLabel(n) + '「' + title + '」'));
   ask(`${BASE}
@@ -939,6 +1026,7 @@ function askChapter(n, title) {
 }
 
 function askExam(it, myAnswer) {
+  if (aiBusy) return;
   $('#ai-title').textContent = it.year + ' 年真題批改';
   bubble('me', esc(myAnswer ? '請批改我的作答' : '請講講這道題'));
   ask(`${BASE}
@@ -946,6 +1034,8 @@ function askExam(it, myAnswer) {
 ${it.material ? '【材料】' + it.material.source + '\n' + it.material.text + '\n' : ''}
 【題目】${it.stem}
 【參考答案】${it.answer}
+【答案來源與使用限度】${it.answerSource || '本站參考'}${it.authorityNote ? '\n' + it.authorityNote : ''}
+請按上述來源表述答案權威性，不把本站分析或估分說成官方評分。
 
 ${myAnswer ? `【學生作答】\n${myAnswer}\n\n請按北京卷評分習慣批改：先按得分點逐條說明拿到了哪些、漏了哪些，再給一個估分（滿分 ${it.score} 分），最後給出兩條具體的修改建議。不要重寫整份答案。`
       : `請講解這道題：命題意圖是什麼、答題應分哪幾步、最常見的失分點是什麼。不超過 600 字。`}`,
@@ -953,6 +1043,7 @@ ${myAnswer ? `【學生作答】\n${myAnswer}\n\n請按北京卷評分習慣批�
 }
 
 function askPerson(p) {
+  if (aiBusy) return;
   $('#ai-title').textContent = p.name + ' · 模擬命題';
   bubble('me', esc('就「' + p.name + '」出一道模擬題'));
   ask(`${BASE}
@@ -977,11 +1068,12 @@ function updateAIContext() {
     $('#ai-title').textContent = '真題助讀';
   } else {
     items = [['從哪讀起', `${BASE}\n一個高中生第一次讀《紅樓夢》，前五回讀不下去，該怎麼辦？給具體可執行的建議，不超過 500 字。`],
-    ['判詞速記', `${BASE}\n請把《紅樓夢》第五回金陵十二釵正冊判詞逐首列出，每首後面用一句話點明所指人物與命運。`]];
+    ['判詞速記', `${BASE}\n請把《紅樓夢》第五回金陵十二釵正冊判詞逐首列出，正冊共十一首，釵黛合判；每首後面點明所指人物，用後文情節印證，並標出仍有爭議之處。`]];
     $('#ai-title').textContent = '問一問';
   }
   quick.innerHTML = items.map((x, i) => `<button class="chip" data-q="${i}">${esc(x[0])}</button>`).join('');
   $$('[data-q]', quick).forEach(b => b.onclick = () => {
+    if (aiBusy) return;
     const [label, prompt] = items[+b.dataset.q];
     bubble('me', esc(label));
     ask(prompt, '想一想…');
@@ -1002,8 +1094,9 @@ function boot() {
   $('#ai-fab').onclick = openAI;
   $('#ai-close').onclick = closeAI;
   $('#scrim').onclick = closeAI;
-  $('#ai-clear').onclick = () => { aiLog().innerHTML = ''; convo.length = 0; sessionKey = ''; };
+  $('#ai-clear').onclick = () => { if (aiBusy) return; aiLog().innerHTML = ''; convo.length = 0; sessionKey = ''; };
   const send = () => {
+    if (aiBusy) return;
     const v = $('#ai-input').value.trim();
     if (!v) return;
     $('#ai-input').value = '';

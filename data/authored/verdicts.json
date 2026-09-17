@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "reviewed": "2026-09-17",
+    "note": "第五回實際展示判詞十四首：正冊十一首（釵黛合判）、副冊一首、又副冊二首，涉及十五位人物；不補造未展示的冊頁。",
+    "authority": "既有詩詞來源逐首對照第五回；新增秦可卿依國學導航第 040 頁。"
+  },
+  "items": [
+    {
+      "id": "又副册判词之一",
+      "people": [
+        "晴雯"
+      ],
+      "book": "又副册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/027.htm",
+      "opening": "霁月难逢"
+    },
+    {
+      "id": "又副册判词之二",
+      "people": [
+        "袭人"
+      ],
+      "book": "又副册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/028.htm",
+      "opening": "枉自温柔和顺"
+    },
+    {
+      "id": "副册判词一首",
+      "people": [
+        "香菱"
+      ],
+      "book": "副册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/029.htm",
+      "opening": "根并荷花一茎香"
+    },
+    {
+      "id": "正册判词之一",
+      "people": [
+        "林黛玉",
+        "薛宝钗"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/030.htm",
+      "opening": "可叹停机德"
+    },
+    {
+      "id": "正册判词之二",
+      "people": [
+        "贾元春"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/031.htm",
+      "opening": "二十年来辨是非"
+    },
+    {
+      "id": "正册判词之三",
+      "people": [
+        "贾探春"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/032.htm",
+      "opening": "才自精明志自高"
+    },
+    {
+      "id": "正册判词之四",
+      "people": [
+        "史湘云"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/033.htm",
+      "opening": "富贵又何为？襁褓之间父母违。转眼吊斜晖"
+    },
+    {
+      "id": "正册判词之五",
+      "people": [
+        "妙玉"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/034.htm",
+      "opening": "欲洁何曾洁"
+    },
+    {
+      "id": "正册判词之六",
+      "people": [
+        "贾迎春"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/035.htm",
+      "opening": "子系中山狼"
+    },
+    {
+      "id": "正册判词之七",
+      "people": [
+        "贾惜春"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/036.htm",
+      "opening": "勘破三春景不长"
+    },
+    {
+      "id": "正册判词之八",
+      "people": [
+        "王熙凤"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/037.htm",
+      "opening": "凡鸟偏从末世来"
+    },
+    {
+      "id": "正册判词之九",
+      "people": [
+        "巧姐"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/038.htm",
+      "opening": "势败休云贵"
+    },
+    {
+      "id": "正册判词之十",
+      "people": [
+        "李纨"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/039.htm",
+      "opening": "桃李春风结子完"
+    },
+    {
+      "id": "正册判词之十一",
+      "people": [
+        "秦可卿"
+      ],
+      "book": "正册",
+      "source": "http://www.guoxue123.com/hongxue/0001/scjs/040.htm",
+      "opening": "情天情海幻情身",
+      "lines": [
+        "情天情海幻情身，情既相逢必主淫。",
+        "漫言不肖皆荣出，造衅开端实在宁。"
+      ],
+      "painting": "一座高楼，上有一美人悬梁自尽。",
+      "explanation": "這首判詞指秦可卿，列正冊第十一首；她是寧國府賈蓉之妻。",
+      "annotations": "情天情海：與太虛幻境的「孽海情天」相照應。\n不肖：不成材、不能繼承先人德業。\n造釁：造成事端；「榮」「寧」分指榮國府、寧國府。",
+      "appreciation": "判詞把人物命運與家族敗落聯繫起來，可與第五回夢境、第十三回喪事及《好事終》對讀。畫中的懸梁意象是判詞的預敘，不能直接當作通行本第十三回已明寫的死亡經過。",
+      "sourceNote": "判詞與畫面據國學導航《紅樓夢》詩詞曲賦鑑賞第 040 頁核對（2026-09-17）；說明、註釋與讀法為本站整理。本站全文底本作「幻情深」「造衅开瑞」，本索引依詩詞來源錄「幻情身」「造衅开端」，保留異文說明，未改動全文底本。"
+    }
+  ]
+}

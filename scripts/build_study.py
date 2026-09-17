@@ -68,6 +68,7 @@ chapters = load(os.path.join(ROOT, "data/hongloumeng.json"))["chapters"]
 shici = load(os.path.join(ROOT, "data/shici.json"))
 exams = load(os.path.join(ROOT, "data/study/exams.json"))
 people = load(os.path.join(AUTHORED, "people.json"))
+verdicts = load(os.path.join(AUTHORED, "verdicts.json"))
 
 assert len(chapters) == 120, len(chapters)
 
@@ -107,14 +108,13 @@ VERDICT_OWNER = {
     "正册判词之二": ["贾元春"],
     "正册判词之三": ["贾探春"],
     "正册判词之四": ["史湘云"],
-    "正册判词之五": ["贾迎春"],
-    "正册判词之六": ["妙玉"],
+    "正册判词之五": ["妙玉"],
+    "正册判词之六": ["贾迎春"],
     "正册判词之七": ["贾惜春"],
     "正册判词之八": ["王熙凤"],
-    "正册判词之九": ["王熙凤"],
-    "正册判词之十": ["巧姐"],
-    "正册判词之十一": ["李纨"],
-    "正册判词之十二": ["秦可卿"],
+    "正册判词之九": ["巧姐"],
+    "正册判词之十": ["李纨"],
+    "正册判词之十一": ["秦可卿"],
     "终身误": ["贾宝玉", "薛宝钗", "林黛玉"],
     "枉凝眉": ["贾宝玉", "林黛玉"],
     "恨无常": ["贾元春"],
@@ -183,9 +183,39 @@ for e in shici:
         "text": body or None,
         "explanation": (d.get("explanation") or "").strip() or None,
         "annotations": (d.get("annotations") or "").strip() or None,
+        "appreciation": (d.get("appreciation") or "").strip() or None,
+        "painting": (d.get("painting_description") or "").strip() or None,
         "people": VERDICT_OWNER.get(title, []),
         "source": e.get("url") or None,
     })
+
+# 校訂層補缺、校驗歸屬；原始來源與既有詩詞 ID 不變。
+by_id = {p["id"]: p for p in poems}
+for v in verdicts["items"]:
+    p = by_id.get(v["id"])
+    if p is None:
+        assert v.get("lines"), "Missing verdict text: " + v["id"]
+        p = {"id": v["id"], "title": v["id"], "kind": "判词",
+             "chapters": [5], "collection": "金陵十二钗图册判词",
+             "text": None, **v}
+        # 新補的末首仍放在正冊結尾，保持原著翻冊順序。
+        last = max(i for i, q in enumerate(poems) if q["kind"] == "判词")
+        poems.insert(last + 1, p)
+    assert p["kind"] == "判词" and p["lines"][0].startswith(v["opening"]), v["id"]
+    p.update(people=v["people"], book=v["book"], source=v["source"])
+    if not p.get("painting"):
+        match = re.search(r"(?:^|\n)画：([^\n]+)", p.get("text") or "")
+        p["painting"] = match.group(1) if match else None
+    # 僅調整分行，保留來源字詞及標點。
+    p["lines"] = [s for line in p["lines"] for s in re.findall(r"[^。！？]+[。！？]?", line)]
+
+assert len([p for p in poems if p["kind"] == "判词"]) == 14
+assert collections.Counter(v["book"] for v in verdicts["items"]) == {"正册": 11, "副册": 1, "又副册": 2}
+assert len({n for v in verdicts["items"] for n in v["people"]}) == 15
+
+for p in poems:
+    if "\ufffd" in json.dumps(p, ensure_ascii=False):
+        p["qualityNote"] = "原資料含編碼缺字；保留來源原貌，待逐字校勘。"
 
 # ---------- 人物出場分布（別名在正文出現次數） ----------
 GROUP_ORDER = ["金陵十二钗正册", "金陵十二钗副册", "金陵十二钗又副册",
@@ -216,6 +246,9 @@ for p in people:
     kind_rank = {"判词": 0, "红楼梦十二支曲": 1}
     kind_of = {q["id"]: q["kind"] for q in poems}
     p["poems"] = sorted(pid_set, key=lambda i: (kind_rank.get(kind_of.get(i), 2), i))
+    assert pid_set <= set(kind_of), (p["name"], pid_set - set(kind_of))
+    for vid in p.get("verdict", []):
+        assert any(q["id"] == vid and p["name"] in q["people"] for q in poems), (p["name"], vid)
     p["_order"] = GROUP_ORDER.index(p["group"]) if p["group"] in GROUP_ORDER else 99
 people.sort(key=lambda p: (p["_order"], -p["mentions"]))
 for p in people:
@@ -330,7 +363,7 @@ dump(os.path.join(ROOT, "data/study/chapters.json"),
      {"parts": [{"from": a, "to": b, "name": n, "desc": d} for a, b, n, d in PARTS],
       "items": index})
 dump(os.path.join(ROOT, "data/study/poems.json"),
-     {"meta": {"count": len(poems)}, "items": poems})
+     {"meta": {"count": len(poems), "verdictNote": verdicts["meta"]["note"]}, "items": poems})
 dump(os.path.join(ROOT, "data/study/people.json"),
      {"groups": GROUP_ORDER, "items": people})
 
@@ -360,7 +393,7 @@ MILESTONES = {
     40: "劉姥姥二進。借外人的眼睛再看一次賈府，記下你注意到的三處奢侈。",
     63: "群芳夜宴。把花簽表整理出來——這一頁的複習性價比最高。",
     74: "抄檢大觀園。園子破了。回看探春那句「必須先從家裡自殺自滅起來」。",
-    80: "曹雪芹的筆到此為止。往下換了人寫，讀法也要跟著換：重情節，輕細節。",
+    80: "前八十回讀畢。往下屬通行本後四十回續書；繼續閱讀，引用時明示範圍，不與佚稿推想混同。",
     98: "黛玉之死。與第三回初會、第二十三回共讀西廂並讀，木石一線至此收束。",
     120: "讀完了。回到第一回那句「滿紙荒唐言，一把辛酸淚」，現在你知道它說的是什麼了。",
 }

@@ -1,6 +1,6 @@
 # Hongloumeng operations
 
-Reviewed 2026-09-09; owner suen. This is the local operations entrypoint.
+Reviewed 2026-09-17; owner suen. This is the local operations entrypoint.
 Read [instructions](../AGENTS.md) and [state](../PROJECT_STATE.md).
 
 ## Source, data, and recovery
@@ -17,7 +17,8 @@ Data layering is defined in [AGENTS.md](../AGENTS.md). In short:
   (141 條詩詞條目), `data/紅樓夢詩詞.json`, `data/gaokao.json` (2025 年前的舊真題摘要，
   已被 `data/study/exams.json` 取代，保留作歷史對照).
 - Hand-authored: `data/study/exams.json`, `data/authored/people.json`,
-  `data/authored/method.json`.
+  `data/authored/method.json`, `data/authored/verdicts.json` (判詞校訂層),
+  `data/authored/research.json` (兩篇論文的教學轉述、來源與練習).
 - Derived (regenerate with `python3 scripts/build_study.py`):
   `data/study/chapters.json`, `data/study/people.json`, `data/study/poems.json`,
   `data/study/plans.json`, `data/text/ch001.json … ch120.json`.
@@ -30,16 +31,19 @@ and its output contract is unverified; do not run it as a repair.
 ## Release procedure
 
 1. Edit sources / authored files.
-2. `python3 scripts/build_study.py` — expect: 120 chapters split, 130 poems,
+2. `python3 scripts/build_study.py` — expect: 120 chapters split, 131 poems (14 判詞、15 人物),
    44 people, 3 plans (100/60/30 days). Any deviation means a source changed.
 3. Bump the `?v=` query on `assets/css/study.css` and `assets/js/app.js` in
    `index.html`, and the matching `V` constant at the top of `assets/js/app.js`.
    Skipping this ships new HTML against stale cached CSS/JS.
-4. `node --check assets/js/app.js`.
+4. `node --check assets/js/app.js`, `TZ=America/Los_Angeles node --test scripts/test_app.mjs`,
+   and `/Users/ylsuen/.venv/bin/python scripts/verify_study.py`. Verify generated output
+   is idempotent and original source/exam datasets are unchanged unless separately edited.
 5. Local check: `python3 -m http.server` from this directory (the workspace
    preview config is `hlm-preview` in `/Users/ylsuen/CF/.claude/launch.json`).
    Walk 今日 / 通讀 / 真題 / 人物 / 詩詞 / 進度 / 讀法 and the AI drawer.
-6. `git add -A && git commit && git push origin main`.
+6. Review and stage only the task-owned files, then commit and push `origin main`.
+   This publishes production; preserve unrelated dirty work.
 7. Verify live per below before calling it done.
 
 ## Verification
@@ -48,19 +52,20 @@ and its output contract is unverified; do not run it as a repair.
    approved commit with the Pages build metadata.
 2. Health: `GET https://hlm.bdfz.net/` plus `data/study/exams.json`,
    `data/study/chapters.json`, `data/study/people.json`, `data/study/poems.json`,
-   `data/study/plans.json`, `data/authored/method.json`, and one
+   `data/study/plans.json`, `data/authored/method.json`, `data/authored/research.json`, and one
    `data/text/ch001.json`. Require JSON content types and valid shapes.
    HTTP 200 is not acceptance — the rendered pages must be inspected.
 3. Browser: the reader must render chapter text and the 本回真題／詩詞／人物 side
    panel; the exam page must expand a question and show answer + analysis; the
    plan page must show today's tasks once a pace is chosen.
-4. AI: `POST https://ai.bdfz.net/` with an `Origin: https://hlm.bdfz.net` header
+4. AI: each attempt has a 25-second timeout, with one retry for network/timeouts,
+   HTTP 429 or 5xx; response bodies are never copied to error logs. `POST https://ai.bdfz.net/` with an `Origin: https://hlm.bdfz.net` header
    returns `{answer}`. The gateway's key pool is intermittently flaky (503 /
    upstream 401); the client retries once and then shows a retry button. A single
-   503 is not a site regression — repeat before escalating.
+   503 is not proof of a site regression; use a bounded test and record failure honestly.
    **Open risk**: hlm's enrollment in the APIS caller registry is unverified. The
-   gateway currently runs caller-auth in `log-only`, so calls succeed; if
-   `enforce` is switched on without hlm enrolled, the AI drawer will 401.
+   2026-09-09 notes recorded `log-only`; this leaf release does not re-certify hub
+   configuration. If enforcement changes without hlm enrolled, calls may fail.
    Owner of that switch is the APIS shared-hub transaction, not this project.
 5. Progress: `hlm_read_progress` / `chapter-第N章` itemKeys and
    `BdfzIdentity.syncProgress` are the pre-existing contract. Verify real
@@ -96,3 +101,21 @@ It also appears on the shared bookshelf `coread.bdfz.net`
 - The novel text and the poem annotations are public-domain / publicly available
   reference material; the character analyses, reading method and exam commentary
   are written for this site.
+
+## 2026-09-17 content/reliability release
+
+Asset version `2026091701`; 131 poems, including all 14 fifth-chapter verdicts
+(11 正冊, 1 副冊, 2 又副冊; 釵黛合判); 17 research cards from 2 papers.
+Qin Keqing is 正冊之十一. Corrected the character ownership of six earlier entries.
+Keep the immutable source datasets intact; supplements belong in authored/verdicts.
+Research cards are teaching paraphrases, not official exam answers; original PDFs
+are not published. Every card preserves source pages, reading task, checks and limits.
+The 2026 exam authority note remains intact and is included in AI requests.
+
+[Design/code review](REVIEW_20260917.md) records findings and residual gaps.
+Current deployment, source hash, live acceptance and rollback receipt:
+`/Users/ylsuen/CF/reports/operations/hongloumeng-20260917/REPORT.md`.
+Pre-release anchor: source `71ae682af487ac54c1f0653a7bb89d9da2c7cef8`, production
+`6ab4c1aa-28d6-49c8-98f4-b0adaa0050a1`. Revert the release commit and push main
+for a source-backed rollback, then verify deployed source and rendered pages.
+No learner records, routes, bindings, domains or shared-hub contracts change.
