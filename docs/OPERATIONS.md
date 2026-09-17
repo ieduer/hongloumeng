@@ -140,3 +140,7 @@ Run the 9 Node tests including 36 palette/mode contrast checks; verify persisten
 all seven sections, all 44 people, 120 chapters, 17 exam details, 17 research cards,
 poem filters, three plans and search. UI checks do not constitute a new claim that
 every historical source character has been philologically corrected.
+
+Final asset/data version `2026091703` adds only the documented Siqi/Jia Zheng/Jia She
+content corrections after the full page sweep. The release receipt records both
+full-coverage acceptance and the subsequent focused readback.

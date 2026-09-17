@@ -59,4 +59,10 @@ for x in research['items']:
 liu = next(p for p in people if p['name'] == '刘姥姥')
 assert '刘老老' in liu['aliases'] and liu['dist'][112] > 0 and liu['dist'][118] > 0
 assert 'authorityNote' in next(e for e in exams if e['id'] == 'bj2026-15')
+siqi = next(p for p in people if p['name'] == '司棋')
+assert '唯一' not in siqi['tagline']
+assert not any('绣春囊即由此而来' in x for x in siqi['traits'])
+for name in ['贾宝玉', '贾政']:
+    person = next(p for p in people if p['name'] == name)
+    assert all(s['ch'] == 120 for s in person['keyScenes'] if '雪中' in s['text'])
 print('PASS: 14 verdicts / 15 people; 131 poems; 120 chapters; 44 people; 17 exams; 17 cited research cards; 3 complete plans; no broken content references')

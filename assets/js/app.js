@@ -5,7 +5,7 @@
 'use strict';
 
 const SITE_KEY = 'hlm';
-const V = 'v=2026091702';
+const V = 'v=2026091703';
 
 /* ---------------- 小工具 ---------------- */
 const $ = (s, r = document) => r.querySelector(s);
