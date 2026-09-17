@@ -251,16 +251,22 @@ function fit(color, backgrounds, target, dark) {
   return dark ? '#ffffff' : '#000000';
 }
 function colors(p, dark) {
-  const paper = dark ? mix(p.accent, '#101116', .94) : p.background;
-  const card = dark ? mix(p.accent, '#202128', .94) : p.surface;
-  const paper2 = dark ? mix(p.accent, '#25262e', .94) : p.commentSurface;
-  const wash = dark ? mix(p.accent, '#2c2d35', .94) : p.wash;
+  // Expand the pastel wash's hue before dimming, so complementary palettes
+  // do not collapse into gray at night. Preserve neutral washes if present.
+  const channels = rgb(p.wash), low = Math.min(...channels), high = Math.max(...channels);
+  const hue = high - low < 8 ? p.wash : '#' + channels.map(v =>
+    Math.round(72 + (v - low) * 168 / (high - low)).toString(16).padStart(2, '0')).join('');
+  const tint = mix(p.accent, hue, .8);
+  const paper = dark ? mix('#101116', tint, .18) : mix(p.background, p.wash, .55);
+  const card = dark ? mix('#191a21', tint, .23) : mix(p.surface, p.wash, .24);
+  const paper2 = dark ? mix('#202128', tint, .26) : mix(p.commentSurface, p.wash, .32);
+  const wash = dark ? mix('#262730', tint, .24) : p.wash;
   const bg = [paper, card, paper2, wash];
   const zhu = fit(dark ? p.accent : p.link, bg, 4.5, dark);
   const onAccent = contrast(zhu, '#ffffff') >= contrast(zhu, '#101116') ? '#ffffff' : '#101116';
   return {'paper':paper,'paper-2':paper2,card,'ink':fit(dark ? '#eee8e0' : p.text,bg,7,dark),
     'ink-2':fit(dark ? '#bdb9b4' : p.textMuted,bg,4.5,dark),'ink-3':fit(dark ? '#bdb9b4' : p.textMuted,bg,4.5,dark),
-    line:dark ? mix(p.accent,'#45454b',.85) : p.border,'line-2':wash,zhu,'zhu-soft':zhu,
+    line:dark ? mix('#45454b',tint,.28) : p.border,'line-2':wash,zhu,'zhu-soft':zhu,
     qing:fit('#3c6b78',bg,4.5,dark),gold:fit('#a9884a',bg,4.5,dark),ok:fit('#4a7a52',bg,4.5,dark),
     'on-accent':onAccent,'on-ok':dark ? '#101116' : '#ffffff'};
 }

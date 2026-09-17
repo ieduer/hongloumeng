@@ -76,3 +76,22 @@ test('all 18 palettes pass text, UI and action contrast in both modes',()=>{
     assert.ok(api.contrast(c.ok,c['on-ok'])>=4.5,p.id+' completed task');
   }
 });
+test('palette backgrounds carry distinct washes through light and dark surface layers',()=>{
+  const api=appearance().window.HLMAppearance;
+  const distance=(a,b)=>Math.max(...a.slice(1).match(/../g).map((v,i)=>Math.abs(parseInt(v,16)-parseInt(b.slice(1).match(/../g)[i],16))));
+  for(const dark of [false,true]) {
+    const schemes=api.palettes.map(p=>api.colors(p,dark));
+    for(const surface of ['paper','card','paper-2','line-2']) {
+      assert.equal(new Set(schemes.map(c=>c[surface])).size,18,surface+' must reflect each palette');
+      // These presets share an accent but have different canonical washes.
+      const a=schemes[api.palettes.findIndex(p=>p.id==='yutanqing')];
+      const b=schemes[api.palettes.findIndex(p=>p.id==='yuhonglan')];
+      assert.ok(distance(a[surface],b[surface])>=(dark?15:4),surface+' must visibly distinguish the two washes');
+    }
+    for(const [i,c] of schemes.entries()) {
+      assert.ok(distance(c.paper,c.card)>=5,api.palettes[i].id+' card remains distinct from page');
+      assert.ok(distance(c.card,c['paper-2'])>=5,api.palettes[i].id+' sidebar remains distinct from card');
+      assert.notEqual(c.card.toLowerCase(),'#ffffff','cards retain a palette tint');
+    }
+  }
+});

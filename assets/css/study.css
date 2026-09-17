@@ -66,8 +66,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.4; 
 /* ---------- 頂欄 ---------- */
 .top {
   position: sticky; top: 0; z-index: 40;
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  backdrop-filter: saturate(1.4) blur(12px);
+  background: var(--paper-2);
   border-bottom: 1px solid var(--line);
 }
 .top-in {
@@ -183,6 +182,7 @@ button.chip:hover { border-color: var(--zhu-soft); }
 /* ---------- 目錄 / 閱讀 ---------- */
 .reader-layout { display: grid; grid-template-columns: 268px minmax(0, 1fr); gap: 22px; align-items: start; }
 .toc { position: sticky; top: 74px; max-height: calc(100vh - 96px); display: flex; flex-direction: column; }
+.toc, .reader-side { background: var(--paper-2); padding: 12px; border-radius: var(--radius); }
 .toc-search {
   width: 100%; padding: 8px 11px; border-radius: 9px;
   border: 1px solid var(--line); background: var(--card); color: var(--ink); font-size: 13px;
@@ -190,7 +190,7 @@ button.chip:hover { border-color: var(--zhu-soft); }
 .toc-list { overflow-y: auto; margin-top: 10px; padding-right: 4px; flex: 1; }
 .toc-toggle { display: none; }
 .toc-part {
-  position: sticky; top: 0; background: var(--paper);
+  position: sticky; top: 0; background: var(--paper-2);
   font-size: 11px; letter-spacing: .16em; color: var(--ink-3);
   padding: 9px 2px 5px; border-bottom: 1px solid var(--line-2); z-index: 1;
 }
@@ -200,7 +200,7 @@ button.chip:hover { border-color: var(--zhu-soft); }
   font-size: 13px; line-height: 1.6; color: var(--ink-2);
 }
 .toc-item:hover { background: var(--line-2); }
-.toc-item.on { background: color-mix(in srgb, var(--zhu) 12%, transparent); color: var(--zhu); }
+.toc-item.on { background: var(--line-2); color: var(--zhu); }
 .toc-item .n { flex: none; width: 2.2em; text-align: right; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .toc-item.read .n::after { content: "·"; color: var(--ok); }
 .toc-item.read { color: var(--ink-3); }

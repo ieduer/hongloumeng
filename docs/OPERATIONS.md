@@ -141,6 +141,30 @@ all seven sections, all 44 people, 120 chapters, 17 exam details, 17 research ca
 poem filters, three plans and search. UI checks do not constitute a new claim that
 every historical source character has been philologically corrected.
 
-Final asset/data version `2026091703` adds only the documented Siqi/Jia Zheng/Jia She
+Asset/data version `2026091703` adds only the documented Siqi/Jia Zheng/Jia She
 content corrections after the full page sweep. The release receipt records both
 full-coverage acceptance and the subsequent focused readback.
+
+## Coordinated palette surfaces (2026091704)
+
+All 18 presets now tint page, cards, top bar, table of contents, reader context and
+AI panel. Light surfaces retain the canonical wash; dark surfaces expand its hue
+before dimming, then incorporate the accent. This preserves visible background
+differences even when two presets share one accent. Top/sidebar surfaces are opaque
+and selected table-of-contents rows use the tested wash, keeping contrast measurable.
+The palette snapshot and local appearance/progress contracts remain unchanged.
+
+10 Node tests pass, including all 36 palette/mode combinations, contrast across four
+surfaces and a regression for shared-accent/different-wash backgrounds. Focused real
+browser acceptance covers two distinct palettes in both modes, background readback,
+theme-color, reload persistence, keyboard/Escape, and measured 1463×914 and 390×844
+viewports. At the end of native dialog Tab order, activeElement briefly reports BODY before
+returning to the close button; no background page control receives focus while modal.
+The earlier complete content/page sweep remains applicable; no data regeneration
+or AI provider probe is needed for this appearance-only follow-up.
+
+GitHub main publishes through the existing Pages integration. The workspace's
+single release receipt above holds the final source/deployment and live asset/browser
+evidence. Immediate rollback anchor: `7351a68ff927c9c34042c0ee4f91c18c1bd34574`, Pages
+`9e8fbf36-1a3e-4633-a09a-8b735931283e`; revert only the background release commit and
+push main, then verify deployment/source and live appearance. Preserve learner data.
