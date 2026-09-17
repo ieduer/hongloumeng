@@ -119,3 +119,24 @@ Pre-release anchor: source `71ae682af487ac54c1f0653a7bb89d9da2c7cef8`, productio
 `6ab4c1aa-28d6-49c8-98f4-b0adaa0050a1`. Revert the release commit and push main
 for a source-backed rollback, then verify deployed source and rendered pages.
 No learner records, routes, bindings, domains or shared-hub contracts change.
+
+## Appearance and page acceptance (2026091702)
+
+`assets/js/appearance.js` snapshots the 17 presets from RDFZ Blog's
+`packages/themes/src/palettes.ts` (source SHA in file), plus the original palette.
+Reference: `/Users/ylsuen/CF/sites/tools/cy/docs/OPERATIONS.md` 色系 section and
+`/Users/ylsuen/CF/platforms/rdfz-blog/docs/HANDOFF.md` palette constraints.
+No runtime dependency or reverse change to those projects. Text/link colors are
+adjusted to reach 7:1 body and 4.5:1 UI/link contrast across all four surfaces,
+including dark mode and selected/action text. Decorative accents are not text colors.
+
+Top-right 閱讀外觀 offers 18 presets and system/light/dark modes. New local key
+`hlm_appearance` stores only palette/mode; legacy `hlm_theme` is read as fallback.
+System mode follows subsequent OS changes. The dialog supports Escape, keyboard
+focus containment and return; browser theme-color follows the selected background.
+Bump index's appearance.js query with CSS/app/data V on releases.
+
+Run the 9 Node tests including 36 palette/mode contrast checks; verify persistence,
+all seven sections, all 44 people, 120 chapters, 17 exam details, 17 research cards,
+poem filters, three plans and search. UI checks do not constitute a new claim that
+every historical source character has been philologically corrected.

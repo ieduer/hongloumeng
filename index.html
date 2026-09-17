@@ -12,17 +12,8 @@
   <meta name="theme-color" content="#f6f1e7" />
   <link rel="icon" href="https://raw.githubusercontent.com/gptv/suen/main/images/Avatar-small.jpeg" type="image/jpeg">
   <link rel="preload" href="assets/fonts/HuWenMingChaoTi.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/study.css?v=2026091701" />
-  <script>
-    (function () {
-      try {
-        var t = JSON.parse(localStorage.getItem('hlm_theme') || 'null');
-        if (t !== 'dark' && t !== 'light') t = null;
-        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.dataset.theme = t;
-      } catch (e) { }
-    })();
-  </script>
+  <link rel="stylesheet" href="assets/css/study.css?v=2026091702" />
+  <script src="assets/js/appearance.js?v=2026091702"></script>
   <script type="text/javascript">
     (function (c, l, a, r, i, t, y) {
       c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
@@ -39,10 +30,21 @@
       <nav class="tabs" id="tabs"></nav>
       <div class="top-tools">
         <button class="icon-btn" id="btn-search" title="全站搜尋（按 /）" aria-label="搜尋">⌕</button>
-        <button class="icon-btn" id="btn-theme" title="切換深淺色" aria-label="切換深淺色">◐</button>
+        <button class="icon-btn" id="btn-theme" title="閱讀外觀" aria-label="閱讀外觀">◐</button>
       </div>
     </div>
   </header>
+
+  <dialog id="appearance" aria-labelledby="appearance-title">
+    <div class="appearance-head"><h2 id="appearance-title">閱讀外觀</h2><button class="icon-btn" id="appearance-close" aria-label="關閉外觀設定">✕</button></div>
+    <p class="small muted">選一種喜歡的紙墨配色，會記住在這個瀏覽器。</p>
+    <div class="appearance-modes" role="group" aria-label="明暗模式">
+      <button class="btn" data-mode="auto" aria-pressed="false">跟隨系統</button>
+      <button class="btn" data-mode="light" aria-pressed="false">淺色</button>
+      <button class="btn" data-mode="dark" aria-pressed="false">深色</button>
+    </div>
+    <h3>色系</h3><div id="palette-options" class="palette-options" role="group" aria-label="色系"></div>
+  </dialog>
 
   <main id="view" class="wrap" role="main"></main>
 
@@ -69,7 +71,7 @@
   </aside>
 
   <script defer src="https://my.bdfz.net/site-auth.js" data-site-key="hlm" data-position="left"></script>
-  <script src="assets/js/app.js?v=2026091701"></script>
+  <script src="assets/js/app.js?v=2026091702"></script>
 </body>
 
 </html>

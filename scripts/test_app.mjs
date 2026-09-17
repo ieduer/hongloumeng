@@ -51,9 +51,28 @@ test('exam AI keeps reference-answer authority limits',()=>{
   assert.match(run(c,'sent'),/本站考訂/);
   assert.match(run(c,'sent'),/非官方答案/);
 });
-test('theme restores the JSON-encoded preference',()=>{
-  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
-  const first=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
-  const c={localStorage:{getItem(){return '"dark"';}},document:{documentElement:{dataset:{}}},matchMedia(){return {matches:false};}};
-  vm.runInNewContext(first,c);assert.equal(c.document.documentElement.dataset.theme,'dark');
+function appearance(stored = {}, matches = false) {
+  const style = {}, c = {console,window:{},localStorage:{getItem(k){return stored[k] || null;},setItem(k,v){stored[k]=v;}},matchMedia(){return {matches,addEventListener(){}};},document:{documentElement:{dataset:{},style:{setProperty(k,v){style[k]=v;}}},querySelector(){return null;},querySelectorAll(){return [];}}};
+  vm.runInNewContext(readFileSync(new URL('../assets/js/appearance.js',import.meta.url),'utf8'),c);
+  return c;
+}
+test('appearance keeps old mode, restores new palette and rejects corrupt preferences',()=>{
+  assert.equal(appearance({hlm_theme:'"dark"'}).document.documentElement.dataset.theme,'dark');
+  const c=appearance({hlm_appearance:'{"palette":"yutanqing","mode":"light"}'},true);
+  assert.equal(c.document.documentElement.dataset.palette,'yutanqing');
+  assert.equal(c.document.documentElement.dataset.theme,'light');
+  assert.equal(appearance({hlm_appearance:'{"palette":"bad","mode":"bad"}'},true).document.documentElement.dataset.palette,'classic');
+  assert.equal(appearance({hlm_appearance:'broken'},true).document.documentElement.dataset.theme,'dark');
+});
+test('all 18 palettes pass text, UI and action contrast in both modes',()=>{
+  const api=appearance().window.HLMAppearance;assert.equal(api.palettes.length,18);
+  for(const p of api.palettes) for(const dark of [false,true]) {
+    const c=api.colors(p,dark);
+    for(const bg of ['paper','paper-2','card','line-2']) {
+      assert.ok(api.contrast(c.ink,c[bg])>=7,p.id+' text '+bg);
+      for(const k of ['ink-2','ink-3','zhu','qing','gold','ok']) assert.ok(api.contrast(c[k],c[bg])>=4.5,p.id+' '+k+' '+bg);
+    }
+    assert.ok(api.contrast(c.zhu,c['on-accent'])>=4.5,p.id+' primary button');
+    assert.ok(api.contrast(c.ok,c['on-ok'])>=4.5,p.id+' completed task');
+  }
 });

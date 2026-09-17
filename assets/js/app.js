@@ -5,7 +5,7 @@
 'use strict';
 
 const SITE_KEY = 'hlm';
-const V = 'v=2026091701';
+const V = 'v=2026091702';
 
 /* ---------------- 小工具 ---------------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -268,7 +268,7 @@ async function viewHome(view) {
     <a class="entry" href="#/exam"><div class="num">${exams.items.length}</div><h3>北京卷真題全編</h3>
       <p>2005—2026 年北京卷中全部涉及《紅樓夢》的試題，含原題、材料、答案要點與詳解。</p></a>
     <a class="entry" href="#/people"><div class="num">44</div><h3>人物分析</h3>
-      <p>判詞歸屬、關鍵情節、出場分布、易錯點，以及每個人對應哪一年的真題。</p></a>
+      <p>判詞歸屬、關鍵情節、名稱分布、易錯點，以及每個人對應哪一年的真題。</p></a>
     <a class="entry" href="#/poems"><div class="num">${poems.items.length}</div><h3>詩詞與判詞</h3>
       <p>依回目、人物、類別（判詞／十二支曲／詩社／燈謎／對聯）交叉檢索。</p></a>
     <a class="entry" href="#/method"><div class="num">七</div><h3>日常閱讀方法</h3>
@@ -583,12 +583,12 @@ async function viewPeople(view, r) {
       </div>
       <p style="margin:10px 0 0;font-size:15px">${esc(p.tagline)}</p>
       <div class="filters" style="margin-top:12px">
-        <a class="chip qing" href="#/read/${p.firstChapter}">首見 ${chLabel(p.firstChapter)}</a>
-        <span class="chip">全書提及 ${p.mentions} 次</span>
+        <a class="chip qing" href="#/read/${p.firstChapter}">導讀 ${chLabel(p.firstChapter)}</a>
+        <span class="chip">名稱匹配 ${p.mentions} 次</span>
         ${p.peakChapters.slice(0, 4).map(c => `<a class="chip" href="#/read/${c}">重場 ${chLabel(c)}</a>`).join('')}
       </div>
       <div style="margin-top:14px">
-        <div class="tiny muted" style="margin-bottom:4px">出場分布（第 1 – 120 回）</div>
+        <div class="tiny muted" style="margin-bottom:4px">名稱在正文的匹配分布（第 1 – 120 回）</div>
         <div class="spark" style="height:40px">${p.dist.map((v, i) =>
       `<i style="height:${Math.max(1, v / max * 100)}%" title="${chLabel(i + 1)}：${v}"></i>`).join('')}</div>
       </div>
@@ -603,6 +603,7 @@ async function viewPeople(view, r) {
           <div class="small" style="color:var(--zhu)">${esc(q.title)}</div>
           <div class="lines" style="font-family:var(--serif);font-size:16px;line-height:2;white-space:pre-line;margin:6px 0">${esc(q.lines.join('\n'))}</div>
           ${q.explanation ? `<p class="small muted" style="margin:0">${esc(q.explanation.slice(0, 160))}${q.explanation.length > 160 ? '…' : ''} <a href="#/poems?q=${encodeURIComponent(q.title)}">全文</a></p>` : ''}
+          ${q.qualityNote ? `<p class="tiny muted">${esc(q.qualityNote)}</p>` : ''}
         </div>`;
       }).join('')}
     </div>` : ''}
@@ -614,7 +615,7 @@ async function viewPeople(view, r) {
 
     <div class="card pad" style="margin-bottom:14px">
       <h3 style="font-size:17px">關鍵情節</h3>
-      <p class="tiny muted" style="margin:4px 0 10px">北京卷幾乎每題都要求「結合書中其他情節」——這些就是可直接調用的例子。</p>
+      <p class="tiny muted" style="margin:4px 0 10px">依題目要求選擇情節並回讀原文，說清言行如何支持判斷，不機械套用例子。</p>
       ${p.keyScenes.map(s => `<div class="scene"><a class="ch" href="#/read/${s.ch}">${chLabel(s.ch)}</a><span>${esc(s.text)}</span></div>`).join('')}
     </div>
 
@@ -641,7 +642,7 @@ async function viewPeople(view, r) {
   view.innerHTML = `
   <div class="page-head">
     <h1>人物分析</h1>
-    <p>44 位人物：判詞歸屬、形象要點、可直接引用的關鍵情節（含回目）、易錯點，以及該人物對應哪一年的北京卷真題。柱狀圖是該人物在一百二十回中的出場分布，由全文別名統計得出。</p>
+    <p>44 位人物：判詞歸屬、形象要點、可直接引用的關鍵情節（含回目）、易錯點，以及該人物對應哪一年的北京卷真題。柱狀圖按姓名與別名在正文的字面匹配統計，供定位閱讀；共用稱謂或同名詞可能誤計，不等於實際出場次數。</p>
   </div>
   ${groups.map(g => `
     <h2 style="font-size:18px;margin:22px 0 10px;letter-spacing:.06em">${esc(g)}</h2>
@@ -1085,11 +1086,8 @@ function updateAIContext() {
    ============================================================= */
 function boot() {
   applyPrefs();
-  $('#btn-theme').onclick = () => {
-    const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = t;
-    store.set('hlm_theme', t);
-  };
+  window.HLMAppearance.bind();
+  $('#btn-theme').onclick = window.HLMAppearance.open;
   $('#btn-search').onclick = () => { location.hash = '#/search'; };
   $('#ai-fab').onclick = openAI;
   $('#ai-close').onclick = closeAI;

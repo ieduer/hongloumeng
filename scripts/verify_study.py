@@ -34,6 +34,10 @@ poem_ids, exam_ids = {p['id'] for p in poems}, {e['id'] for e in exams}
 for p in people:
     assert set(p['poems']) <= poem_ids and set(p['examIds']) <= exam_ids
     assert len(p['dist']) == 120
+    assert p['mentions'] == sum(p['dist'])
+    assert 1 <= p['firstChapter'] <= 120
+    assert all(1 <= s['ch'] <= 120 and s['text'] for s in p['keyScenes'])
+    assert not {'怡红院', '太太', '大奶奶'}.intersection(p['aliases'])
 for n, chapter in enumerate(chapters, 1):
     assert chapter['n'] == n
     assert set(chapter['poems']) <= poem_ids and set(chapter['exams']) <= exam_ids
