@@ -129,3 +129,7 @@ AI 真題助讀攜帶答案來源與權威性說明。全文／說明／鑑賞�
 - **`parse_hongloumeng.py`**：根目錄輸入 `紅樓夢詩詞.txt` 仍缺；來源出處與可測試的還原
   程序仍為 `review_required`，該腳本維持封存不執行。
 - **後四十回**：站上多處註明為通行本續書，答題引證以前八十回為主；此判斷已寫入讀法頁。
+
+## Reader completion candidate — 2026-09-19
+
+The source-bound completion integration is prepared on `codex/reader-family-activation-20260919`. See [the contract and verification](docs/READER_COMPLETION.md). Production release and real authenticated acceptance remain pending; earlier accepted deployments are unchanged.

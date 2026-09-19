@@ -168,3 +168,7 @@ single release receipt above holds the final source/deployment and live asset/br
 evidence. Immediate rollback anchor: `7351a68ff927c9c34042c0ee4f91c18c1bd34574`, Pages
 `9e8fbf36-1a3e-4633-a09a-8b735931283e`; revert only the background release commit and
 push main, then verify deployment/source and live appearance. Preserve learner data.
+
+## Reader completion candidate — 2026-09-19
+
+See [READER_COMPLETION.md](READER_COMPLETION.md) for the additive named RPC contract, visibility rules, ordered readback, focused tests and rollback. This is candidate source documentation; final release and real acceptance remain pending under workspace receipt `20260919-uc-reader-family-activation`.
