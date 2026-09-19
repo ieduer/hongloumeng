@@ -63,18 +63,19 @@ function setRead(n, on) {
 }
 const identity = () => window.BdfzIdentity || null;
 function syncProgress(n, done) {
-  const idx = state.chapters && state.chapters.items[n - 1];
-  identity()?.syncProgress?.({
-    siteKey: SITE_KEY,
-    itemKey: itemKey(n),
-    itemTitle: chLabel(n) + ' ' + (idx ? idx.title : ''),
-    itemGroup: '阅读',
-    itemType: 'chapter',
-    state: done ? 'done' : 'in_progress',
-    progressPercent: done ? 100 : 30,
-    meta: { chapter: '第' + n + '章' },
-  })?.catch?.(() => { });
+  // A manual reading marker is a self-report, separate from server completion.
+  identity()?.getSession?.().then(session => {
+    if (!session?.authenticated) return;
+    return fetch('https://my.bdfz.net/api/data-records', {
+      method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ siteKey: SITE_KEY, recordKind: 'event', recordKey: 'hlm:reading-marker:' + n,
+        title: chLabel(n) + ' 閱讀標記', itemGroup: '紅樓夢', itemType: 'reading_self_report',
+        contentFormat: 'hlm-reading-marker-v1', sourceUrl: location.href,
+        payload: { chapterId: String(n), markedRead: done, scoringEligible: false } }),
+    });
+  })?.catch?.(() => {});
 }
+
 async function hydrateProgress() {
   const id = identity();
   if (!id || typeof id.api !== 'function') return;
@@ -134,6 +135,7 @@ function parseRoute() {
 }
 
 async function render() {
+  window.ReaderCompletion.detach();
   const renderId = ++state.renderId;
   const r = parseRoute();
   state.route = r;
@@ -411,7 +413,7 @@ async function viewRead(view, r) {
   const marks = new Set(store.get('hlm_marks_' + n, []));
   const paras = doc.content.split(/\n+/).map(s => s.trim()).filter(Boolean);
   $('#body').innerHTML = paras.map((p, i) =>
-    `<p data-i="${i}" class="${marks.has(i) ? 'mark' : ''}">${esc(p.replace(/^　+/, ''))}</p>`).join('');
+    `<p data-i="${i}" data-seg="hlm:chapter:${n}:paragraph:${i}" class="${marks.has(i) ? 'mark' : ''}">${esc(p.replace(/^　+/, ''))}</p>`).join('');
 
   let markMode = false;
   $('#mk-mode').onclick = (e) => { markMode = !markMode; e.target.classList.toggle('on', markMode); };
@@ -426,7 +428,7 @@ async function viewRead(view, r) {
   };
 
   store.set('hlm_last', { n });
-  syncProgress(n, isRead(n));
+  window.ReaderCompletion.mount($('#body'), String(n), "p[data-seg]", "data-seg");
   window.scrollTo({ top: 0 });
 }
 
