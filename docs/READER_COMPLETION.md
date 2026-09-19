@@ -1,6 +1,16 @@
+## Reader completion production accepted — 2026-09-19
+
+Source `fc64a5eaeb9e00907bec6a2989125a18602b1a21` is deployed at `https://hlm.bdfz.net/`: Pages deployment `52e0411b-2edb-4a4f-a483-c7c15381deab`, deployment `52e0411b-2edb-4a4f-a483-c7c15381deab`. Source page, central progress/evaluation and an ordinary reload without a version override all passed for the authorized account and exactly one preverified shortest chapter (`12`). The central receipt is unique, sealed and eligible; no historical completion or grades were backfilled.
+
+Evidence: `/Users/ylsuen/CF/reports/operations/reader-family-activation-serial2-20260919/acceptance-hlm.json`. Family report: `/Users/ylsuen/CF/reports/operations/reader-family-activation-serial3-20260919/REPORT.md`; shared receipt: `20260919-uc-reader-family-activation`. Existing content, paragraph/chapter IDs, identity, academic-year scoring policy and reaction/comment data are preserved.
+
+Rollback anchor: `e9a223f8-7a94-483e-bc10-76bcbb929e7a`. Roll back the leaf before removing its additive central contract, retain valid forward learning evidence, and use the project's existing release/rollback checks.
+
+This section supersedes earlier candidate/pending statements for this completion release only; unrelated historical incidents and follow-ups retain their own authority.
+
 # Server-verified reader completion
 
-Source candidate: 2026-09-19, `codex/reader-family-activation-20260919`. Production release and authenticated acceptance are still pending. The serial workspace receipt is `20260919-uc-reader-family-activation`; do not infer live completion from these local checks.
+Production accepted on 2026-09-19. Exact source, runtime, verification and rollback are recorded below and in the operations manual.
 
 ## Contract
 
