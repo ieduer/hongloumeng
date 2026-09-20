@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-20T05:57:52.384Z",
+  "scope": "release-channel control acceptance; project product/data acceptance remains distinct",
+  "repository": "ieduer/hongloumeng",
+  "branch": "main",
+  "targets": [
+    {
+      "target": "hongloumeng",
+      "mode": "guarded_automatic",
+      "deployment": "3d610977-34ef-4b79-8151-ff06d0cba621",
+      "source_commit": "fde98c2c2b2808e80282fa4a8b24a3dc36a05fb1",
+      "artifacts": 149,
+      "policy_file": ".release/policies.json"
+    }
+  ]
+}
