@@ -1,5 +1,5 @@
 name = "hongloumeng"
-pages_build_output_dir = "."
+pages_build_output_dir = ".release-output/hongloumeng"
 compatibility_date = "2025-03-24"
 
 [[services]]
