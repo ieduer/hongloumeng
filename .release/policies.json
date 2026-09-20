@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "guard_source": "ieduer/cf-ops-scripts@6aef139c359a50c38b5ac3d2522a481540a3daab",
+  "targets": [
+    {
+      "schema_version": 1,
+      "target": "hongloumeng",
+      "repository": "https://github.com/ieduer/hongloumeng",
+      "branch": "main",
+      "origin": "https://hongloumeng-4mw.pages.dev",
+      "baseline_commit": "fc64a5eaeb9e00907bec6a2989125a18602b1a21",
+      "source_root": "",
+      "output": ".release-output/hongloumeng",
+      "stage_tracked_static": true,
+      "build_command": "",
+      "required_paths": [
+        "functions/_shared/learning-evidence-proxy.js",
+        "functions/_shared/learning-manifest.js",
+        "functions/api/learning/[[path]].js",
+        "index.html",
+        "assets/js/app.js",
+        "data/study/exams.json"
+      ],
+      "required_artifacts": [
+        "index.html"
+      ],
+      "checks": [],
+      "bootstrap": {
+        "deployment_id": "52e0411b-2edb-4a4f-a483-c7c15381deab",
+        "fingerprints": [
+          {
+            "path": "/",
+            "artifact": "index.html",
+            "sha256": "901fc74de8a3fd2a9b6f940d0d1d27e614e134ea6a06795aef45d04890fae752"
+          },
+          {
+            "path": "/assets/css/study.css?v=2026091704",
+            "artifact": "assets/css/study.css",
+            "sha256": "090c0564e6a8858b97fabbc1d6903b3c541804053846b2b4d12fc10014701143"
+          },
+          {
+            "path": "/assets/js/appearance.js?v=2026091704",
+            "artifact": "assets/js/appearance.js",
+            "sha256": "86243ba8c529f3f9c419791a760443424dee1031fd7d75bfa5bc43c65943fae4"
+          },
+          {
+            "path": "/learning-manifest.js",
+            "artifact": "learning-manifest.js",
+            "sha256": "9ea7c8db807baee7f5c8e9052f23ab8762a764ab43a85cce56ee00c6b4fdd95c"
+          },
+          {
+            "path": "/reader-learning-evidence-v1.js",
+            "artifact": "reader-learning-evidence-v1.js",
+            "sha256": "22d6e13a0ef8355c1a9b65541b10016fb76259819710c43554157120ad504a81"
+          },
+          {
+            "path": "/reader-completion-ui.js",
+            "artifact": "reader-completion-ui.js",
+            "sha256": "95d24cbc7a3c421c90b0ab241d2508ed41ff9efde2027749809951a68764c286"
+          },
+          {
+            "path": "/assets/js/app.js?v=2026091901",
+            "artifact": "assets/js/app.js",
+            "sha256": "a5260adca2686058f1cfdaf71796f33370b34e5743d26e2324553ea1146edbd8"
+          }
+        ]
+      }
+    }
+  ]
+}
