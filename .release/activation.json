@@ -1,1 +1,1 @@
-{"schema_version":1,"targets":["hongloumeng"],"source_gate":"9476ff7f83dca246e163922b9392f7b2acfda2a3","intent":"Verify guarded automatic publication while preserving existing live artifacts"}
+{"intent":"Verify exact guarded artifact after output authority correction","source":"8888390204e7a0d32baf17c5037f5ce0d65f5ecc"}
