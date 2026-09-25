@@ -7,6 +7,27 @@
 const SITE_KEY = 'hlm';
 const V = 'v=2026091704';
 
+
+let detailedSession='';
+const detailedDrafts=new Map();
+function detailedContext(resourceKey=location.hash||'home') {
+ detailedSession ||= window.BdfzLearningRecords?.id() || `hlm-session-${Date.now()}`;
+ return {sessionKey:detailedSession,resourceKey,resourceVersion:'git-tree-sha1:c79b7229f408698998292fe046ddaca3f962a6b2',captureScope:window.BdfzLearningRecords?.scope||null,sourceContext:{route:location.hash}};
+}
+function detailedCapture(action,content,options={},context=detailedContext()) {
+ const service=window.BdfzLearningRecords;if(!service)return null;
+ const operation=service.build(action,content,context,options),saved=service.record(operation);saved.catch(()=>{});return{operation,saved};
+}
+function detailedDraft(text,resourceKey) {
+ const context=detailedContext(resourceKey),capture=detailedCapture('draft.edit',{text},{revisesOperationId:detailedDrafts.get(resourceKey)||''},context);
+ if(capture)detailedDrafts.set(resourceKey,capture.operation.operationId);
+}
+function initDetailedCapture() {
+ const service=window.BdfzLearningRecords;if(!service)return;
+ service.onState(s=>{const node=document.getElementById('learning-record-status');if(node)node.textContent=s.status==='unattributed'?'記錄已保存在本機；身份未確認時的內容不會自動歸屬':s.status==='saved'?'學習記錄已同步':['needs_attention','storage_error'].includes(s.status)?'學習記錄待處理，請保留此頁並重試':'學習記錄已在本機保存';});
+ void service.prepare().catch(()=>{});
+ document.getElementById('learning-record-retry')?.addEventListener('click',()=>service.retry().catch(()=>{}));
+}
 /* ---------------- 小工具 ---------------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -59,6 +80,7 @@ function setRead(n, on) {
   const k = itemKey(n);
   if (on) readSet.add(k); else readSet.delete(k);
   store.set('hlm_read_progress', [...readSet]);
+  detailedCapture('reading.marker',{chapterId:n,markedRead:on},{status:'succeeded'},detailedContext('chapter:'+n));
   syncProgress(n, on);
 }
 const identity = () => window.BdfzIdentity || null;
@@ -556,7 +578,7 @@ function bindExam(root, exams) {
 }
 function bindExamBody(art, it) {
   const ta = $('textarea[data-ans]', art);
-  if (ta) ta.oninput = () => store.set(ta.dataset.ans, ta.value);
+  if (ta) ta.oninput = () => { detailedDraft(ta.value,'exam:'+it.id);store.set(ta.dataset.ans, ta.value); };
   const btn = $('[data-ai-exam]', art);
   if (btn) btn.onclick = () => { openAI(); askExam(it, ta ? ta.value : ''); };
 }
@@ -956,7 +978,12 @@ function md(t) {
   return e.split(/\n{2,}/).map(b => /^<(h\d|ul|ol)/.test(b) ? b : '<p>' + b.replace(/\n/g, '<br>') + '</p>').join('');
 }
 
-async function callAI(prompt) {
+async function callAI(prompt,captureContext=detailedContext(),attemptNumber=1) {
+  const request=detailedCapture('ai.request',{prompt,attemptNumber},{actor:'system',status:'pending',contentOrigin:'request_context'},captureContext);
+  if(!request)throw new Error('學習記錄服務尚未就緒');
+  await request.saved;
+  captureContext.requestAt ||= request.operation.occurredAt;
+  try {
   const res = await fetch('https://ai.bdfz.net/', {
     signal: AbortSignal.timeout(25000),
     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -968,10 +995,17 @@ async function callAI(prompt) {
   try { j = JSON.parse(raw); } catch (e) { throw new Error('回應格式異常'); }
   const a = typeof j?.answer === 'string' ? j.answer.trim() : '';
   if (!a) throw new Error('空回應');
+  const reply=detailedCapture('assistant.reply',{text:j.answer},{actor:'assistant',status:'succeeded',parentOperationId:request.operation.operationId,contentOrigin:'ai_reply',assessment:{reportedModel:typeof j.model==='string'?j.model:null,modelProvenance:typeof j.model==='string'?'response_declared':'not_reported'}},captureContext);
+  if(reply){captureContext.replyAt=reply.operation.occurredAt;await reply.saved.catch(()=>{});}
   return a;
+  } catch(error) {
+    detailedCapture('ai.failure',{httpStatus:error.status||null,errorClass:error.name||'Error',attemptNumber},{actor:'system',status:'failed',parentOperationId:request.operation.operationId,contentOrigin:'transport_result'},captureContext);
+    throw error;
+  }
 }
 
 async function ask(prompt, label) {
+  const captureContext=detailedContext();
   if (aiBusy) return;
   aiBusy = true;
   $('#ai-send').disabled = true;
@@ -979,15 +1013,15 @@ async function ask(prompt, label) {
   try {
     let answer;
     try {
-      answer = await callAI(prompt);
+      answer = await callAI(prompt,captureContext,1);
     } catch (first) {
       if (!(first.status === 429 || first.status >= 500 || ['TypeError', 'TimeoutError', 'AbortError'].includes(first.name))) throw first;
       console.warn('[hlm] AI retry', first.status || first.name);
       b.innerHTML = '<p class="muted">再試一次…</p>';
-      answer = await callAI(prompt);
+      answer = await callAI(prompt,captureContext,2);
     }
     b.innerHTML = md(answer);
-    try { archive(prompt, answer); } catch (_) { /* 回答成功不受歸檔失敗影響 */ }
+    try { archive(prompt, answer,captureContext); } catch (_) { /* 回答成功不受歸檔失敗影響 */ }
   } catch (e) {
     console.error('[hlm] AI failed', e.status || e.name);
     b.innerHTML = '<p>這次沒答上來，上游暫時不可用。</p>'
@@ -1003,14 +1037,16 @@ async function ask(prompt, label) {
 
 let sessionKey = '';
 const convo = [];
-function archive(q, a) {
-  convo.push({ role: 'user', content: q.slice(0, 400) }, { role: 'assistant', content: a });
+function archive(q, a,captureContext) {
+  if(!captureContext?.captureScope || captureContext.captureScope!==window.BdfzLearningRecords?.scope)return;
+  convo.push({ id:window.BdfzLearningRecords.id(),createdAt:captureContext.requestAt,scope:captureContext.captureScope,role:'system',content:q,contentOrigin:'request_context' }, { id:window.BdfzLearningRecords.id(),createdAt:captureContext.replyAt,scope:captureContext.captureScope,role:'assistant',content:a });
+  if(convo.some(m=>m.scope!==captureContext.captureScope))return;
   if (!sessionKey) sessionKey = identity()?.createSessionKey?.(SITE_KEY + '-chat') || SITE_KEY + '-' + Date.now().toString(36);
   identity()?.recordConversation?.({
     siteKey: SITE_KEY, sessionKey, title: '紅樓夢助讀',
     summary: (a || '').slice(0, 120), sourceUrl: location.href,
-    messages: convo.slice(-16).map((m, i) => ({ id: String(i + 1), role: m.role, content: m.content })),
-    meta: { route: location.hash },
+    messages: convo.map(m => ({ id:m.id,role:m.role,content:m.content,createdAt:m.createdAt })),
+    meta: { route: captureContext.sourceContext.route },
   })?.catch?.(() => { });
 }
 
@@ -1087,6 +1123,7 @@ function updateAIContext() {
    啟動
    ============================================================= */
 function boot() {
+  initDetailedCapture();
   applyPrefs();
   window.HLMAppearance.bind();
   $('#btn-theme').onclick = window.HLMAppearance.open;
@@ -1098,6 +1135,7 @@ function boot() {
   const send = () => {
     if (aiBusy) return;
     const v = $('#ai-input').value.trim();
+    if(v)detailedCapture('question.submit',{text:v},{status:'succeeded'});
     if (!v) return;
     $('#ai-input').value = '';
     bubble('me', esc(v));
@@ -1106,6 +1144,7 @@ function boot() {
     ask(`${BASE}\n${ctx}讀者的問題：${v}`, '想一想…');
   };
   $('#ai-send').onclick = send;
+  $('#ai-input').oninput = e => detailedDraft(e.target.value,'chat:'+location.hash);
   $('#ai-input').onkeydown = (e) => { if (e.key === 'Enter') send(); };
 
   document.addEventListener('keydown', (e) => {

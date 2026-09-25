@@ -10,7 +10,7 @@ function setup() {
   const c = vm.createContext({console,URLSearchParams,AbortSignal,Date,Set,Map,Promise,
     localStorage:{getItem(){return null;},setItem(){}},location:{hash:'#/'},
     document:{readyState:'loading',addEventListener(){},documentElement:{style:{setProperty(){}},dataset:{}},querySelector(s){if(!nodes.has(s))nodes.set(s,node());return nodes.get(s);},querySelectorAll(){return [];}},
-    window:{scrollTo(){},addEventListener(){}},fetch:async()=>({ok:true,json:async()=>({})})});
+    window:{BdfzLearningRecords:{scope:'a'.repeat(64),id:()=> 'synthetic-message-id',build:(action,content,context,options)=>({operationId:'synthetic-operation',occurredAt:'2026-09-25T14:00:00Z',action,content,context,options}),record:async()=>({ok:true})},scrollTo(){},addEventListener(){}},fetch:async()=>({ok:true,json:async()=>({})})});
   vm.runInContext(app,c); return c;
 }
 const run=(c,s)=>vm.runInContext(s,c);
@@ -94,4 +94,15 @@ test('palette backgrounds carry distinct washes through light and dark surface l
       assert.notEqual(c.card.toLowerCase(),'#ffffff','cards retain a palette tint');
     }
   }
+});
+
+
+test('AI stores raw full reply, request and failure without promoting source context to student work',async()=>{
+ const c=setup();c.records=[];c.window.BdfzLearningRecords.record=async op=>{c.records.push(op);return{ok:true};};
+ c.fetch=async()=>({ok:true,text:async()=>JSON.stringify({answer:'  synthetic < reply\n',model:'declared'})});
+ await run(c,"callAI('synthetic prompt')");assert.equal(c.records[0].action,'ai.request');assert.equal(c.records[1].content.text,'  synthetic < reply\n');assert.equal(c.records[1].options.assessment.modelProvenance,'response_declared');
+});
+test('local persistence failure prevents a provider attempt',async()=>{
+ const c=setup();let calls=0;c.fetch=async()=>{calls++;};c.window.BdfzLearningRecords.record=async()=>{throw Error('storage unavailable');};
+ await assert.rejects(run(c,"callAI('synthetic')"),/storage/);assert.equal(calls,0);
 });
