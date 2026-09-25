@@ -1,3 +1,9 @@
+## 2026-09-25 — Detailed learning capture candidate, not deployed
+
+The task-owned candidate preserves complete source operations and account ownership. Its shared capture wrapper now resumes both durable queues after persisted page return, online reconnect and focus without resetting the bounded automatic retry budget; the script cache version changed with it. Unknown and other-account originals are never reassigned. Existing scoring/content/completion contracts remain unchanged.
+
+Leaf publication and real leaf acceptance follow UC core acceptance and this week's observed activity order. Current source, core readiness, ownership and remaining full-site/report work: `/Users/ylsuen/CF/reports/operations/learning-records-validity-20260925/REPORT.md`. This candidate is not a production or full-coverage claim.
+
 ## Reader completion production accepted — 2026-09-19
 
 Source `fc64a5eaeb9e00907bec6a2989125a18602b1a21` is deployed at `https://hlm.bdfz.net/`: Pages deployment `52e0411b-2edb-4a4f-a483-c7c15381deab`, deployment `52e0411b-2edb-4a4f-a483-c7c15381deab`. Source page, central progress/evaluation and an ordinary reload without a version override all passed for the authorized account and exactly one preverified shortest chapter (`12`). The central receipt is unique, sealed and eligible; no historical completion or grades were backfilled.
