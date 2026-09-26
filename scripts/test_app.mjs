@@ -5,12 +5,12 @@ import test from 'node:test';
 
 const app = readFileSync(new URL('../assets/js/app.js', import.meta.url), 'utf8');
 function setup() {
-  const nodes = new Map();
+  const nodes = new Map(); let operationSequence=0;
   const node = () => ({innerHTML:'',className:'',style:{setProperty(){}},classList:{add(){},remove(){},toggle(){}},querySelector(){return node();},querySelectorAll(){return [];}});
   const c = vm.createContext({console,URLSearchParams,AbortSignal,Date,Set,Map,Promise,
     localStorage:{getItem(){return null;},setItem(){}},location:{hash:'#/'},
-    document:{readyState:'loading',addEventListener(){},documentElement:{style:{setProperty(){}},dataset:{}},querySelector(s){if(!nodes.has(s))nodes.set(s,node());return nodes.get(s);},querySelectorAll(){return [];}},
-    window:{BdfzLearningRecords:{scope:'a'.repeat(64),id:()=> 'synthetic-message-id',build:(action,content,context,options)=>({operationId:'synthetic-operation',occurredAt:'2026-09-25T14:00:00Z',action,content,context,options}),record:async()=>({ok:true})},scrollTo(){},addEventListener(){}},fetch:async()=>({ok:true,json:async()=>({})})});
+    document:{readyState:'loading',getElementById(){return null;},addEventListener(){},documentElement:{style:{setProperty(){}},dataset:{}},querySelector(s){if(!nodes.has(s))nodes.set(s,node());return nodes.get(s);},querySelectorAll(){return [];}},
+    window:{BdfzLearningRecords:{scope:'a'.repeat(64),id:()=> 'synthetic-message-id',build:(action,content,context,options)=>({operationId:'synthetic-operation-'+(++operationSequence),occurredAt:'2026-09-25T14:00:00Z',action,content,context,options}),record:async()=>({ok:true})},scrollTo(){},addEventListener(){}},fetch:async()=>({ok:true,json:async()=>({})})});
   vm.runInContext(app,c); return c;
 }
 const run=(c,s)=>vm.runInContext(s,c);
@@ -105,4 +105,26 @@ test('AI stores raw full reply, request and failure without promoting source con
 test('local persistence failure prevents a provider attempt',async()=>{
  const c=setup();let calls=0;c.fetch=async()=>{calls++;};c.window.BdfzLearningRecords.record=async()=>{throw Error('storage unavailable');};
  await assert.rejects(run(c,"callAI('synthetic')"),/storage/);assert.equal(calls,0);
+});
+
+test('account change during durable request storage prevents dispatch',async()=>{
+ const c=setup();let release,calls=0;c.window.BdfzLearningRecords.record=()=>new Promise(r=>release=r);c.fetch=async()=>{calls++;};const task=run(c,"callAI('original prompt')");c.window.BdfzLearningRecords.scope='b'.repeat(64);release();await assert.rejects(task,/帳號已變更/);assert.equal(calls,0);
+});
+test('full reply save failure retains exact operation; storage retry never repeats a model call',async()=>{
+ const c=setup(),rows=[];let broken=true,calls=0;c.window.BdfzLearningRecords.record=async op=>{if(broken&&op.action==='assistant.reply')throw Error('storage full');rows.push(op);};c.window.BdfzLearningRecords.retry=async()=>({ok:true});const answer=' 完整回覆\n'.repeat(5000);c.fetch=async()=>{calls++;return{ok:true,text:async()=>JSON.stringify({answer,model:'fixture',modelVersion:'v1'})};};await assert.rejects(run(c,"callAI('question')"),/storage full/);assert.equal(run(c,'detailedPending.size'),1);assert.equal(rows.length,1);broken=false;await run(c,'retryDetailedStorage()');assert.equal(calls,1);assert.equal(rows[1].action,'assistant.reply');assert.equal(rows[1].content.text,answer);assert.equal(rows[1].content.response.modelVersion,'v1');assert.equal(rows[1].options.assessment.reportedModelVersion,'v1');assert.equal(run(c,'detailedPending.size'),0);
+});
+test('bounded retry records failure and links the next request to it',async()=>{
+ const c=setup(),rows=[];c.window.BdfzLearningRecords.record=async op=>rows.push(op);run(c,"globalThis.fixtureContext=detailedContext('exam:test')");c.fetch=async()=>({ok:false,status:503,text:async()=>'synthetic failure body'});await assert.rejects(run(c,"callAI('prompt',fixtureContext,1)"));c.fetch=async()=>({ok:true,text:async()=>'{"answer":"full reply"}'});await run(c,"callAI('prompt',fixtureContext,2)");assert.deepEqual(rows.map(x=>x.action),['ai.request','ai.failure','ai.request','assistant.reply']);assert.equal(rows[2].options.parentOperationId,rows[1].operationId);assert.equal(rows[3].options.parentOperationId,rows[2].operationId);assert.equal(rows[3].options.assessment.reportedModel,null);assert(rows.every(x=>x.options.assessment.scoringEligibility==='record_only'));
+});
+test('submitted original answer is saved before its request and full response',async()=>{
+ const c=setup(),rows=[];c.window.BdfzLearningRecords.record=async op=>rows.push(op);c.fetch=async()=>{assert.equal(rows.length,2);return{ok:true,text:async()=>'{"answer":"reply"}'};};run(c,"bubble=()=>({innerHTML:'',querySelector:()=>null}); globalThis.fixtureContext=detailedContext('exam:test');globalThis.submission=detailedCapture('answer.submit',{text:' original answer \\n',question:{id:'test'}},{actor:'student'},fixtureContext)");await run(c,"ask('generated prompt','label',fixtureContext,submission)");assert.equal(rows[0].content.text,' original answer \n');assert.equal(rows[1].options.parentOperationId,rows[0].operationId);assert.equal(rows[2].options.parentOperationId,rows[1].operationId);
+});
+test('late reply stays with original scope and cannot paint or archive under a new account',async()=>{
+ const c=setup(),rows=[];c.window.BdfzLearningRecords.record=async op=>rows.push(op);run(c,"globalThis.responseBubble={innerHTML:'',querySelector:()=>null};bubble=()=>responseBubble");c.fetch=async()=>{c.window.BdfzLearningRecords.scope='b'.repeat(64);return{ok:true,text:async()=>'{"answer":"private old-owner reply"}'};};await run(c,"ask('prompt','waiting')");assert(!run(c,'responseBubble.innerHTML').includes('private'));assert(rows.every(x=>x.context.captureScope==='a'.repeat(64)));assert.equal(run(c,'convo.length'),0);
+});
+test('draft ancestry is isolated by account and persists in the existing browser storage',async()=>{
+ const c=setup(),values=new Map();c.localStorage.getItem=k=>values.get(k)||null;c.localStorage.setItem=(k,v)=>values.set(k,v);const first=run(c,"detailedCapture('draft.edit',{text:'original'},{},detailedContext('exam:test'))");await first.saved;assert.equal(run(c,"detailedContext('exam:test').parentOperationId"),first.operation.operationId);c.window.BdfzLearningRecords.scope='b'.repeat(64);assert.equal(run(c,"detailedContext('exam:test').parentOperationId"),'');
+});
+test('retrying a failed draft persists its original account ancestry',async()=>{
+ const c=setup(),values=new Map();c.localStorage.getItem=k=>values.get(k)||null;c.localStorage.setItem=(k,v)=>values.set(k,v);c.window.BdfzLearningRecords.record=async()=>{throw Error('storage unavailable');};c.window.BdfzLearningRecords.retry=async()=>({ok:true});const first=run(c,"detailedCapture('draft.edit',{text:'original'},{},detailedContext('exam:test'))");await assert.rejects(first.saved);c.window.BdfzLearningRecords.record=async()=>({ok:true});await run(c,'retryDetailedStorage()');assert.equal(run(c,"detailedContext('exam:test').parentOperationId"),first.operation.operationId);
 });

@@ -5,28 +5,41 @@
 'use strict';
 
 const SITE_KEY = 'hlm';
-const V = 'v=2026091704';
+const V = 'v=2026092601';
 
 
 let detailedSession='';
-const detailedDrafts=new Map();
+let detailedGeneration=0;
+const detailedPending=new Map();
 function detailedContext(resourceKey=location.hash||'home') {
  detailedSession ||= window.BdfzLearningRecords?.id() || `hlm-session-${Date.now()}`;
- return {sessionKey:detailedSession,resourceKey,resourceVersion:'git-tree-sha1:c79b7229f408698998292fe046ddaca3f962a6b2',captureScope:window.BdfzLearningRecords?.scope||null,sourceContext:{route:location.hash}};
+ const captureScope=window.BdfzLearningRecords?.scope||null;
+ const context={sessionKey:detailedSession,resourceKey,resourceVersion:'git-tree-sha1:c79b7229f408698998292fe046ddaca3f962a6b2',captureScope,generation:detailedGeneration,chapterId:resourceKey,chapterTitle:document.title||'紅樓夢',sourceContext:{route:location.hash}};
+ context.pointerKey=captureScope?`hlm-learning-parent-v1:${captureScope}:${resourceKey}`:null;
+ try{context.parentOperationId=context.pointerKey?localStorage.getItem(context.pointerKey)||'':'';}catch{context.parentOperationId='';}
+ return context;
 }
+function detailedCurrent(context){return context.generation===detailedGeneration&&(window.BdfzLearningRecords?.scope||null)===context.captureScope;}
 function detailedCapture(action,content,options={},context=detailedContext()) {
  const service=window.BdfzLearningRecords;if(!service)return null;
- const operation=service.build(action,content,context,options),saved=service.record(operation);saved.catch(()=>{});return{operation,saved};
+ const operation=service.build(action,content,context,{parentOperationId:context.parentOperationId||'',...options,assessment:{scoringEligibility:'record_only',...options.assessment}});
+ detailedPending.set(operation.operationId,{service,operation,context});
+ const saved=(async()=>{await service.record(operation);detailedPending.delete(operation.operationId);if(['draft.edit','question.submit','answer.submit'].includes(action)&&context.pointerKey){try{localStorage.setItem(context.pointerKey,operation.operationId);}catch{}}})();
+ saved.catch(()=>{context.storageFailure=true;const node=document.getElementById('learning-record-status');if(node)node.textContent='記錄尚未完整保存，請保留此頁並重試保存';});return{operation,saved};
 }
 function detailedDraft(text,resourceKey) {
- const context=detailedContext(resourceKey),capture=detailedCapture('draft.edit',{text},{revisesOperationId:detailedDrafts.get(resourceKey)||''},context);
- if(capture)detailedDrafts.set(resourceKey,capture.operation.operationId);
+ const context=detailedContext(resourceKey);detailedCapture('draft.edit',{text},{revisesOperationId:context.parentOperationId},context);
+}
+async function retryDetailedStorage(){
+ for(const [id,item]of [...detailedPending]){await item.service.record(item.operation);detailedPending.delete(id);item.context.storageFailure=false;if(['draft.edit','question.submit','answer.submit'].includes(item.operation.action)&&item.context.pointerKey){try{localStorage.setItem(item.context.pointerKey,item.operation.operationId);}catch{}}}
+ return window.BdfzLearningRecords.retry();
 }
 function initDetailedCapture() {
  const service=window.BdfzLearningRecords;if(!service)return;
  service.onState(s=>{const node=document.getElementById('learning-record-status');if(node)node.textContent=s.status==='unattributed'?'記錄已保存在本機；身份未確認時的內容不會自動歸屬':s.status==='saved'?'學習記錄已同步':['needs_attention','storage_error'].includes(s.status)?'學習記錄待處理，請保留此頁並重試':'學習記錄已在本機保存';});
  void service.prepare().catch(()=>{});
- document.getElementById('learning-record-retry')?.addEventListener('click',()=>service.retry().catch(()=>{}));
+ document.getElementById('learning-record-retry')?.addEventListener('click',()=>retryDetailedStorage().catch(()=>{}));
+ window.addEventListener('bdfz:session-invalidated',()=>{detailedGeneration++;detailedSession='';convo.length=0;sessionKey='';aiLog()?.replaceChildren();const input=$('#ai-input');if(input)input.value='';});
 }
 /* ---------------- 小工具 ---------------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -979,60 +992,52 @@ function md(t) {
 }
 
 async function callAI(prompt,captureContext=detailedContext(),attemptNumber=1) {
+  if(!detailedCurrent(captureContext))throw new Error('學習帳號已變更');
   const request=detailedCapture('ai.request',{prompt,attemptNumber},{actor:'system',status:'pending',contentOrigin:'request_context'},captureContext);
   if(!request)throw new Error('學習記錄服務尚未就緒');
   await request.saved;
+  if(!detailedCurrent(captureContext))throw new Error('學習帳號已變更');
   captureContext.requestAt ||= request.operation.occurredAt;
+  let raw,j,a;
   try {
-  const res = await fetch('https://ai.bdfz.net/', {
-    signal: AbortSignal.timeout(25000),
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt }),
-  });
-  const raw = await res.text();
-  if (!res.ok) { const error = new Error('AI 服務暫時無法回應（HTTP ' + res.status + '）'); error.status = res.status; throw error; }
-  let j;
-  try { j = JSON.parse(raw); } catch (e) { throw new Error('回應格式異常'); }
-  const a = typeof j?.answer === 'string' ? j.answer.trim() : '';
-  if (!a) throw new Error('空回應');
-  const reply=detailedCapture('assistant.reply',{text:j.answer},{actor:'assistant',status:'succeeded',parentOperationId:request.operation.operationId,contentOrigin:'ai_reply',assessment:{reportedModel:typeof j.model==='string'?j.model:null,modelProvenance:typeof j.model==='string'?'response_declared':'not_reported'}},captureContext);
-  if(reply){captureContext.replyAt=reply.operation.occurredAt;await reply.saved.catch(()=>{});}
-  return a;
-  } catch(error) {
-    detailedCapture('ai.failure',{httpStatus:error.status||null,errorClass:error.name||'Error',attemptNumber},{actor:'system',status:'failed',parentOperationId:request.operation.operationId,contentOrigin:'transport_result'},captureContext);
+    const res=await fetch('https://ai.bdfz.net/',{signal:AbortSignal.timeout(25000),method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+    raw=await res.text();
+    if(!res.ok){const error=new Error('AI 服務暫時無法回應（HTTP '+res.status+'）');error.status=res.status;throw error;}
+    try{j=JSON.parse(raw);}catch{throw new Error('回應格式異常');}
+    a=typeof j?.answer==='string'?j.answer.trim():'';
+    if(!a)throw new Error('空回應');
+  }catch(error){
+    const failed=detailedCapture('ai.failure',{httpStatus:error.status||null,errorClass:error.name||'Error',attemptNumber,responseBody:typeof raw==='string'?raw:null},{actor:'system',status:'failed',parentOperationId:request.operation.operationId,contentOrigin:'transport_result'},captureContext);
+    if(failed){await failed.saved;captureContext.parentOperationId=failed.operation.operationId;}
     throw error;
   }
+  const reply=detailedCapture('assistant.reply',{text:j.answer,response:j},{actor:'assistant',status:'succeeded',parentOperationId:request.operation.operationId,contentOrigin:'ai_reply',assessment:{reportedModel:typeof j.model==='string'?j.model:null,reportedModelVersion:typeof j.modelVersion==='string'?j.modelVersion:null,modelProvenance:typeof j.model==='string'?'response_declared':'not_reported'}},captureContext);
+  if(!reply)throw new Error('學習記錄服務尚未就緒');
+  captureContext.replyAt=reply.operation.occurredAt;await reply.saved;captureContext.parentOperationId=reply.operation.operationId;
+  return a;
 }
 
-async function ask(prompt, label) {
-  const captureContext=detailedContext();
-  if (aiBusy) return;
-  aiBusy = true;
-  $('#ai-send').disabled = true;
-  const b = bubble('ai', '<p class="muted">' + esc(label || '想一想…') + '</p>');
-  try {
+async function ask(prompt,label,captureContext=detailedContext(),submitted=null) {
+  if(aiBusy)return;
+  aiBusy=true;$('#ai-send').disabled=true;
+  const b=bubble('ai','<p class="muted">'+esc(label||'想一想…')+'</p>');
+  try{
+    if(submitted){await submitted.saved;captureContext.parentOperationId=submitted.operation.operationId;}
+    if(detailedPending.size)throw new Error('尚有記錄待保存');
     let answer;
-    try {
-      answer = await callAI(prompt,captureContext,1);
-    } catch (first) {
-      if (!(first.status === 429 || first.status >= 500 || ['TypeError', 'TimeoutError', 'AbortError'].includes(first.name))) throw first;
-      console.warn('[hlm] AI retry', first.status || first.name);
-      b.innerHTML = '<p class="muted">再試一次…</p>';
-      answer = await callAI(prompt,captureContext,2);
+    try{answer=await callAI(prompt,captureContext,1);}
+    catch(first){
+      if(!detailedCurrent(captureContext)||captureContext.storageFailure||!(first.status===429||first.status>=500||['TypeError','TimeoutError','AbortError'].includes(first.name)))throw first;
+      b.innerHTML='<p class="muted">再試一次…</p>';answer=await callAI(prompt,captureContext,2);
     }
-    b.innerHTML = md(answer);
-    try { archive(prompt, answer,captureContext); } catch (_) { /* 回答成功不受歸檔失敗影響 */ }
-  } catch (e) {
-    console.error('[hlm] AI failed', e.status || e.name);
-    b.innerHTML = '<p>這次沒答上來，上游暫時不可用。</p>'
-      + '<p><button class="btn" data-retry="1">重試</button></p>';
-    const r = b.querySelector('[data-retry]');
-    if (r) r.onclick = () => { b.remove(); ask(prompt, label); };
-  } finally {
-    aiBusy = false;
-    $('#ai-send').disabled = false;
-    aiLog().scrollTop = aiLog().scrollHeight;
-  }
+    if(!detailedCurrent(captureContext))return;
+    b.innerHTML=md(answer);try{archive(prompt,answer,captureContext);}catch{}
+  }catch(e){
+    if(!detailedCurrent(captureContext))return;
+    if(captureContext.storageFailure||detailedPending.size){b.innerHTML='<p>記錄尚未完整保存，請使用「重試保存學習記錄」。不會自動重新呼叫模型。</p>';return;}
+    b.innerHTML='<p>這次沒答上來，上游暫時不可用。</p><p><button class="btn" data-retry="1">重試</button></p>';
+    const r=b.querySelector('[data-retry]');if(r)r.onclick=()=>{if(!detailedCurrent(captureContext))return;b.remove();ask(prompt,label,captureContext);};
+  }finally{aiBusy=false;$('#ai-send').disabled=false;aiLog().scrollTop=aiLog().scrollHeight;}
 }
 
 let sessionKey = '';
@@ -1066,6 +1071,8 @@ function askChapter(n, title) {
 
 function askExam(it, myAnswer) {
   if (aiBusy) return;
+  const captureContext=detailedContext('exam:'+it.id);
+  const submitted=myAnswer?detailedCapture('answer.submit',{text:myAnswer,question:it},{actor:'student',status:'succeeded'},captureContext):null;
   $('#ai-title').textContent = it.year + ' 年真題批改';
   bubble('me', esc(myAnswer ? '請批改我的作答' : '請講講這道題'));
   ask(`${BASE}
@@ -1078,7 +1085,7 @@ ${it.material ? '【材料】' + it.material.source + '\n' + it.material.text + 
 
 ${myAnswer ? `【學生作答】\n${myAnswer}\n\n請按北京卷評分習慣批改：先按得分點逐條說明拿到了哪些、漏了哪些，再給一個估分（滿分 ${it.score} 分），最後給出兩條具體的修改建議。不要重寫整份答案。`
       : `請講解這道題：命題意圖是什麼、答題應分哪幾步、最常見的失分點是什麼。不超過 600 字。`}`,
-    myAnswer ? '正在批改…' : '正在講解…');
+    myAnswer ? '正在批改…' : '正在講解…',captureContext,submitted);
 }
 
 function askPerson(p) {
@@ -1134,14 +1141,15 @@ function boot() {
   $('#ai-clear').onclick = () => { if (aiBusy) return; aiLog().innerHTML = ''; convo.length = 0; sessionKey = ''; };
   const send = () => {
     if (aiBusy) return;
-    const v = $('#ai-input').value.trim();
-    if(v)detailedCapture('question.submit',{text:v},{status:'succeeded'});
-    if (!v) return;
+    const v = $('#ai-input').value;
+    if (!v.trim()) return;
+    const captureContext=detailedContext('chat:'+location.hash);
+    const submitted=detailedCapture('question.submit',{text:v},{actor:'student',status:'succeeded'},captureContext);
     $('#ai-input').value = '';
     bubble('me', esc(v));
     const r = state.route || { seg: [] };
     const ctx = r.seg[0] === 'read' && r.seg[1] ? `（讀者目前在讀${chLabel(+r.seg[1])}）` : '';
-    ask(`${BASE}\n${ctx}讀者的問題：${v}`, '想一想…');
+    ask(`${BASE}\n${ctx}讀者的問題：${v}`, '想一想…',captureContext,submitted);
   };
   $('#ai-send').onclick = send;
   $('#ai-input').oninput = e => detailedDraft(e.target.value,'chat:'+location.hash);
