@@ -57,3 +57,14 @@ test('mismatching server checkpoint cannot enable or automatically submit comple
 test('rejected source completion never writes a completed progress projection',async()=>{
  const h=harness(undefined,{rejectComplete:true});await h.open();await h.step(30);assert.equal(h.store.evidence,0);assert.equal(h.store.rows[0].state,'in_progress');assert.equal(h.tracker.snapshot().completed,false);
 });
+
+test('historical completed chapter remains visible when a new reading session is incomplete',async()=>{
+ const first=harness();await first.open();await first.step(25);first.tracker.detach();
+ const previousRows=JSON.stringify(first.store.rows);first.store.completed=false;first.store.active=0;first.store.segments={};
+ const next=harness(first.store);await next.open();
+ assert.equal(next.tracker.snapshot().historicalCompleted,true);
+ assert.equal(next.tracker.snapshot().completed,false,'current session completion remains separate');
+ assert.equal(next.tracker.snapshot().eligible,false,'historical record cannot grant current eligibility');
+ assert.equal(next.calls.complete,0);assert.equal(next.calls.progress,0);
+ assert.equal(JSON.stringify(next.store.rows),previousRows);
+});

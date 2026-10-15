@@ -182,6 +182,8 @@
         completing: !!current.completionInFlight,
         completionFailed: current.completionFailed === true,
         completed: current.completed === true,
+        historicalCompleted: current.historicalCompleted === true,
+        historyUnavailable: current.historyUnavailable === true,
         sourceReady: !!current.sourceSessionId,
         sourceFailed: !!current.sourceError,
         sourcePaused: current.sourcePaused === true,
@@ -382,10 +384,14 @@
       if (!(await sessionIsAuthenticated())) return { ok: false, reason: 'anonymous' };
       var progress = await getProgress(manifest.siteKey).catch(function () { return null; });
       if (!progress || !Array.isArray(progress.items)) {
+        state.historyUnavailable = true;
+        if (current === state) notify();
         return { ok: false, reason: 'central_readback_unavailable' };
       }
       var rows = progress.items;
       if ((rows || []).some(function (item) { return isStrictChapterCompletion(item, manifest, chapter); })) {
+        state.historicalCompleted = true;
+        if (current === state) notify();
         return { ok: true, legacyCompleted: true };
       }
       if (current !== state) return { ok: false, reason: 'chapter_changed' };
@@ -429,6 +435,8 @@
         lastTick: now(),
         pageActive: !(root.document && root.document.hidden),
         completed: false,
+        historicalCompleted: false,
+        historyUnavailable: false,
         sourceCompleted: false,
         openRegistered: false,
         checkpoint: null,

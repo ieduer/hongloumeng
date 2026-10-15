@@ -15,6 +15,13 @@
   function paint(status) {
     if (!button || !status) return;
     if (status.completed) { button.textContent = '本章已完成 · 已計入學習軌跡與評價'; button.disabled = true; }
+    else if (status.historicalCompleted) {
+      button.disabled = !status.eligible || status.completing || status.sourcePaused;
+      if (status.completionFailed) button.disabled = false;
+      var detail = status.completing ? '本次閱讀正在同步' : status.sourcePaused ? '本次同步中斷，請重開本章' : status.completionFailed ? '本次同步未完成，點此重試' : status.eligible ? '本次閱讀已核驗' : '本次已核驗 ' + status.serverObservedSegmentCount + ' / ' + status.segmentCount + ' 段';
+      button.textContent = '本章已讀 · 歷史完成記錄已保留 · ' + detail;
+    }
+    else if (status.historyUnavailable) { button.textContent = '暫時無法核對歷史記錄，請重新打開本章後同步'; button.disabled = true; }
     else if (status.sourcePaused) { button.textContent = '閱讀同步暫時中斷，請重新打開本章後繼續'; button.disabled = true; }
     else if (status.completing) { button.textContent = '正在核對中央完成記錄…'; button.disabled = true; }
     else if (status.completionFailed) { button.textContent = '同步未完成，閱讀證據已保留 · 點此重試'; button.disabled = false; }
