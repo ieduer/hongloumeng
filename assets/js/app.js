@@ -1002,7 +1002,12 @@ async function callAI(prompt,captureContext=detailedContext(),attemptNumber=1) {
   try {
     const res=await fetch('https://ai.bdfz.net/',{signal:AbortSignal.timeout(25000),method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
     raw=await res.text();
-    if(!res.ok){const error=new Error('AI 服務暫時無法回應（HTTP '+res.status+'）');error.status=res.status;throw error;}
+    if(!res.ok){const error=new Error('AI 服務暫時無法回應（HTTP '+res.status+'）');error.status=res.status;
+      // APIS 2026-10-15: PAYLOAD_TOO_LARGE / UPSTREAM_OUTPUT_TOO_LARGE (also as an older 503) and retryable:false are final for this request.
+      let body=null;try{body=JSON.parse(raw);}catch{}
+      error.code=typeof body?.error_code==='string'?body.error_code:'';
+      error.terminal=['PAYLOAD_TOO_LARGE','UPSTREAM_OUTPUT_TOO_LARGE'].includes(error.code)||body?.retryable===false;
+      throw error;}
     try{j=JSON.parse(raw);}catch{throw new Error('回應格式異常');}
     a=typeof j?.answer==='string'?j.answer.trim():'';
     if(!a)throw new Error('空回應');
@@ -1027,7 +1032,7 @@ async function ask(prompt,label,captureContext=detailedContext(),submitted=null)
     let answer;
     try{answer=await callAI(prompt,captureContext,1);}
     catch(first){
-      if(!detailedCurrent(captureContext)||captureContext.storageFailure||!(first.status===429||first.status>=500||['TypeError','TimeoutError','AbortError'].includes(first.name)))throw first;
+      if(!detailedCurrent(captureContext)||captureContext.storageFailure||first.terminal||!(first.status===429||first.status>=500||['TypeError','TimeoutError','AbortError'].includes(first.name)))throw first;
       b.innerHTML='<p class="muted">再試一次…</p>';answer=await callAI(prompt,captureContext,2);
     }
     if(!detailedCurrent(captureContext))return;
@@ -1035,7 +1040,8 @@ async function ask(prompt,label,captureContext=detailedContext(),submitted=null)
   }catch(e){
     if(!detailedCurrent(captureContext))return;
     if(captureContext.storageFailure||detailedPending.size){b.innerHTML='<p>記錄尚未完整保存，請使用「重試保存學習記錄」。不會自動重新呼叫模型。</p>';return;}
-    b.innerHTML='<p>這次沒答上來，上游暫時不可用。</p><p><button class="btn" data-retry="1">重試</button></p>';
+    if(e.code==='PAYLOAD_TOO_LARGE'||e.status===413){b.innerHTML='<p>這次的內容超過 AI 服務上限，請縮短後再問。</p>';return;}
+    b.innerHTML=(e.code==='UPSTREAM_OUTPUT_TOO_LARGE'?'<p>這次的回答異常過長，已停止自動重試。</p>':'<p>這次沒答上來，上游暫時不可用。</p>')+'<p><button class="btn" data-retry="1">重試</button></p>';
     const r=b.querySelector('[data-retry]');if(r)r.onclick=()=>{if(!detailedCurrent(captureContext))return;b.remove();ask(prompt,label,captureContext);};
   }finally{aiBusy=false;$('#ai-send').disabled=false;aiLog().scrollTop=aiLog().scrollHeight;}
 }
