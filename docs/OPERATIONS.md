@@ -1,3 +1,15 @@
+## 2026-10-16 — APIS terminal codes end an AI question after one call (accepted)
+
+Source `30eba617d20bc27557dc88a16113e793ec900df9` (`main`, fast-forward from `cba827b`) was published by the guarded native Pages build as deployment `cc91490c-a77d-4b74-938a-20bb378da479` (deploy stage ended 2026-10-16T04:08:04Z). Only `assets/js/app.js` (cache key `?v=2026101501`) and `index.html` changed; Functions inputs and the Pages configuration are unchanged.
+
+Behaviour: when `ai.bdfz.net` answers with `error_code` `PAYLOAD_TOO_LARGE` or `UPSTREAM_OUTPUT_TOO_LARGE` (including the older 503 shape) or with `retryable:false`, the question ends after one call, with no automatic second attempt. A payload refusal (that code or HTTP 413) asks the reader to shorten the question and offers no identical retry; an over-size answer keeps the manual 重試 button. Network errors, timeouts, HTTP 429 and other 5xx keep the single automatic second attempt. Regression test: `tests/ai-terminal.test.mjs`.
+
+Acceptance: `/__release.json` source, tree, policy and artifact digest exact; all 149 public files equal source (after removing the one edge-injected hidden link from `index.html`). A logged-out real browser asked one question: one `ai.bdfz.net` call, HTTP 200, no second automatic call. Status record `20261016-hlm-ai-terminal-retry` r1 verified (record, global and hlm RSS). Rollback: source `cba827b` / deployment `96c4763d-bcf2-42e1-9a34-039ce5c0a490`, code only, preserving forward data.
+
+Later on 2026-10-16 a separate task published `83b6924` (reader-history display) on top of this source; this release (`30eba61` / `cc91490c`) is that version's rollback target. The current accepted source, deployment and rollback are in `/Users/ylsuen/CF/platform/release-authority.json` → `hlm-bdfz-net`.
+
+Release report: `/Users/ylsuen/CF/_meta/reports/operations/apis-upgrade-design-20261014/RELEASE-BATCH1-20261016/REPORT.md`.
+
 ## 2026-09-25 — Detailed learning capture candidate, not deployed
 
 The task-owned candidate preserves complete source operations and account ownership. Its shared capture wrapper now resumes both durable queues after persisted page return, online reconnect and focus without resetting the bounded automatic retry budget; the script cache version changed with it. Unknown and other-account originals are never reassigned. Existing scoring/content/completion contracts remain unchanged.
@@ -75,7 +87,9 @@ and its output contract is unverified; do not run it as a repair.
    panel; the exam page must expand a question and show answer + analysis; the
    plan page must show today's tasks once a pace is chosen.
 4. AI: each attempt has a 25-second timeout, with one retry for network/timeouts,
-   HTTP 429 or 5xx; response bodies are never copied to error logs. `POST https://ai.bdfz.net/` with an `Origin: https://hlm.bdfz.net` header
+   HTTP 429 or 5xx; APIS terminal codes (`PAYLOAD_TOO_LARGE`,
+   `UPSTREAM_OUTPUT_TOO_LARGE`, any `retryable:false`) are not retried (since
+   `30eba61`, 2026-10-16); response bodies are never copied to error logs. `POST https://ai.bdfz.net/` with an `Origin: https://hlm.bdfz.net` header
    returns `{answer}`. The gateway's key pool is intermittently flaky (503 /
    upstream 401); the client retries once and then shows a retry button. A single
    503 is not proof of a site regression; use a bounded test and record failure honestly.

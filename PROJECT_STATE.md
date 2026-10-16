@@ -1,3 +1,9 @@
+## 2026-10-16 — APIS terminal codes in AI questions, accepted
+
+Accepted source `30eba617d20bc27557dc88a16113e793ec900df9`, Pages deployment `cc91490c-a77d-4b74-938a-20bb378da479`, via the guarded native channel; rollback `cba827b` / `96c4763d-bcf2-42e1-9a34-039ce5c0a490`, code only. An AI question that APIS answers with `PAYLOAD_TOO_LARGE`, `UPSTREAM_OUTPUT_TOO_LARGE` or `retryable:false` now ends after one call; transient failures keep the single automatic second attempt. Public provenance, all 149 files, a logged-out one-question real path and Status `20261016-hlm-ai-terminal-retry` r1 passed. Nothing is pending for this release.
+
+`83b6924` (reader-history display, a separate task) was accepted later the same day on top of it, with this release as its rollback; the current accepted record is `release-authority.json` → `hlm-bdfz-net`. Details: [operations](docs/OPERATIONS.md); report `/Users/ylsuen/CF/_meta/reports/operations/apis-upgrade-design-20261014/RELEASE-BATCH1-20261016/REPORT.md`.
+
 ## 2026-09-25 — Detailed learning capture candidate, not deployed
 
 The task-owned candidate preserves complete source operations and account ownership. Its shared capture wrapper now resumes both durable queues after persisted page return, online reconnect and focus without resetting the bounded automatic retry budget; the script cache version changed with it. Unknown and other-account originals are never reassigned. Existing scoring/content/completion contracts remain unchanged.
