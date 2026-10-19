@@ -7,14 +7,14 @@ import { readFileSync } from 'node:fs';
 const app = readFileSync(new URL('../assets/js/app.js', import.meta.url), 'utf8');
 const source = app.slice(app.indexOf('async function callAI('), app.indexOf('let sessionKey = '));
 
-function run(responses) {
+function run(responses, onFetch) {
   let fetches = 0;
   const bubbleEl = { innerHTML: '', querySelector: () => null, remove() {} };
   const ctx = vm.createContext({
-    AbortSignal, JSON, Error,
+    AbortSignal, JSON, Error, String, Number,
     detailedCurrent: () => true, detailedPending: new Set(), detailedContext: () => ({}),
     detailedCapture: () => ({ operation: { operationId: 'op', occurredAt: 't' }, saved: Promise.resolve() }),
-    fetch: async () => { const r = responses[Math.min(fetches, responses.length - 1)]; fetches += 1; return r; },
+    fetch: async (_url, init) => { onFetch?.(init); const r = responses[Math.min(fetches, responses.length - 1)]; fetches += 1; if (r instanceof Error) throw r; return r; },
     $: () => ({ disabled: false }), bubble: () => bubbleEl, md: (a) => `<p>${a}</p>`, esc: (s) => s, aiLog: () => ({ scrollTop: 0, scrollHeight: 0 }), archive() {},
     aiBusy: false,
   });
@@ -38,12 +38,35 @@ test('terminal APIS codes are sent once; a payload refusal offers no identical r
   }
 });
 
-test('a transient 5xx keeps the single automatic second attempt', async () => {
-  const r = run([json(503, { error_code: 'DEADLINE_EXCEEDED', retry_after_seconds: 2 }), json(200, { answer: '寶玉初見黛玉。' })]);
+test('a typed zero-dispatch refusal keeps the single automatic second attempt', async () => {
+  const r = run([json(503, { error_code: 'DEADLINE_EXCEEDED', retry_after_seconds: 2, provider_attempt_count: 0 }), json(200, { answer: '寶玉初見黛玉。' })]);
   await r.ask();
   assert.equal(r.fetches(), 2);
   assert.match(r.bubble.innerHTML, /寶玉初見黛玉/);
-  const down = run([json(502, { error_code: 'UPSTREAM_UNAVAILABLE' })]);
+  const down = run([json(502, { error_code: 'UPSTREAM_UNAVAILABLE', provider_attempt_count: 0 })]);
   await down.ask();
   assert.equal(down.fetches(), 2);
+});
+
+test('an unknown outcome is never retried automatically: timeout, network failure or a 5xx after a dispatch', async () => {
+  for (const [first, pattern] of [
+    [Object.assign(new Error('timeout'), { name: 'TimeoutError' }), /結果未確認/],
+    [new TypeError('Failed to fetch'), /結果未確認/],
+    [json(503, { error_code: 'UPSTREAM_UNAVAILABLE', provider_attempt_count: 1 }), /結果未確認/],
+    [json(503, { error_code: 'UPSTREAM_UNAVAILABLE' }), /結果未確認/],
+  ]) {
+    const r = run([first, json(200, { answer: '不應送出' })]);
+    await r.ask();
+    assert.equal(r.fetches(), 1, pattern.source);
+    assert.match(r.bubble.innerHTML, pattern);
+    assert.match(r.bubble.innerHTML, /會重新呼叫模型/);
+    assert.ok(/data-retry/.test(r.bubble.innerHTML));
+  }
+});
+
+test('every gateway call carries the captured request operation id', async () => {
+  const headers = [];
+  const r = run([json(200, { answer: '好' })], (init) => headers.push(init.headers['X-Request-ID']));
+  await r.ask();
+  assert.deepEqual(headers, ['op']);
 });
