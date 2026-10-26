@@ -20,15 +20,62 @@ function detailedContext(resourceKey=location.hash||'home') {
  return context;
 }
 function detailedCurrent(context){return context.generation===detailedGeneration&&(window.BdfzLearningRecords?.scope||null)===context.captureScope;}
+// The content, version, time and operation id are fixed when the action happens; only the owner may resolve later.
+// At page load and right after a window focus the recorder is still being prepared, so a capture without an owner
+// waits for it (bounded) instead of storing a row no one owns. A scope other than the one this page last recorded
+// under (an account switch) is not adopted: that capture stays unattributed. The owner found is written into the
+// context (with its parent pointer), so an ask and its request and reply stay on one owner.
+let lastDetailedScope=null,detailedScopeWait=null;
+function detailedOwner(context) {
+ const previous=lastDetailedScope;
+ // Captures waiting together share one wait and are recorded in the order they happened.
+ detailedScopeWait ||= readyCaptureScope().catch(()=>null).finally(()=>{detailedScopeWait=null;});
+ return detailedScopeWait.then(scope=>{
+  context.ownerChecked=true;
+  if(scope&&!context.captureScope&&(!previous||scope===previous)&&context.generation===detailedGeneration){
+   context.captureScope=scope;context.pointerKey=`hlm-learning-parent-v1:${scope}:${context.resourceKey}`;
+   if(!context.parentOperationId){try{context.parentOperationId=localStorage.getItem(context.pointerKey)||'';}catch{}}
+  }
+  return context.captureScope;
+ });
+}
 function detailedCapture(action,content,options={},context=detailedContext()) {
  const service=window.BdfzLearningRecords;if(!service)return null;
- const operation=service.build(action,content,context,{parentOperationId:context.parentOperationId||'',...options,assessment:{scoringEligibility:'record_only',...options.assessment}});
- detailedPending.set(operation.operationId,{service,operation,context});
- const saved=(async()=>{await service.record(operation);detailedPending.delete(operation.operationId);if(['draft.edit','question.submit','answer.submit'].includes(action)&&context.pointerKey){try{localStorage.setItem(context.pointerKey,operation.operationId);}catch{}}})();
- saved.catch(()=>{context.storageFailure=true;const node=document.getElementById('learning-record-status');if(node)node.textContent='記錄尚未完整保存，請保留此頁並重試保存';});return{operation,saved};
+ const fixed={...options,operationId:options.operationId||service.id(),occurredAt:options.occurredAt||new Date().toISOString()};
+ // A draft revises the owner's last draft or submission on this resource.
+ const build=()=>service.build(action,content,context,{parentOperationId:context.parentOperationId||'',...(action==='draft.edit'?{revisesOperationId:context.parentOperationId||''}:{}),...fixed,assessment:{scoringEligibility:'record_only',...options.assessment}});
+ const returned=build();let operation=returned;
+ const saved=(async()=>{
+  // A late reply kept on its request's earlier owner does not count as this page's current owner.
+  if(context.captureScope){if(context.captureScope===service.scope)lastDetailedScope=context.captureScope;}
+  else if(!context.ownerChecked&&await detailedOwner(context)){lastDetailedScope=context.captureScope;operation=build();}
+  // Pending (and retried) only in its final form, so a retry during the wait cannot store an ownerless copy.
+  detailedPending.set(operation.operationId,{service,operation,context});
+  await service.record(operation);detailedPending.delete(operation.operationId);if(['draft.edit','question.submit','answer.submit'].includes(action)&&context.pointerKey){try{localStorage.setItem(context.pointerKey,operation.operationId);}catch{}}
+ })();
+ saved.catch(()=>{context.storageFailure=true;const node=document.getElementById('learning-record-status');if(node)node.textContent='記錄尚未完整保存，請保留此頁並重試保存';});return{operation:returned,saved};
 }
 function detailedDraft(text,resourceKey) {
- const context=detailedContext(resourceKey);detailedCapture('draft.edit',{text},{revisesOperationId:context.parentOperationId},context);
+ detailedCapture('draft.edit',{text},{},detailedContext(resourceKey));
+}
+// The recorder's scope exists only after prepare() has resolved; a focus event re-identifies the recorder. Wait for
+// it, bounded; a signed-out reader stays unattributed without a long wait.
+async function readyCaptureScope(timeoutMs=4000) {
+ const service=window.BdfzLearningRecords;
+ if(!service)return null;
+ if(service.scope)return service.scope;
+ const deadline=Date.now()+timeoutMs;
+ while(Date.now()<deadline){
+  try{
+   const remaining=Math.max(0,deadline-Date.now());
+   const recorder=await Promise.race([service.prepare(),new Promise(resolve=>setTimeout(()=>resolve(null),remaining))]);
+   return recorder?.scope||service.scope||null;
+  }catch(error){
+   if(error?.code==='LEARNING_LOGIN_REQUIRED')return null;
+   await new Promise(resolve=>setTimeout(resolve,250));
+  }
+ }
+ return service.scope||null;
 }
 async function retryDetailedStorage(){
  for(const [id,item]of [...detailedPending]){await item.service.record(item.operation);detailedPending.delete(id);item.context.storageFailure=false;if(['draft.edit','question.submit','answer.submit'].includes(item.operation.action)&&item.context.pointerKey){try{localStorage.setItem(item.context.pointerKey,item.operation.operationId);}catch{}}}
