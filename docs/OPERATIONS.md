@@ -1,3 +1,7 @@
+## Shared font slices — 2026-10-26 (task `portal-design-pass-20261026`, batch 2)
+
+The page no longer downloads the whole 8.2 MB `HuWenMingChaoTi` file (and no longer preloads it). `index.html` links the shared set hosted on mx.bdfz.net, `https://mx.bdfz.net/fonts/huwen/v1/HuWenMingChao.4eeeeaf657.css` (family `HuWenMingChao`, 90 immutable unicode-range slices, CORS-open), with a preconnect; the `@font-face` block left the site stylesheet, whose cache-buster is now `v=20261026-shared-font`. Browsers fetch only slices for characters on screen and share them with the other sites that use the set. Local before/after: phone home font 8,052 KB -> 549 KB; identical rendering except the random poem card. The local font files stay in `assets/fonts/` unreferenced. A new shared set will live in a new directory (`v2`); update the link then.
+
 ## 2026-10-16 — APIS terminal codes end an AI question after one call (accepted)
 
 Source `30eba617d20bc27557dc88a16113e793ec900df9` (`main`, fast-forward from `cba827b`) was published by the guarded native Pages build as deployment `cc91490c-a77d-4b74-938a-20bb378da479` (deploy stage ended 2026-10-16T04:08:04Z). Only `assets/js/app.js` (cache key `?v=2026101501`) and `index.html` changed; Functions inputs and the Pages configuration are unchanged.
