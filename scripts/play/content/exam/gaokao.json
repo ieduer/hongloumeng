@@ -1,0 +1,874 @@
+{
+ "note": "北京卷以外涉及《紅樓夢》的高考語文題：研究流程逐題以至少兩個不同網域的網頁核對（confirmed），題面照網頁所見簡體原文；單一來源 8 題不收。原題（mc／multi）選項逐字；其餘題只作改編題的證據。sources 為核對網址。",
+ "questions": [
+  {
+   "id": "gk-2004-fujian-25",
+   "year": 2004,
+   "paper": "福建卷",
+   "section": "作文",
+   "qno": "25",
+   "label": "福建卷 2004 第 25 題",
+   "format": "short",
+   "stem": "25.选择下面所列的一个人物或文学形象作为话题，自选角度，写一篇不少于800字的作文。(60分)\n人　　物：孔子　　苏轼　　曾国藩　　鲁迅　　　史蒂芬•霍金\n文学形象：曹操　　宋江　　薛宝钗　　冬妮娅　　桑提亚哥\n［注意］①题目自拟。②立意自定。③文体自选。④不得抄袭。",
+   "options": null,
+   "answer": null,
+   "answerText": "作文，无标准答案",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/48-3.html",
+    "https://www.gaokao.com/e/20130729/51f625d5e1dbe.shtml",
+    "https://m.gaokao.com/e/20130729/51f625d5e1dbe.shtml",
+    "http://www.chinanews.com.cn/news/2004year/2004-06-07/26/445630.shtml",
+    "https://gaokao.eol.cn/huodong/2005mfzw/2004zw/200709/t20070906_252770.shtml",
+    "https://news.southcn.com/node_179d29f1ce/cde692d350.shtml",
+    "https://www.163.com/dy/article/GV6E339S0521TS0H.html"
+   ],
+   "verify": "confirmed",
+   "card": "r-baochai",
+   "ch": null,
+   "explain": null
+  },
+  {
+   "id": "gk-2006-hunan-14",
+   "year": 2006,
+   "paper": "湖南卷",
+   "section": "詩歌鑑賞",
+   "qno": "14",
+   "label": "湖南卷 2006 第 14 題",
+   "format": "short",
+   "stem": "14．阅读下面两首诗，根据提示，完成赏析。(6分)\n薛宝钗咏白海棠                      林黛玉咏白海棠\n珍熏芳姿昼掩门，自携手瓮灌苔盆。    半卷湘帘半掩门，碾冰为土玉为盆．\n胭脂洗出秋阶影，冰雪招采露砌魂。    偷来梨蕊三分白，借得梅花一缕魂．\n淡极始知花更艳，愁多焉得玉无痕。    月窟仙人缝缟袂，秋闺怨女拭啼痕．\n欲偿白帝凭清洁，不语婷婷日又昏。    娇羞默默同谁诉，倦倚西风夜已昏．\n(据人民文学出版杜1996年12月第2版《红楼梦》第三十七回)\n咏物诗讲究形神兼备。以上两诗，颔联都着眼于白海棠之“白”，但绘形写神各有不同。\n“胭脂洗出秋阶影，冰雪招来露砌魂”一联，前句以洗尽胭脂，极言其自然本色之美，后句以晶莹剔透的冰雪，喻其冰消玉洁之魂。倒装句式的运用，显得新颖别致：“洗”“招’二字，运用拟人手法，生动地传达出白海棠的情韵神态；而“秋阶”“露砌”的映衬，更是意味深长。诗人含蓄地表现了白海棠朴素淡雅、清洁自励的品性。\n“偷来梨蕊三分白，借得梅花一缕魂”一联___________________________________",
+   "options": null,
+   "answer": null,
+   "answerText": "“偷来梨蕊三分白，借得梅花一缕魂”一联，前句以梨花之白，形容白海棠的“白”，较之“洗出”句，更侧重于表现“白”的鲜艳洁净，后句再以梅花之魂赋予了白海棠孤高傲世的精神；“偷来”“借得”，巧用了拟人手法；而“偷来”一词，贬词褒用，想象新颖，灵巧别致。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/82-2.html",
+    "https://blog.sina.com.cn/s/blog_5f792efc0101b305.html",
+    "https://news.southcn.com/node_179d29f1ce/cde692d350.shtml"
+   ],
+   "verify": "confirmed",
+   "card": "s-haitang",
+   "ch": 37,
+   "explain": null
+  },
+  {
+   "id": "gk-2007-fujian-11",
+   "year": 2007,
+   "paper": "福建卷",
+   "section": "名著閱讀",
+   "qno": "11",
+   "label": "福建卷 2007 第 11 題",
+   "format": "short",
+   "stem": "11．简答题（任选两题，每题100字左右）。（10分）\n（1）《红楼梦》第二十三回“西厢记妙词通戏语”是一个著名的情节，请简述书中宝玉、黛玉共读《西厢记》的故事。",
+   "options": null,
+   "answer": null,
+   "answerText": "（1）三月桃花开时，宝玉在大观园里偷偷阅读《西厢记》，黛玉来后发现宝玉读的是《西厢记》，于是也认真阅读记诵起来，二人还各借《西厢记》词句表白、打趣。宝玉自比张生（我就是个“多愁多病的身”，）比黛玉为莺莺（你就是那“倾国倾城的貌”）；黛玉说宝玉是“银样蜡枪头”。\n解析：本题考查对事件的概括能力。简述要注意交代时间、地点、人物、事件，注意叙述简明扼要以及字数的限制。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/95-2.html",
+    "https://www.gzywtk.com/tmshow/1172.html",
+    "https://www.gzywtk.com/sjbrow/95-3.html",
+    "https://c.m.163.com/news/a/F3859BS60521TS0H.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-xixiang",
+   "ch": 23,
+   "explain": null
+  },
+  {
+   "id": "gk-2008-jiangsu-25",
+   "year": 2008,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "25",
+   "label": "江蘇卷 2008 第 25 題",
+   "format": "short",
+   "stem": "（2）《红楼梦》中写道：“都道是金玉良缘，俺只念木石前盟。”请说说“金玉良缘”、“木石前盟”的含义。（5分）",
+   "options": null,
+   "answer": null,
+   "answerText": "“金玉良缘”指薛宝钗有金锁，贾宝玉有宝玉，两人应结成姻缘。“木石前盟”指林黛玉前生为绛珠仙草，贾宝玉前生为女娲炼石补天余下的石头化成的神瑛侍者，两者有恩有义，今世应结成姻缘。如答：薛宝钗的“钗”中有金，贾宝玉的名字中有玉，两人结为婚姻为金玉良缘。林黛玉的名字中有木，贾宝玉的名字中有玉，前生有约，两人应结为婚姻为木石前盟。",
+   "answerSource": "",
+   "sources": [
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://www.gzywtk.com/sjbrow/119-3.html",
+    "https://www.gzywtk.com/sjbrow/119-2.html",
+    "https://www.gzywtk.com/sjbrow/119-7.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-huanlei",
+   "ch": 5,
+   "explain": null
+  },
+  {
+   "id": "gk-2009-jiangsu-23",
+   "year": 2009,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "23",
+   "label": "江蘇卷 2009 第 23 題",
+   "format": "short",
+   "stem": "23．简答题(10分)\n(1)《欧也妮•葛朗台》中的老葛朗台是个什么样的人?(4分)\n(2)概括说说《红楼梦》“冷子兴演说荣国府”的主要内容。(6分)",
+   "options": null,
+   "answer": null,
+   "answerText": "①介绍贾府的历史与人物，②点出贾府存在的危机，③介绍主要人物贾宝玉的特点。",
+   "answerSource": "",
+   "sources": [
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://www.gzywtk.com/sjbrow/133-3.html",
+    "https://www.gzywtk.com/sjbrow/133-5.html",
+    "https://www.gzywtk.com/tmshow/1680.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-lengzixing",
+   "ch": 2,
+   "explain": null
+  },
+  {
+   "id": "gk-2009-fujian-7",
+   "year": 2009,
+   "paper": "福建卷",
+   "section": "名著閱讀",
+   "qno": "7",
+   "label": "福建卷 2009 第 7 題",
+   "format": "short",
+   "stem": "7.简答题。（任选一题，100字左右）（5分）\n（1）简述《红楼梦》中贾珍请王熙凤到宁国府协理秦可卿丧事的原因和过程。\n（2）简述《巴黎圣母院》中穷诗人甘果瓦与爱斯梅拉达结成名义夫妻的经过。",
+   "options": null,
+   "answer": null,
+   "answerText": "（1）答案示例：儿媳秦可卿死后，贾珍想把丧事办得体面些，可偏偏此时妻子尤氏犯病，不能料理事务。这时，贾宝玉向他推荐了王熙凤。于是贾珍便向邢夫人和王夫人提出请求，王熙凤也表示愿意到宁国府协理丧事。",
+   "answerSource": "",
+   "sources": [
+    "https://m.kekenet.com/gaokao/201408/319239.shtml",
+    "https://www.gzywtk.com/tmshow/1621.html",
+    "https://www.gzywtk.com/sjbrow/129-1.html",
+    "https://www.gzywtk.com/sjbrow/129-4.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-xieli",
+   "ch": 13,
+   "explain": null
+  },
+  {
+   "id": "gk-2010-jiangsu-22",
+   "year": 2010,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "22",
+   "label": "江蘇卷 2010 第 22 題",
+   "format": "multi",
+   "stem": "二、名著阅读题（15分）\n22、下列有关名著的说明，不正确的两项是（5分）",
+   "options": [
+    {
+     "key": "A",
+     "text": "《阿Q正传》中，阿Q为了革命，用砖砸开了静修庵，砸了庵里“皇帝万岁万万岁”的龙牌，并顺手拿走了观音娘娘座前的宣德炉。"
+    },
+    {
+     "key": "B",
+     "text": "《女神 湘累》中，屈原在洞庭湖上说：“我效法造化底精神，我自由创造，自由地表现我自己。”作者借此表现了五四个性解放精神。"
+    },
+    {
+     "key": "C",
+     "text": "在《边城》的结尾部分，傩送出走了，白塔倾圮了，老船夫也死了，老马兵觉得自己却成了翠翠“这孤雏的唯一靠山唯一信托人”。"
+    },
+    {
+     "key": "D",
+     "text": "《哈姆莱特》中所写的哈姆莱特、雷欧提斯和小福丁布拉斯三人复仇的举动，既是为了各自故去的父亲，也是为了争得骑士荣誉。"
+    },
+    {
+     "key": "E",
+     "text": "《红楼梦》中贾宝玉梦游太虚幻境所见判词：“子系中山狼，得志便猖狂。 金闺花柳质，一载赴黄粱。”其中暗示了迎春的悲惨命运。"
+    }
+   ],
+   "answer": "AD",
+   "answerText": "AD",
+   "answerSource": "多個網站刊載的參考答案一致（見核對網址）",
+   "sources": [
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://www.gzywtk.com/tmshow/1902.html"
+   ],
+   "verify": "confirmed",
+   "card": "s-pc-z6",
+   "ch": 5,
+   "explain": "參考答案 AD。E 是本題唯一的《紅樓夢》選項，敘述正確：「子係中山狼，得志便猖狂。金閨花柳質，一載赴黃粱」是第五回寶玉在太虛幻境所見金陵十二釵正冊中迎春的判詞，暗指她嫁給孫紹祖、不到一年就被折磨而死。A、D 兩項與《阿Q正傳》《哈姆萊特》原著情節不符。"
+  },
+  {
+   "id": "gk-2010-hubei-21",
+   "year": 2010,
+   "paper": "湖北卷",
+   "section": "語言文字運用",
+   "qno": "21",
+   "label": "湖北卷 2010 第 21 題",
+   "format": "short",
+   "stem": "21.某中学研究型学习小组举办《红楼梦》读书交流会。主题是“《红楼梦》诗词鉴赏”。请为主持人写一则开场白。要求：①紧扣主题；②表达得体，富有文采；③不写称呼语、问候语；④不超过60字。（4分）",
+   "options": null,
+   "answer": null,
+   "answerText": "【答案】示例一：“满纸荒唐言，谁解其中味”，绝世奇书《红楼梦》中的诗词也是难得的艺术瑰宝。让我走进宝山，去欣赏它们的璀璨与绚丽吧！示例二：“好风凭借力，送我上青云”这是宝钗的思想写照，“一年三百六十日，风刀霜剑严相逼”这是黛玉的生活环境，《红楼梦》诗词文质兼美。今天我们将对它进行专题鉴赏，希望同学们积极发言。【解析】开场白就是话题的导入语。导入语要求紧扣主题（此次为“红楼梦诗词赏析”），表达得体（符合主持人的身份，符合学习小组的特点），作为文学类研究型学习小组，自然要讲究文采，才能与其氛围吻合。【考点】考查语言的得体和生动。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/148-3.html",
+    "https://www.gzywtk.com/sjbrow/148-5.html",
+    "https://blog.sina.com.cn/s/blog_65a246c70100j9yq.html",
+    "https://news.southcn.com/node_179d29f1ce/cde692d350.shtml"
+   ],
+   "verify": "confirmed",
+   "card": "s-zanghua",
+   "ch": 27,
+   "explain": null
+  },
+  {
+   "id": "gk-2011-jiangsu-23",
+   "year": 2011,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "23",
+   "label": "江蘇卷 2011 第 23 題",
+   "format": "short",
+   "stem": "23．简答题（10分）\n（1） 《红楼梦》判词：“枉自温柔和顺，空云似桂如兰。堪羡优伶有福，谁知公子无缘。”\n判词所指是谁?“优伶”和“公子”指小说中的哪两个人物?(4 分)",
+   "options": null,
+   "answer": null,
+   "answerText": "23．(1)袭人(花袭人)；蒋玉菡，宝玉(贾宝玉)。〔一苇轩卷末答案原文；新浪博客转载本作「【答案】（1）袭人（花袭人）；蒋玉菡，宝玉（贾宝玉）。」，文字相同〕即判詞指襲人，「优伶」指蔣玉菡，「公子」指賈寶玉。騰訊新聞「少读红楼」版參考答案：「判词所指是花袭人；优伶是蒋玉菡，公子是贾宝玉。」",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/169-2.html",
+    "https://www.gzywtk.com/tmshow/2151.html",
+    "https://blog.sina.com.cn/s/blog_4574ed5d0102zp0k.html",
+    "https://wapbaike.baidu.com/tashuo/browse/content?id=fe67b47afaa1120206e992ea",
+    "https://news.qq.com/rain/a/20250606A021F300"
+   ],
+   "verify": "confirmed",
+   "card": "s-pc-y2",
+   "ch": 5,
+   "explain": null
+  },
+  {
+   "id": "gk-2012-jiangsu-23",
+   "year": 2012,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "23",
+   "label": "江蘇卷 2012 第 23 題",
+   "format": "short",
+   "stem": "23．简答题（10分）\n（1）“若问渠侬多少恨，数完庭榭堕飘花。一声你好香消散，别院笙箫月影斜。”这首诗末两句写了《红楼梦》中哪两件事?前一件事发生在大观园中什么地方?（4分）",
+   "options": null,
+   "answer": null,
+   "answerText": "（1）黛玉辞世  宝玉、宝钗成亲  潇湘馆",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/tmshow/3853.html",
+    "https://www.gzywtk.com/sjbrow/453-2.html",
+    "https://wapbaike.baidu.com/tashuo/browse/content?id=fe67b47afaa1120206e992ea",
+    "https://blog.sina.com.cn/s/blog_4574ed5d0102zp0k.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-fengao",
+   "ch": 98,
+   "explain": null
+  },
+  {
+   "id": "gk-2012-fujian-7",
+   "year": 2012,
+   "paper": "福建卷",
+   "section": "名著閱讀",
+   "qno": "7",
+   "label": "福建卷 2012 第 7 題",
+   "format": "multi",
+   "stem": "7、下列各项中对作品故事情节的表述，不正确的两项是(5分)",
+   "options": [
+    {
+     "key": "A",
+     "text": "宝玉挨打后，黛玉前来探望，两个眼睛肿得桃子一般，满面泪光，抽抽噎噎地说道：“你从此可都改了罢！” (《红楼梦》)"
+    },
+    {
+     "key": "B",
+     "text": "屠维岳使用软化、开除、升迁等多种手段，“和平解决”了厂里的怠工风潮，暂时解除了吴荪甫的后顾之忧。(《子夜》)"
+    },
+    {
+     "key": "C",
+     "text": "觉慧创办了《黎明周报》，被祖父责骂，祖父吩咐觉新严加看管。觉慧不听觉新的劝告，执意要办下去。(《家》)"
+    },
+    {
+     "key": "D",
+     "text": "在爱斯梅拉达将要被抬上囚车时，伽西莫多借助绳子从圣母院墙上滑下，打倒刽子手的助手，把她抱进圣母院。(《巴黎圣母院》)"
+    },
+    {
+     "key": "E",
+     "text": "涅赫柳多夫认识了许多像西蒙松这样的犯人，但还是鄙视他们。他为马斯洛娃找西蒙松作为保护人感到不快。(《复活》)"
+    }
+   ],
+   "answer": "CE",
+   "answerText": "CE。解析：C项《黎明周报》并非觉慧创办，觉慧只是参加其中的工作。祖父责骂的是觉慧参加学生运动。E项涅赫柳多夫并不鄙视像西蒙松这样的犯人，他是为马斯洛娃找西蒙松作为保护人感到高兴。（A项《红楼梦》情节表述正确。）",
+   "answerSource": "多個網站刊載的參考答案一致（見核對網址）",
+   "sources": [
+    "https://m.kekenet.com/gaokao/201411/342983.shtml",
+    "https://www.gzywtk.com/sjbrow/460-1.html",
+    "https://www.gzywtk.com/sjbrow/460-3.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-aida",
+   "ch": 34,
+   "explain": "參考答案 CE。A 是本題的《紅樓夢》選項，敘述正確：第三十四回寶玉挨打後黛玉來探，「兩個眼睛腫得桃兒一般，滿面淚光」，抽抽噎噎地說「你從此可都改了罷」。C、E 兩項與《家》《復活》原著情節不符。"
+  },
+  {
+   "id": "gk-2012-guangdong-18",
+   "year": 2012,
+   "paper": "廣東卷",
+   "section": "文學類文本閱讀",
+   "qno": "18",
+   "label": "廣東卷 2012 第 18 題",
+   "format": "short",
+   "stem": "阅读下面的文字，完成16-18题。\n荷叶\n韩开春\n【材料提要（散文原文不全录）：①写深秋游宏村，画桥、一泓碧水；②目光被湖中枯萎的残荷吸引，“脑海中瞬间浮现的竟是《红楼梦》里林黛玉反对贾宝玉拔除破荷叶的理由：“我最不喜欢李义山的诗，只喜他这一句‘留得残荷听雨声’。””随后想到林妹妹对着残荷发痴的眼睛，生出长留宏村、卧听雨打残荷的念头；③初中时宿舍后有一大片荷塘，听雨打残荷次数不少，却“从未听出过什么诗意”；④⑤⑥写更喜欢夏日新荷、孩子戏水、荷叶粥与荷叶包熟食的童年记忆。（选自《2010散文》，人民文学出版社，有删改）】\n18．在第②段和第③段中，“我”都见到了残荷，感受有什么不同？你认为造成不同感受的原因是什么？请结合文意进行分析。（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "18.第②段中成年的“我”被残荷吸引，联想到“雨打残荷”的诗意美，产生了留恋之意。（1分）第③段中初中的“我”没有留意残荷，也没从“雨打残荷”中听出诗意。（1分）\n分析：能从“人生阅历”（如文学作品的熏陶、审美经验的积累、人物身份或环境的变化等）方面进行分析，符合情理，思路清晰可得4分。\n示例：在少年时代“我”的眼里，新荷光鲜洁净，又能用于游戏，所以“我”喜欢新荷；而枯萎的残荷，单从外表来看，不能吸引“我”。后来经过文学作品的熏陶，特别是《红楼梦》中对残荷诗意的描写，加上人生经历更加丰富，“我”逐渐拥有了审美的眼光，因此能够欣赏雨打残荷的诗意美。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/452-2.html",
+    "https://www.gzywtk.com/sjbrow/452-4.html",
+    "https://www.gaokao.com/e/20120606/4fcef0b408d73_5.shtml",
+    "https://www.gaokao.com/e/20120606/4fcef0b408d73_6.shtml",
+    "https://files.eduuu.com/img/2012/06/07/125746_4fd034cae0d4f.jpg",
+    "https://files.eduuu.com/img/2012/06/07/125909_4fd0351da9d4d.jpg"
+   ],
+   "verify": "confirmed",
+   "card": "r-daiyu",
+   "ch": 40,
+   "explain": null
+  },
+  {
+   "id": "gk-2013-jiangsu-23",
+   "year": 2013,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "23",
+   "label": "江蘇卷 2013 第 23 題",
+   "format": "short",
+   "stem": "23.简答题（10分）\n(1)《红楼梦》中抄检大观园时，在入画的箱子里寻出一大包金银锞子、一副玉带板子和一包男人的靴袜等物，在司棋的箱子里发现一双男子的锦带袜、一双缎鞋和一个小包袱，包袱里有一个同心如意和她表弟潘又安写的大红双喜笺。入画和司棋分别是谁的丫鬟？在处置入画和赶走司棋时，她们的主子各是什么态度？（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "(1)惜春　迎春。惜春的态度是“立逼凤姐带了去”，“或打或杀或卖”，“一概不管”。迎春的态度是“含泪”劝司棋离开。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/732-2.html",
+    "https://www.gzywtk.com/sjbrow/732-4.html",
+    "https://www.gaokao.com/e/20130521/519aee41aea89_7.shtml",
+    "https://files.eduuu.com/img/2013/06/10/184736_51b5aec85d324.jpg",
+    "https://blog.sina.com.cn/s/blog_4574ed5d0102zp0k.html",
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://wapbaike.baidu.com/tashuo/browse/content?id=fe67b47afaa1120206e992ea",
+    "https://news.southcn.com/node_179d29f1ce/cde692d350.shtml"
+   ],
+   "verify": "confirmed",
+   "card": "e-chaojian",
+   "ch": 74,
+   "explain": null
+  },
+  {
+   "id": "gk-2013-fujian-8",
+   "year": 2013,
+   "paper": "福建卷",
+   "section": "名著閱讀",
+   "qno": "8",
+   "label": "福建卷 2013 第 8 題",
+   "format": "short",
+   "stem": "8、简答题。（任选一题）（5分）\n（2）阅读下面的《红楼梦》选段，回答问题。\n媳妇们回头说：“外头派了焦大，谁知焦大醉了，又骂呢。”\n焦大因何事醉后骂人？宁国府怎样处治焦大？请复述原著相关情节。",
+   "options": null,
+   "answer": null,
+   "answerText": "（2）宁国府半夜派焦大送客回家。【情节要点】①贾蓉骂了几句，叫人将焦大捆起来。②众人将他掀翻捆倒，拖到马圈里。③用土和马粪填了他一嘴。（意思对即可）",
+   "answerSource": "",
+   "sources": [
+    "https://m.kekenet.com/gaokao/201408/319232.shtml",
+    "https://www.gzywtk.com/sjbrow/739-1.html",
+    "https://www.gzywtk.com/sjbrow/739-3.html"
+   ],
+   "verify": "confirmed",
+   "card": "r-jiaoda",
+   "ch": 7,
+   "explain": null
+  },
+  {
+   "id": "gk-2013-tianjin-4",
+   "year": 2013,
+   "paper": "天津卷",
+   "section": "病句辨析",
+   "qno": "4",
+   "label": "天津卷 2013 第 4 題",
+   "format": "short",
+   "stem": "4.下列各句中没有语病的一句是\nA.在学校开设的各种选修课中，同学们尤其更喜欢“生活中的法律”“电脑音乐制作”等体验性强、新鲜有趣的课程。\nB.一代又一代儒家学者以“返本开新”为宗旨，不断对《论语》进行创造性的诠释，由此形成了中国思想史上的经学传统。\nC.“蛟龙”号载人深潜器每年会有近５个月的霎时间执行深海资源勘察、环境勘探、海底生物研究等项工作。\nD.关于《红楼梦》后４０回的作者是谁这个问题，红学家历来有不同的说法，现在大家一般采用的是以高鹗续作这一说法为准。",
+   "options": null,
+   "answer": null,
+   "answerText": "B（两个来源的答案表都只给选项字母：gzywtk 744-3 页“4.B”；高考网所载学科网首发答案扫描图“一、（15分，每小题3分）1.D 2.B 3.C 4.B 5.A”。没有解析文字；D 是病句，涉及《红楼梦》的这一项不是正确答案。）",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/744-1.html",
+    "https://www.gzywtk.com/sjbrow/744-3.html",
+    "https://www.gaokao.com/e/20130521/519b00aa2bf75_2.shtml",
+    "https://www.gaokao.com/e/20130521/519b00aa2bf75.shtml",
+    "https://www.gaokao.com/e/20130521/519b00e4561d9.shtml"
+   ],
+   "verify": "confirmed",
+   "card": "b-xushu",
+   "ch": null,
+   "explain": null
+  },
+  {
+   "id": "gk-2014-jiangsu-25",
+   "year": 2014,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "25",
+   "label": "江蘇卷 2014 第 25 題",
+   "format": "short",
+   "stem": "二、名著阅读题(15分)\n25．简答题(10分)\n(1)《红楼梦》不同的版本中，凹晶馆联诗一回，黛玉的名句，一为“冷月葬花魂”，一为“冷月葬诗魂”。请从小说情节和主题两个方面，分别说明“葬花魂”与“葬诗魂”的依据。 (6分)",
+   "options": null,
+   "answer": null,
+   "answerText": "“葬花魂”的依据：小说中有黛玉葬花的重要情节；表达女性精神在一个时代的毁灭。“葬诗魂”的依据：小说中多有黛玉吟诗的情节；表达对诗意消亡的哀悼。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/1120-2.html",
+    "https://www.gzywtk.com/sjbrow/1120-5.html",
+    "https://www.gzywtk.com/tmshow/11985.html",
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://news.southcn.com/node_179d29f1ce/cde692d350.shtml",
+    "https://blog.sina.com.cn/s/blog_4574ed5d0102zp0k.html",
+    "https://wapbaike.baidu.com/tashuo/browse/content?id=fe67b47afaa1120206e992ea"
+   ],
+   "verify": "confirmed",
+   "card": "s-lianju",
+   "ch": 76,
+   "explain": null
+  },
+  {
+   "id": "gk-2015-jiangsu-24",
+   "year": 2015,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "24",
+   "label": "江蘇卷 2015 第 24 題",
+   "format": "short",
+   "stem": "(1)在《红楼梦》第四十回“史太君两宴大观园，金鸳鸯三宣牙牌令”中，鸳鸯说：“天天咱们说，外头老爷们吃酒吃饭，都有一个篾片相公，拿他取笑儿。咱们今儿也得了一个女篾片了。”鸳鸯她们要取笑的“女篾片”指谁？请结合本回情节，归纳她的性格特征。（5分）",
+   "options": null,
+   "answer": null,
+   "answerText": "刘姥姥。朴实善良，善解人意；老于世故，精明狡黠；幽默风趣，性格诙谐；顺从讨好，偶有反抗。",
+   "answerSource": "",
+   "sources": [
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://www.gzywtk.com/sjbrow/1554-2.html",
+    "https://www.gzywtk.com/tmshow/17353.html",
+    "https://www.gzywtk.com/sjbrow/1554-3.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-erjin",
+   "ch": 40,
+   "explain": null
+  },
+  {
+   "id": "gk-2015-fujian-7",
+   "year": 2015,
+   "paper": "福建卷",
+   "section": "名著閱讀",
+   "qno": "7",
+   "label": "福建卷 2015 第 7 題",
+   "format": "multi",
+   "stem": "二、文学名著、文化经典阅读（12分）（一）文学名著阅读（6分）\n7．下列各项中，对作品故事情节的叙述，不正确的两项是（6分）",
+   "options": [
+    {
+     "key": "A",
+     "text": "张飞攻下两座城池后在长沙受阻，关羽前来支援。交战中，黄忠马失前蹄而关羽让他换马再战。黄忠被关羽的义气所感动，与太守出城投降。（《三国演义》"
+    },
+    {
+     "key": "B",
+     "text": "黛玉从傻大姐的话里得知贾府要宝玉娶宝钗，就去见宝玉，宝玉只会傻笑。回到潇湘馆后，病情日重一日，她感到绝望，便烧了诗帕和诗稿。（《红楼梦》）"
+    },
+    {
+     "key": "C",
+     "text": "高老太爷生日庆典后不久，觉新就接到梅去世的消息，他急忙赶到她家。看着梅的遗体，觉新百感交集。他忍着悲痛，与梅的家人共同料理了丧事。（《家》）"
+    },
+    {
+     "key": "D",
+     "text": "赵伯韬告诉吴荪甫，外国金融资本家正要实施兼并中国的民族中小企业的计划。回到家后，吴荪甫又得到在公债市场投资失败的消息，他彻底绝望了。（《子夜》）"
+    },
+    {
+     "key": "E",
+     "text": "欧也妮过生日那天，夏尔的公子哥儿做派让有些客人反感，但欧也妮却很喜欢。她细心安排夏尔的卧室，并拿出零花钱让拿侬去买白蜡烛和糖。（《欧也妮•葛朗台》）"
+    }
+   ],
+   "answer": "AD",
+   "answerText": "AD（B项《红楼梦》为正确叙述）",
+   "answerSource": "多個網站刊載的參考答案一致（見核對網址）",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/1552-1.html",
+    "https://www.gzywtk.com/sjbrow/1552-3.html",
+    "http://www.exam58.com/gaokao/15788.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-fengao",
+   "ch": 97,
+   "explain": "參考答案 AD。B 是本題的《紅樓夢》選項，敘述正確：黛玉從傻大姐口中得知寶玉要娶寶釵，恍恍惚惚去見寶玉，兩人只是對著傻笑；回到瀟湘館後病勢日重，終於焚稿斷癡情（通行本第九十六、九十七回）。A、D 兩項與《三國演義》《子夜》原著情節不符。"
+  },
+  {
+   "id": "gk-2015-shanghai-12",
+   "year": 2015,
+   "paper": "上海卷",
+   "section": "默寫",
+   "qno": "12",
+   "label": "上海卷 2015 第 12 題",
+   "format": "short",
+   "stem": "（三）默写。（6分）\n【任选6空作答；超过6空，按前6空评分】\n12.\n（1）__________，而神明自得，圣心备焉。（《荀子．劝学》）\n（2）仰观宇宙之大，___________。（王羲之《兰亭集序》）\n（3）总为浮云能蔽日，__________。（李白《登金陵凤凰台》）\n（4）雾失楼台，__________，桃源望断无寻处。（秦观《踏莎行·郴州旅舍》）\n（5）__________，王孙自可留。（王维《山居秋暝》）\n（6）德不孤，__________。（《论语·里仁》）\n（7）风乍起，__________。（冯延巳《渴金门》）\n（8）谁解其中味？___________。（曹雪芹《红楼梦》）",
+   "options": null,
+   "answer": null,
+   "answerText": "（8）都云作者痴。新浪博客所載第12題全部參考答案：（1）积善成德（2）俯察品类之盛（3）长安不见使人愁（4）月迷津渡（5）随意春芳歇（6）必有邻（7）吹皱一池春水（8）都云作者痴；评分说明：答对1空给1分；考生答案超过6空时，按前6空评分。网易潘建华汇编答案作「都云作者痴。」",
+   "answerSource": "",
+   "sources": [
+    "https://blog.sina.com.cn/s/blog_71e461e90102y7w3.html",
+    "https://c.m.163.com/news/a/F3859BS60521TS0H.html"
+   ],
+   "verify": "confirmed",
+   "card": "b-author",
+   "ch": 1,
+   "explain": null
+  },
+  {
+   "id": "gk-2016-jiangsu-25",
+   "year": 2016,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "25",
+   "label": "江蘇卷 2016 第 25 題",
+   "format": "short",
+   "stem": "《红楼梦》“大观园试才题对额,荣国府归省庆元宵”两回中，贾政称宝玉为“无知的孽障”，“手足眈眈小动唇舌,不肖种种大承笞挞”一回中，又称之为“不孝的孽障”。请结合相关情节，说明这两处的“孽障”分别表达了贾政对宝玉什么样的感情。（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "(1)“元妃省亲”前,贾政带着宝玉给各个景点题匾额、对联,宝玉文思泉涌,贾政称其为“孽障”,表面上是责怪,实际上是欣赏;“宝玉挨打”中,贾政认为宝玉在外流荡优伶,在家淫辱母婢、荒疏学业,斥之为“孽障”,表达了强烈的痛惜之情。",
+   "answerSource": "",
+   "sources": [
+    "https://m.nj.bendibao.com/edu/61886.shtm",
+    "https://m.nj.bendibao.com/edu/61886_2.shtm",
+    "https://news.qq.com/rain/a/20200724A0XB4500",
+    "https://wapbaike.baidu.com/tashuo/browse/content?id=fe67b47afaa1120206e992ea"
+   ],
+   "verify": "confirmed",
+   "card": "e-tie",
+   "ch": 17,
+   "explain": null
+  },
+  {
+   "id": "gk-2017-jiangsu-25",
+   "year": 2017,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "25",
+   "label": "江蘇卷 2017 第 25 題",
+   "format": "short",
+   "stem": "《红楼梦》第四十五回“金兰契互剖金兰语，风雨夕闷制风雨词”中，黛玉对宝钗说：“我最是个多心的人，只当你心里藏奸……往日竟是我错了，实在误到如今。”请说明黛玉对宝钗的认识发生变化的原因。（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "黛玉在行酒令时“失于检点”，宝钗私下提醒；宝钗教导黛玉要做女性“分内的事”，“看杂书不好”；宝钗关心黛玉的身体健康。",
+   "answerSource": "",
+   "sources": [
+    "https://c.m.163.com/news/a/F3859BS60521TS0H.html",
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://news.qq.com/rain/a/20200724A0XB4500",
+    "https://wapbaike.baidu.com/tashuo/browse/content?id=fe67b47afaa1120206e992ea",
+    "https://oss.simiyun.cn/upload/20240626/4152f5c0d8c14c029ee8662714c14172.pdf"
+   ],
+   "verify": "confirmed",
+   "card": "e-lanyan",
+   "ch": 45,
+   "explain": null
+  },
+  {
+   "id": "gk-2018-jiangsu-25",
+   "year": 2018,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "25",
+   "label": "江蘇卷 2018 第 25 題",
+   "format": "short",
+   "stem": "25．简答题（10分）\n（1）《红楼梦》“散余资贾母明大义，复世职政老沐天恩”一回中，贾母得知府中库藏已空、入不敷出的实情后，将自己多年的积蓄拿出来，以渡难关。请结合这一情节，分析贾母的形象特点。（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "处变不惊，性格坚强；处置果断，能力出众；分配得当，处事公平；轻财重义，顾全大局。",
+   "answerSource": "",
+   "sources": [
+    "https://gaokao.eol.cn/jiang_su/dongtai/201806/t20180610_1607816_4.shtml",
+    "https://www.gzywtk.com/tmshow/26582.html",
+    "https://www.gzywtk.com/sjbrow/2340-3.html",
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://baike.baidu.com/tashuo/browse/content?id=fe67b47afaa1120206e992ea"
+   ],
+   "verify": "confirmed",
+   "card": "r-jiamu",
+   "ch": 107,
+   "explain": null
+  },
+  {
+   "id": "gk-2019-jiangsu-26",
+   "year": 2019,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "26",
+   "label": "江蘇卷 2019 第 26 題",
+   "format": "short",
+   "stem": "语文Ⅱ（附加题）\n二、名著阅读题。（15分）\n26．简答题（10分）\n（1）《红楼梦》“寿怡红群芳开夜宴，死金丹独艳理亲丧”一回中，群芳行令，宝钗摇得牡丹签，上云“任是无情也动人”。请结合小说概括宝钗的“动人”之处。（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "容貌妍丽，行止娴静；才能出众，处事得体；善解人意，关怀他人。",
+   "answerSource": "",
+   "sources": [
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://www.gzywtk.com/tmshow/26959.html",
+    "https://www.gzywtk.com/sjbrow/2379-7.html",
+    "https://gaokao.eol.cn/jiang_su/dongtai/201906/W020220527624751128106.doc"
+   ],
+   "verify": "confirmed",
+   "card": "r-baochai",
+   "ch": 63,
+   "explain": null
+  },
+  {
+   "id": "gk-2020-jiangsu-26",
+   "year": 2020,
+   "paper": "江蘇卷",
+   "section": "附加題",
+   "qno": "26",
+   "label": "江蘇卷 2020 第 26 題",
+   "format": "short",
+   "stem": "二、名著阅读题（15分）\n……\n26. 简答题（10分）\n（1）《红楼梦》第五十回“芦雪庵争联即景诗，暖香坞雅制春灯谜”中，众人联句，起句为王熙凤所作，她说，“你们别笑话我，我只有一句粗话”，“就是‘一夜北风紧’”。请结合这句诗简析王熙凤的形象。（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "诗句浅白，表明其学识浅薄；诗句能领起全篇，表明其聪明颖悟，有一定领导才能；诗句意境肃杀，表明其心怀忧惧。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gaokao.com/e/20200711/5f09bd0caf44d_2.shtml",
+    "https://www.gaokao.com/e/20200711/5f09bd0caf44d_3.shtml",
+    "https://www.gzywtk.com/tmshow/27029.html",
+    "https://www.gzywtk.com/sjbrow/2386-3.html",
+    "https://www.gzywtk.com/sjbrow/2386-7.html",
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://news.southcn.com/node_179d29f1ce/cde692d350.shtml"
+   ],
+   "verify": "confirmed",
+   "card": "e-luxueguang",
+   "ch": 50,
+   "explain": null
+  },
+  {
+   "id": "gk-2020-tianjin-21",
+   "year": 2020,
+   "paper": "天津卷",
+   "section": "名著閱讀",
+   "qno": "21",
+   "label": "天津卷 2020 第 21 題",
+   "format": "short",
+   "stem": "六、（10分）\n21. 在某校读书交流活动中，有同学说“我就读不进《红楼梦》”，有同学说“我就不爱读《三国演义》”，还有同学说“《论语》读起来才没劲呢”。请针对此现象，任选上述三本书中的一本，结合小说情节或《论语》名句，谈谈如何“走进经典”。要求100字左右。（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "官方参考答案（天津市教育招生考试院《2020年普通高等学校招生全国统一考试（天津卷）语文参考答案》第2页）：六、（10分） 21.（6分） 结合情节或语句　方法　表达（只列三项评分要点，没有示例答案）。\n解析版示例答案（一苇轩 gzywtk.com，题号作23）概要：分别用《红楼梦》“滴翠亭杨妃戏彩蝶”（宝钗扑蝶，“写出了宝钗的青春之美”）、《论语》“不患人之不己知，患不知人也”、《三国演义》“桃园三结义”三例示范，最后落到“走进经典”；【详解】说本题考查语言表达简明、连贯、得体、准确、鲜明、生动的能力，选小说要结合情节，选《论语》要结合名句。\n腾讯新闻（少读红楼）作者个人“参考解析”概要：可先读前五回掌握全书梗概再读后文（以贾宝玉神游太虚幻境为例），或先看同名电视剧再读原著（以宝黛钗感情线为例）。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gaokao.com/e/20200711/5f097f858883e.shtml",
+    "https://gaokaobang.oss-cn-beijing.aliyuncs.com/attachs/ohr/2020/07/11/165943_5f097f7f3fe2a.docx",
+    "http://www.gzywtk.com/tmshow/27049.html",
+    "http://www.gzywtk.com/sjshow/2388.html",
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://www.gaokao.com/e/20200711/5f097f0953e58_2.shtml"
+   ],
+   "verify": "confirmed",
+   "card": "e-pudie",
+   "ch": 27,
+   "explain": null
+  },
+  {
+   "id": "gk-2021-tianjin-21",
+   "year": 2021,
+   "paper": "天津卷",
+   "section": "名著閱讀",
+   "qno": "21",
+   "label": "天津卷 2021 第 21 題",
+   "format": "short",
+   "stem": "校文学社拟从《论语》《三国演义》《红楼梦》中选取一个场景拍摄视频短剧。假如你是导演，会选取哪部书中的哪个经典场景？请说明理由。要求100字左右。",
+   "options": null,
+   "answer": null,
+   "answerText": "开放题，三书任选其一、言之成理即可。解析卷答案要点（学科网解析版，经一苇轩 gzywtk.com 转载，非官方；此处为要点归纳，非逐字）：选《红楼梦》“林黛玉进贾府”——①为全书开端，借黛玉入府依次展开贾府背景与主要人物；②是黛玉“还泪”悲剧一生的起点；③写出贾府礼节繁琐、排场奢侈之弊；④宝黛初次相会。详解要点：所选场景应能体现人物典型性格或精神品质，或在全书中对揭示主题、展开或转折情节起关键作用；示例《论语》“子路、曾皙、冉有、公西华侍坐”、《红楼梦》“黛玉葬花”、《三国演义》“火烧赤壁”。逐字原文见 http://www.gzywtk.com/sjbrow/2404-5.html。",
+   "answerSource": "",
+   "sources": [
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "http://www.gzywtk.com/sjbrow/2404-3.html",
+    "http://www.gzywtk.com/sjbrow/2404-5.html",
+    "http://www.gzywtk.com/sjshow/2404.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-jinfu",
+   "ch": 3,
+   "explain": null
+  },
+  {
+   "id": "gk-2022-jia-22",
+   "year": 2022,
+   "paper": "全國甲卷",
+   "section": "作文",
+   "qno": "22",
+   "label": "全國甲卷 2022 第 22 題",
+   "format": "short",
+   "stem": "四、写作（60分）\n22. 阅读下面的材料，根据要求写作。\n《红楼梦》写到“大观园试才题对额”时有一个情节，为元妃（贾元春）省亲修建的大观园竣工后，众人给园中桥上亭子的匾额题名。有人主张从欧阳修《醉翁亭记》“有亭翼然”一句中，取“翼然”二字；贾政认为“此亭压水而成”，题名“还须偏于水”，主张从“泻出于两峰之间”中拈出一个“泻”字，有人即附和题为“泻玉”；贾宝玉则觉得用“沁芳”更为新雅，贾政点头默许。“沁芳”二字，点出了花木映水的佳境，不落俗套；也契合元妃省亲之事，蕴藉含蓄，思虑周全。\n以上材料中，众人给匾额题名，或直接移用，或借鉴化用，或根据情境独创，产生了不同的艺术效果。这个现象也能在更广泛的领域给人以启示，引发深入思考。请你结合自己的学习和生活经验，写一篇文章。\n要求：选准角度，确定立意，明确文体，自拟标题；不要套作，不得抄袭；不得泄露个人信息；不少于800字。",
+   "options": null,
+   "answer": null,
+   "answerText": "作文，無標準答案",
+   "answerSource": "",
+   "sources": [
+    "https://gaokao.eol.cn/shiti/zhenti/202206/t20220610_2230954.shtml",
+    "https://edu.sina.com.cn/gaokao/2022-06-07/doc-imizmscu5529593.shtml",
+    "https://www.thepaper.cn/newsDetail_forward_18458922",
+    "https://www.ecnu.edu.cn/info/1095/60332.htm",
+    "https://news.southcn.com/node_179d29f1ce/cde692d350.shtml",
+    "https://www.gzywtk.com/sjbrow/2409-3.html",
+    "https://www.intowz.com/page/22-06-12/191455.html",
+    "http://doss.xhby.net/zpaper/yzwb/pc/att/202206/08/a6b9924a-34dc-4487-b4da-c9c7d3c41eb0.pdf",
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "http://m.cnhubei.com/content/2022-06/11/content_14829973.html"
+   ],
+   "verify": "confirmed",
+   "card": "e-tie",
+   "ch": 17,
+   "explain": null
+  },
+  {
+   "id": "gk-2022-yi-3",
+   "year": 2022,
+   "paper": "全國乙卷",
+   "section": "論述類文本閱讀",
+   "qno": "3",
+   "label": "全國乙卷 2022 第 3 題",
+   "format": "short",
+   "stem": "【2022年普通高等学校招生全国统一考试·语文·全国乙卷】\n一、现代文阅读（36分）\n（一）论述类文本阅读（本题共3小题，9分）\n阅读下面的文字，完成1～3题。\n［材料提要——非原文，系据网页所见材料概括；原文约1200字，全文见所列网址］材料摘编自杨义《中国叙事学：逻辑起点和操作程式》。文章认为中国传统叙事作品不同于西方的定点透视，常用流动视角或复眼映视式视角：其一，流动视角让叙事者、读者随主要人物变换视角（“三体交融”），举《水浒传》武松大闹快活林为例，并以《巴黎圣母院》先花数十页写建筑作对照；其二，流动视角可走圆形轨迹——杨志、索超比武是由外向内聚焦（引金圣叹眉评），梁山泊攻陷大名府借梁中书的眼光由内向外辐射；其三，视角分内、外、旁等层面，可在同一层面或跨层面流动，纪昀《阅微草堂笔记》中二百余字的从征伊犁官员故事用复眼式视角，使短文兼具情节、深度心理与口碑功能。材料本身没有提到《红楼梦》。\n3．根据原文内容，下列说法不正确的一项是（3分）\nA．［大意，非原文］视角流动有两类：人物内视角转为外视角、旁视角，以及一人的内视角转为另一人的内视角。\nB．［大意，非原文］圆形叙事取由外向内聚焦还是由内向外辐射，既看叙述内容，也看叙事者想要的效果。\nC．［大意，非原文］笔记小说篇幅短小，比长篇作品更容易借流动或复眼映视式视角实现多重叙事功能。\nD．《红楼梦》“林黛玉进贾府”一节采用流动视角，既写“众人见黛玉年貌虽小，其举止言谈不俗”，又写黛玉眼中的凤姐、宝玉等人。",
+   "options": null,
+   "answer": null,
+   "answerText": "C。网页所载答案为 1.B 2.D 3.C。C项说笔记小说比长篇作品更容易实现多重叙事功能，于文无据：原文末段只说复眼映视式视角使纪昀那则笔记具有多重功能，并没有拿它与长篇作品比较。D项为正确表述（非答案项）：原文说流动视角可由外向内聚焦、也可由内向外辐射，“林黛玉进贾府”既写众人看黛玉、又写黛玉看凤姐宝玉等人，正属流动视角（严景东析评认为该节兼用了两种方式）。",
+   "answerSource": "",
+   "sources": [
+    "https://gaokao.eol.cn/shiti/zhenti/202206/t20220608_2230635.shtml",
+    "https://gaokao.eol.cn/shiti/zhenti/202206/t20220610_2230955.shtml",
+    "https://www.gzywtk.com/sjbrow/2410-1.html",
+    "https://www.intowz.com/page/22-06-10/191361.html"
+   ],
+   "verify": "confirmed",
+   "card": "b-art",
+   "ch": 3,
+   "explain": null
+  },
+  {
+   "id": "gk-2022-xin2-1",
+   "year": 2022,
+   "paper": "新高考Ⅱ卷",
+   "section": "現代文閱讀",
+   "qno": "1–5",
+   "label": "新高考Ⅱ卷 2022 第 1–5 題",
+   "format": "short",
+   "stem": "一、现代文阅读（35分）\n（一）现代文阅读I（本题共5小题，19分）\n阅读下面的文字，完成1~5题。\n【材料提要（非原文；三则材料为学术论文摘编，逐字全文见 urls 中 gzywtk.com 页面与 news.qq.com 文内试卷图片）】\n材料一（摘编自辛红娟《中国典籍“谁来译”》）：中国典籍英译多由西方汉学家完成，过去常因迎合译语读者而误译；典籍外译应让西方了解真实的中国文化；主张客观比较杨宪益、戴乃迭（英国籍）合译本与英国人霍克斯《红楼梦》译本（均出版于20世纪70年代）的得失，借以提升讲述中国故事、构建中国话语体系的能力。\n材料二（摘编自党争胜《霍克思与杨宪益的翻译思想刍议》）：霍克思大体忠实原文、偶有不拘原意之处——如略去《红楼梦》第一回作者交代写作目的及甄士隐、贾雨村命名缘由的一段，直接从“列位看官：你道此书从何而来？”译起——出于对译本整体艺术性的考量，其忠实定位于篇章层面；杨宪益的翻译可称“临摹式翻译”，以忠实原作为艺术追求的全部。\n材料三（摘编自杨乃乔《（红楼梦）与The Story of the Stone——谈异质文化观念的不可通约性及其翻译的创造性》）：作者关注两译本在语言修辞、文化身份、翻译立场与策略上的差异：杨译贴近汉语文化观念、向西方读者直接输出中国文化传统，因而流失西方读者；霍译超越字面，以西方读者熟悉的地道英语与文化观念创造性地重构《石头记》，实现两种异质文化观念的转换生成。\n1. 下列对材料相关内容的梳理，正确的一项是（3分）〔选项为树状图，见 options 提要〕\n2. 下列对材料相关内容的概括和分析，正确的一项是（3分）\n3．下列对材料相关内容的分析和评价，正确的一项是（3分）（ ）\n4．请根据材料二，简要说明杨宪益与霍克思对译文艺术性的理解有何不同。（4分）\n5．评价一部中国典籍译本是否优秀，可以有哪些标准？请结合材料进行概括。（6分）",
+   "options": null,
+   "answer": null,
+   "answerText": "1．A　2．A　3．B（news.qq.com、gzywtk.com、zy.21cnjy.com 一致；gaokao.eol.cn 早期版作 3．D，见 differences）\n4．（要点）①杨宪益：主张“临摹式翻译”，把忠实原作视为艺术追求的全部，力求与原著形神皆似；②霍克思：追求译文与原著在艺术性上等值或最大程度接近，大多时候忠于原著，但把“忠实”定位于篇章层面，出于艺术性考量可省译、删减文字（译法较灵活，不逐字逐句）。\n5．（要点）①译本能否如实传播、向西方介绍真正的中国传统文化，促进文化交流；②是否忠实原著，并在此基础上具有一定的创造性和艺术性；③能否引起国外读者关注并获得认可，达到文化交流的目的。",
+   "answerSource": "",
+   "sources": [
+    "https://gaokao.eol.cn/shiti/yw/202207/t20220713_2237561.shtml",
+    "https://gaokao.eol.cn/shiti/yw/202207/t20220713_2237563.shtml",
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://zy.21cnjy.com/22454046",
+    "https://www.gzywtk.com/tmshow/27156.html"
+   ],
+   "verify": "confirmed",
+   "card": "b-hongxue",
+   "ch": null,
+   "explain": null
+  },
+  {
+   "id": "gk-2022-tianjin-21",
+   "year": 2022,
+   "paper": "天津卷",
+   "section": "名著閱讀",
+   "qno": "21",
+   "label": "天津卷 2022 第 21 題",
+   "format": "short",
+   "stem": "21.三幅图均取材于古典文学名著《红楼梦》，请从中选择一幅你喜欢的，指出其所涉及的人物和相关情节，并说明喜欢的理由。要求100字左右。\n【材料提要：题后附三幅图，无文字说明】gaokao.eol.cn 试卷图（黑白）：图一为印有“中国人民邮政”字样、左上标“2”的邮票，画面是一男一女在山石花树间并坐共读；图二为线描，一女子执团扇，身旁有蝴蝶飞舞；图三为线描，有石狮的府第大门前，一老妇携一孩童站立。news.qq.com 与 gzywtk.com 所附为同一组彩色画：花树下一男一女共读一书；执扇女子与蝴蝶；老妇携孩童立于有石狮的府门前。\n【异文】gzywtk.com 作“21．以下三幅图均取材于古典文学名著《红楼梦》，请从中选择一幅你喜欢的，指出其所涉及的人物和相关情节，并说明喜欢的理由。要求100字左右。”（多“以下”二字）；news.qq.com 无题号，作“2022年：三幅图均取材于古典文学名著《红楼梦》，……要求100字左右。（天津卷，简答题，6分）”。",
+   "options": null,
+   "answer": null,
+   "answerText": "无官方答案；开放题，任选一幅作答。参考答案要点（gzywtk.com 卷末“参考答案”及【详解】，提要非逐字）：①宝黛共读西厢（第二十三回）：宝玉在沁芳闸桥边桃花下读《会真记》（《西厢记》），黛玉走来，二人共读，宝玉借西厢词句吐露心意；理由：场景唯美，二人从此心意相通、成为知己。②宝钗扑蝶（第二十七回）：宝钗往潇湘馆，见宝玉先进去，为避嫌折回，见一双玉色蝴蝶，取扇扑蝶，一直追到滴翠亭；理由：表现一向稳重端庄的宝钗活泼可爱的少女一面。③刘姥姥一进荣国府（第六回）：刘姥姥因家计艰难，带外孙板儿到荣府，在角门前称门人为“太爷”、极力讨好，由一老者指点去找周瑞家；理由：写出封建社会等级差别之大及刘姥姥的世故精明。news.qq.com 作者个人“参考解析”只点明三图依次为宝黛共读西厢（爱情萌芽）、宝钗扑蝶（少女天真烂漫）、刘姥姥一进荣国府（贫富对比）。gaokao.eol.cn 答案页作“21.略”。",
+   "answerSource": "",
+   "sources": [
+    "https://news.qq.com/rain/a/20250606A021F300",
+    "https://www.gzywtk.com/tmshow/30699.html",
+    "https://www.gzywtk.com/sjbrow/2847-3.html",
+    "https://www.gzywtk.com/sjbrow/2847-5.html",
+    "https://gaokao.eol.cn/shiti/yw/202303/t20230314_2324061.shtml",
+    "https://gaokao.eol.cn/shiti/yw/202303/t20230314_2324062.shtml"
+   ],
+   "verify": "confirmed",
+   "card": "e-yijin",
+   "ch": 6,
+   "explain": null
+  },
+  {
+   "id": "gk-2022-shanghai-3",
+   "year": 2022,
+   "paper": "上海卷",
+   "section": "積累應用",
+   "qno": "3",
+   "label": "上海卷 2022 第 3 題",
+   "format": "mc",
+   "stem": "3. 学校组织“《红楼梦》演出季”活动，某学生小组改编“宝玉挨打”的情节参加演出，他们力求台词符合原著中人物的身份与性格。以下台词最恰当的一项是（   ）",
+   "options": [
+    {
+     "key": "A",
+     "text": "黛玉对宝玉说：早就对你说过，你真是执迷不悟啊！"
+    },
+    {
+     "key": "B",
+     "text": "宝钗对宝玉说：这次活该你挨打，就是自食其果！"
+    },
+    {
+     "key": "C",
+     "text": "贾母对贾政说：你想想，你父亲是怎么管教你的？"
+    },
+    {
+     "key": "D",
+     "text": "王夫人对贾政说：我现在就死给你看，一了百了！"
+    }
+   ],
+   "answer": "C",
+   "answerText": "C。【详解】A.“早就对你说过，你真是执迷不悟啊”语气直接职责，不符合黛玉委婉的性格；B.“这次活该你挨打，就是自食其果”过于直接，宝钗是端庄的大家闺秀形象，不符合其形象；D.王夫人是贾政正室，端庄有度，不会说出“我现在就死给你看，一了百了”的话语，这更像是赵姨娘的话语。故选C。（21世纪教育网解析版原文；菁优网答案亦为C，解答栏为空）",
+   "answerSource": "多個網站刊載的參考答案一致（見核對網址）",
+   "sources": [
+    "https://zy.21cnjy.com/13276679",
+    "https://www.jyeoo.com/shiti/9a51026a-1597-4153-5791-3c30258e5f43/",
+    "https://gaokao.eol.cn/zuowen/jiqiao/202207/t20220708_2236760.shtml"
+   ],
+   "verify": "confirmed",
+   "card": "e-aida",
+   "ch": 33,
+   "explain": "參考答案 C。第三十三回賈政痛打寶玉，賈母趕來對賈政說：「當日你父親怎麼教訓你來著。」以母親的身分壓住賈政，最合她的地位與口吻。黛玉探傷時只含淚說「你從此可都改了罷」，寶釵是委婉規勸，王夫人則是抱住寶玉痛哭、求賈政先勒死自己；A、B、D 的說法都不合這些人物的身分與性格。"
+  },
+  {
+   "id": "gk-2023-tianjin-23",
+   "year": 2023,
+   "paper": "天津卷",
+   "section": "名著閱讀",
+   "qno": "23",
+   "label": "天津卷 2023 第 23 題",
+   "format": "short",
+   "stem": "从下两个题目中任选1个作答。（4分）\n22．在城镇化发展的今天，阅读《乡土中国》有哪些作用？请给出2条阅读理由。\n23．《红楼梦》中出现了诸多人物，其中有些人物的话，可以给人带来愉悦的感受，请举出1个这样的人物，并结合情节说明。",
+   "options": null,
+   "answer": null,
+   "answerText": "23．示例：王熙凤说话八面玲珑，十分讨巧。比如，初见林黛玉时，她说黛玉气派十足，像贾母嫡亲的孙女，就同时奉承了贾母、黛玉、“三春”，令在场诸人都十分愉悦。",
+   "answerSource": "",
+   "sources": [
+    "https://www.gzywtk.com/sjbrow/2848-3.html",
+    "https://www.gzywtk.com/sjbrow/2848-5.html",
+    "https://www.intowz.com/page/24-08-15/211088.html",
+    "https://news.qq.com/rain/a/20250606A021F300"
+   ],
+   "verify": "confirmed",
+   "card": "r-xifeng",
+   "ch": 3,
+   "explain": null
+  }
+ ]
+}

@@ -3,7 +3,8 @@
 《紅樓夢》考點收服遊戲，仿字靈收服（wygame.bdfz.net）與筆靈收服（mh.bdfz.net/play）的玩法：
 一局十題，答對收服「石靈」、削誤讀妖的血；石靈分人物、詩詞、情節、書史四族，答對同一張石靈三題（其中至少兩道不同的題）即識得。
 題目依本站《紅樓夢》一百二十回原文（`data/text/`）、詩詞校訂層（`data/study/poems.json`、`data/authored/verdicts.json`）、
-北京卷《紅樓夢》真題（`data/study/exams.json`）與指考國文涉及《紅樓夢》的全部 17 題原題編成，每題附原文出處。
+北京卷《紅樓夢》真題（`data/study/exams.json`）、指考國文涉及《紅樓夢》的全部 17 題原題，以及北京卷以外各地高考經雙源核對的 32 題（2004–2023，原題 4 道選擇題、其餘改編）編成，每題附原文出處。
+2026-11-02 第二輪（站長：「好，做第二輪」）加入各地高考兩關 `gk-1`、`gk-2`；單一來源的 8 題不收。
 2026-11-02 站長要求並授權：「基於 hlm.bdfz.net 結合指考和高考內紅樓夢全部考題，使用字靈文靈模式，將紅樓夢做成石頭收服」。
 
 ## 結構
@@ -16,7 +17,7 @@
 | `scripts/play/content/q/*.json` | 撰寫題（每題附逐字原文證據）＋同名 `.review.json` 審題紀錄 | 人工撰寫＋獨立審題 |
 | `scripts/play/content/exam/zhikao.json` | 指考《紅樓夢》原題 17 題（取自 tw.bdfz.net 題庫，官方答案） | 來源快照 |
 | `scripts/play/content/exam/zhikao-explain.json` | 指考原題解析 | 人工撰寫 |
-| `scripts/play/content/exam/gaokao.json` | 北京卷以外的高考原題（若有，雙源核對） | 來源快照 |
+| `scripts/play/content/exam/gaokao.json` | 北京卷以外的各地高考《紅樓夢》題 32 題（每題至少兩個不同網域核對，`sources` 為核對網址；選擇題 4 道收原題，其餘只作改編題證據） | 來源快照 |
 | `scripts/play/check_facts.mjs` | 單檔核對：卡片、回次、繁體、引文與證據逐字出自所註來源 | 閘門 |
 | `scripts/play/build_bank.mjs` | 建置：關卡分配、正解位置、真題原題 → `play/bank/`、`functions/_shared/play/bank-index.js`、`docs/play/AUDIT.md` | 產生器 |
 | `play/bank/`、`functions/_shared/play/bank-index.js`、`docs/play/AUDIT.md` | 建置產物，**手改必失** | 派生 |

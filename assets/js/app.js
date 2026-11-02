@@ -53,7 +53,7 @@ function detailedCapture(action,content,options={},context=detailedContext()) {
   detailedPending.set(operation.operationId,{service,operation,context});
   await service.record(operation);detailedPending.delete(operation.operationId);if(['draft.edit','question.submit','answer.submit'].includes(action)&&context.pointerKey){try{localStorage.setItem(context.pointerKey,operation.operationId);}catch{}}
  })();
- saved.catch(()=>{context.storageFailure=true;const node=document.getElementById('learning-record-status');if(node)node.textContent='記錄尚未完整保存，請保留此頁並重試保存';});return{operation:returned,saved};
+ saved.catch(()=>{context.storageFailure=true;const node=document.getElementById('learning-record-status');if(node)node.textContent='記錄尚未完整保存，請保留此頁並重試保存';recordFailure=true;syncRecordBar();});return{operation:returned,saved};
 }
 function detailedDraft(text,resourceKey) {
  detailedCapture('draft.edit',{text},{},detailedContext(resourceKey));
@@ -81,11 +81,14 @@ async function retryDetailedStorage(){
  for(const [id,item]of [...detailedPending]){await item.service.record(item.operation);detailedPending.delete(id);item.context.storageFailure=false;if(['draft.edit','question.submit','answer.submit'].includes(item.operation.action)&&item.context.pointerKey){try{localStorage.setItem(item.context.pointerKey,item.operation.operationId);}catch{}}}
  return window.BdfzLearningRecords.retry();
 }
+let recordState='',recordFailure=false;
+// 底部記錄條平時隱藏；只有保存失敗、待處理或仍有未保存項目時才顯示（可重試）
+function syncRecordBar(){const bar=document.getElementById('learning-record-bar');if(!bar)return;bar.hidden=!(recordFailure||detailedPending.size>0||['needs_attention','storage_error'].includes(recordState));document.body.classList.toggle('lr-open',!bar.hidden);}
 function initDetailedCapture() {
  const service=window.BdfzLearningRecords;if(!service)return;
- service.onState(s=>{const node=document.getElementById('learning-record-status');if(node)node.textContent=s.status==='unattributed'?'記錄已保存在本機；身份未確認時的內容不會自動歸屬':s.status==='saved'?'學習記錄已同步':['needs_attention','storage_error'].includes(s.status)?'學習記錄待處理，請保留此頁並重試':'學習記錄已在本機保存';});
+ service.onState(s=>{recordState=s.status;const node=document.getElementById('learning-record-status');if(node)node.textContent=s.status==='unattributed'?'記錄已保存在本機；身份未確認時的內容不會自動歸屬':s.status==='saved'?'學習記錄已同步':['needs_attention','storage_error'].includes(s.status)?'學習記錄待處理，請保留此頁並重試':'學習記錄已在本機保存';syncRecordBar();});
  void service.prepare().catch(()=>{});
- document.getElementById('learning-record-retry')?.addEventListener('click',()=>retryDetailedStorage().catch(()=>{}));
+ document.getElementById('learning-record-retry')?.addEventListener('click',()=>retryDetailedStorage().then(()=>{recordFailure=false;},()=>{}).finally(syncRecordBar));
  window.addEventListener('bdfz:session-invalidated',()=>{detailedGeneration++;detailedSession='';convo.length=0;sessionKey='';aiLog()?.replaceChildren();const input=$('#ai-input');if(input)input.value='';});
 }
 /* ---------------- 小工具 ---------------- */

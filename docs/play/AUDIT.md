@@ -1,10 +1,10 @@
-# 石頭收服題庫審計（版本 cffa7b8c44d3）
+# 石頭收服題庫審計（版本 9e1e20727f1d）
 
 由 `node scripts/play/build_bank.mjs` 產生，手改必失。
 
 - 石靈 142 張：人 44、詩 46、事 44、書 8
-- 題目 611 題：撰寫 591（a1-panci.json、a10-bj-extra.json、a2-qu.json、a3-poems.json、a4-major.json、a5-others.json、a6-events1.json、a7-events2.json、a8-book.json、a9-bj-adapted.json）、真題原題 20
-- 關卡 39 關、區域 8 區；正解位置（撰寫題）135／156／148／152
+- 題目 647 題：撰寫 623（a1-panci.json、a10-bj-extra.json、a11-gaokao.json、a2-qu.json、a3-poems.json、a4-major.json、a5-others.json、a6-events1.json、a7-events2.json、a8-book.json、a9-bj-adapted.json）、真題原題 24
+- 關卡 41 關、區域 8 區；正解位置（撰寫題）141／168／154／160
 
 ## 題型
 
@@ -14,8 +14,8 @@
 | book | 18 |
 | cause | 36 |
 | event | 17 |
-| exam | 20 |
-| exam-adapted | 50 |
+| exam | 24 |
+| exam-adapted | 82 |
 | flower | 4 |
 | home | 6 |
 | maid | 10 |
@@ -77,12 +77,14 @@
 | bj-1 | 真題殿 | 北京卷 2005–2020・原題與官方答案改編 | 15 |
 | bj-2 | 真題殿 | 北京卷 2020–2022・原題與官方答案改編 | 14 |
 | bj-3 | 真題殿 | 北京卷 2022–2026・原題與官方答案改編 | 15 |
-| zk-1 | 真題殿 | 指考 91–109・原題原答案・其一 | 13 |
-| zk-2 | 真題殿 | 指考 91–109・原題原答案・其二 | 13 |
+| zk-1 | 真題殿 | 指考 91–109・大考中心原題・其一 | 13 |
+| zk-2 | 真題殿 | 指考 91–109・大考中心原題・其二 | 13 |
+| gk-1 | 真題殿 | 各地高考 2004–2014・全國卷與各省卷 | 18 |
+| gk-2 | 真題殿 | 各地高考 2015–2023・全國卷與各省卷 | 18 |
 
 ## 真題覆蓋
 
-涉及《紅樓夢》的真題 34 道，已用到 34 道。
+涉及《紅樓夢》的真題 66 道，已用到 66 道。
 
 | 真題 | 用到的題 |
 | --- | --- |
@@ -120,16 +122,48 @@
 | 指考 109 學年度指定科目考試 第 22 題（tw-109-22） | tw-109-22 |
 | 指考 109 學年度指定科目考試 第 23 題（tw-109-23） | a4-jiamu-chuihuamen、tw-109-23 |
 | 指考 109 學年度指定科目考試（補考） 第 39 題（tw-109-bu-39） | a8-hongxue-hongxue、a8-structure-zhuzhou、tw-109-bu-39 |
+| 福建卷 2004 第 25 題（gk-2004-fujian-25） | a11-2004fj-wenxue |
+| 湖南卷 2006 第 14 題（gk-2006-hunan-14） | a11-2006hn-chai、a11-2006hn-mei |
+| 福建卷 2007 第 11 題（gk-2007-fujian-11） | a11-2007fj-lazhang |
+| 江蘇卷 2008 第 25 題（gk-2008-jiangsu-25） | a11-2008js-mu、a11-2008js-jin |
+| 江蘇卷 2009 第 23 題（gk-2009-jiangsu-23） | a11-2009js-lengzi |
+| 福建卷 2009 第 7 題（gk-2009-fujian-7） | a11-2009fj-jian |
+| 江蘇卷 2010 第 22 題（gk-2010-jiangsu-22） | gk-2010-jiangsu-22 |
+| 湖北卷 2010 第 21 題（gk-2010-hubei-21） | a11-2010hb-huanjing |
+| 江蘇卷 2011 第 23 題（gk-2011-jiangsu-23） | a11-2011js-gongzi |
+| 江蘇卷 2012 第 23 題（gk-2012-jiangsu-23） | a11-2012js-xiaoxiang |
+| 福建卷 2012 第 7 題（gk-2012-fujian-7） | gk-2012-fujian-7 |
+| 廣東卷 2012 第 18 題（gk-2012-guangdong-18） | a11-2012gd-canhe |
+| 江蘇卷 2013 第 23 題（gk-2013-jiangsu-23） | a11-2013js-taidu、a11-2013js-taidu |
+| 福建卷 2013 第 8 題（gk-2013-fujian-8） | a11-2013fj-jiaoda |
+| 天津卷 2013 第 4 題（gk-2013-tianjin-4） | a11-2013tj-bingju |
+| 江蘇卷 2014 第 25 題（gk-2014-jiangsu-25） | a11-2014js-shihun |
+| 江蘇卷 2015 第 24 題（gk-2015-jiangsu-24） | a11-2015js-miepian |
+| 福建卷 2015 第 7 題（gk-2015-fujian-7） | gk-2015-fujian-7 |
+| 上海卷 2015 第 12 題（gk-2015-shanghai-12） | a11-2015sh-moxie |
+| 江蘇卷 2016 第 25 題（gk-2016-jiangsu-25） | a11-2016js-niezhang、a11-2016js-aida |
+| 江蘇卷 2017 第 25 題（gk-2017-jiangsu-25） | a11-2017js-gaiguan |
+| 江蘇卷 2018 第 25 題（gk-2018-jiangsu-25） | a11-2018js-jiamu、a11-2018js-jiamu |
+| 江蘇卷 2019 第 26 題（gk-2019-jiangsu-26） | a11-2019js-dongren |
+| 江蘇卷 2020 第 26 題（gk-2020-jiangsu-26） | a11-2020js-beifeng |
+| 天津卷 2020 第 21 題（gk-2020-tianjin-21） | a11-2020tj-pudie |
+| 天津卷 2021 第 21 題（gk-2021-tianjin-21） | a11-2021tj-jinfu |
+| 全國甲卷 2022 第 22 題（gk-2022-jia-22） | a11-2022jia-yiran、a11-2022jia-qinfang、a11-2022jia-qinfang |
+| 全國乙卷 2022 第 3 題（gk-2022-yi-3） | a11-2022yi-shijiao |
+| 新高考Ⅱ卷 2022 第 1–5 題（gk-2022-xin2-1） | a11-2022x2-stone |
+| 天津卷 2022 第 21 題（gk-2022-tianjin-21） | a11-2022tj-liulaolao |
+| 上海卷 2022 第 3 題（gk-2022-shanghai-3） | gk-2022-shanghai-3 |
+| 天津卷 2023 第 23 題（gk-2023-tianjin-23） | a11-2023tj-fengjie |
 
 ## 石靈題數
 
 | 卡 | 族 | 名 | 題數 |
 | --- | --- | --- | ---: |
 | r-baoyu | 人 | 賈寶玉 | 11 |
-| r-daiyu | 人 | 林黛玉 | 9 |
-| r-baochai | 人 | 薛寶釵 | 8 |
-| r-xifeng | 人 | 王熙鳳 | 7 |
-| r-jiamu | 人 | 賈母 | 7 |
+| r-daiyu | 人 | 林黛玉 | 10 |
+| r-baochai | 人 | 薛寶釵 | 10 |
+| r-xifeng | 人 | 王熙鳳 | 8 |
+| r-jiamu | 人 | 賈母 | 8 |
 | r-xiangyun | 人 | 史湘雲 | 7 |
 | r-tanchun | 人 | 賈探春 | 7 |
 | r-qingwen | 人 | 晴雯 | 6 |
@@ -168,16 +202,16 @@
 | r-siqi | 人 | 司棋 | 3 |
 | r-jinchuan | 人 | 金釧兒 | 3 |
 | r-sheyue | 人 | 麝月 | 3 |
-| r-jiaoda | 人 | 焦大 | 3 |
+| r-jiaoda | 人 | 焦大 | 4 |
 | s-pc-y1 | 詩 | 又副冊判詞·其一 | 7 |
-| s-pc-y2 | 詩 | 又副冊判詞·其二 | 5 |
+| s-pc-y2 | 詩 | 又副冊判詞·其二 | 6 |
 | s-pc-f1 | 詩 | 副冊判詞 | 5 |
 | s-pc-z1 | 詩 | 正冊判詞·其一 | 6 |
 | s-pc-z2 | 詩 | 正冊判詞·其二 | 4 |
 | s-pc-z3 | 詩 | 正冊判詞·其三 | 4 |
 | s-pc-z4 | 詩 | 正冊判詞·其四 | 4 |
 | s-pc-z5 | 詩 | 正冊判詞·其五 | 4 |
-| s-pc-z6 | 詩 | 正冊判詞·其六 | 5 |
+| s-pc-z6 | 詩 | 正冊判詞·其六 | 6 |
 | s-pc-z7 | 詩 | 正冊判詞·其七 | 4 |
 | s-pc-z8 | 詩 | 正冊判詞·其八 | 5 |
 | s-pc-z9 | 詩 | 正冊判詞·其九 | 5 |
@@ -201,9 +235,9 @@
 | s-haolezhu | 詩 | 好了歌注 | 3 |
 | s-huguanfu | 詩 | 護官符 | 3 |
 | s-xijiangyue | 詩 | 西江月·嘲賈寶玉 | 3 |
-| s-zanghua | 詩 | 葬花吟 | 3 |
+| s-zanghua | 詩 | 葬花吟 | 4 |
 | s-tipa | 詩 | 題帕三絕 | 3 |
-| s-haitang | 詩 | 詠白海棠 | 4 |
+| s-haitang | 詩 | 詠白海棠 | 6 |
 | s-juhua | 詩 | 菊花詩 | 5 |
 | s-pangxie | 詩 | 螃蟹詠 | 3 |
 | s-qiuchuang | 詩 | 秋窗風雨夕 | 3 |
@@ -212,38 +246,38 @@
 | s-wumei | 詩 | 五美吟 | 4 |
 | s-taohua | 詩 | 桃花行 | 5 |
 | s-liuxu | 詩 | 柳絮詞 | 5 |
-| s-lianju | 詩 | 凹晶館聯詩 | 5 |
+| s-lianju | 詩 | 凹晶館聯詩 | 6 |
 | s-furong | 詩 | 芙蓉女兒誄 | 5 |
 | s-dengmi | 詩 | 元宵燈謎 | 4 |
 | e-butian | 事 | 女媧補天 | 3 |
-| e-huanlei | 事 | 絳珠還淚 | 4 |
-| e-lengzixing | 事 | 冷子興演說榮國府 | 3 |
-| e-jinfu | 事 | 黛玉進府 | 10 |
+| e-huanlei | 事 | 絳珠還淚 | 5 |
+| e-lengzixing | 事 | 冷子興演說榮國府 | 4 |
+| e-jinfu | 事 | 黛玉進府 | 11 |
 | e-hulupan | 事 | 葫蘆僧判案 | 3 |
 | e-taixu | 事 | 神遊太虛幻境 | 5 |
-| e-yijin | 事 | 劉姥姥一進榮國府 | 3 |
-| e-jinyu | 事 | 金玉相識 | 3 |
+| e-yijin | 事 | 劉姥姥一進榮國府 | 4 |
+| e-jinyu | 事 | 金玉相識 | 4 |
 | e-xiangsi | 事 | 毒設相思局 | 4 |
 | e-tuomeng | 事 | 可卿託夢 | 5 |
-| e-xieli | 事 | 協理寧國府 | 3 |
+| e-xieli | 事 | 協理寧國府 | 4 |
 | e-nongquan | 事 | 弄權鐵檻寺 | 4 |
 | e-xingqin | 事 | 元妃省親 | 3 |
-| e-tie | 事 | 試才題對額 | 3 |
-| e-xixiang | 事 | 共讀西廂 | 4 |
+| e-tie | 事 | 試才題對額 | 6 |
+| e-xixiang | 事 | 共讀西廂 | 5 |
 | e-zanghua | 事 | 黛玉葬花 | 5 |
-| e-pudie | 事 | 寶釵撲蝶 | 3 |
+| e-pudie | 事 | 寶釵撲蝶 | 4 |
 | e-huaqiang | 事 | 齡官畫薔 | 3 |
 | e-sishan | 事 | 晴雯撕扇 | 4 |
 | e-jinchuan | 事 | 金釧投井 | 4 |
-| e-aida | 事 | 寶玉挨打 | 4 |
+| e-aida | 事 | 寶玉挨打 | 7 |
 | e-haitangshe | 事 | 海棠詩社 | 3 |
-| e-erjin | 事 | 劉姥姥進大觀園 | 6 |
+| e-erjin | 事 | 劉姥姥進大觀園 | 7 |
 | e-pincha | 事 | 櫳翠庵品茶 | 4 |
-| e-lanyan | 事 | 蘭言解疑癖 | 3 |
+| e-lanyan | 事 | 蘭言解疑癖 | 4 |
 | e-pocu | 事 | 鳳姐潑醋 | 3 |
 | e-kanghun | 事 | 鴛鴦抗婚 | 4 |
 | e-xueshi | 事 | 香菱學詩 | 3 |
-| e-luxueguang | 事 | 蘆雪廣即景聯句 | 3 |
+| e-luxueguang | 事 | 蘆雪廣即景聯句 | 4 |
 | e-buqiu | 事 | 晴雯補裘 | 4 |
 | e-lijia | 事 | 探春理家 | 4 |
 | e-shiyu | 事 | 紫鵑試玉 | 3 |
@@ -252,18 +286,18 @@
 | e-yeyan | 事 | 群芳夜宴 | 4 |
 | e-sanjie | 事 | 尤三姐自刎 | 3 |
 | e-erjie | 事 | 尤二姐之死 | 3 |
-| e-chaojian | 事 | 抄檢大觀園 | 5 |
+| e-chaojian | 事 | 抄檢大觀園 | 6 |
 | e-qingwensi | 事 | 晴雯之死 | 4 |
 | e-wujia | 事 | 迎春誤嫁 | 3 |
 | e-diaobao | 事 | 掉包計 | 5 |
-| e-fengao | 事 | 黛玉焚稿 | 4 |
+| e-fengao | 事 | 黛玉焚稿 | 6 |
 | e-chaojia | 事 | 查抄寧國府 | 4 |
 | e-chujia | 事 | 寶玉出家 | 3 |
-| b-author | 書 | 曹雪芹 | 5 |
+| b-author | 書 | 曹雪芹 | 6 |
 | b-names | 書 | 書名五題 | 9 |
 | b-genre | 書 | 章回小說 | 7 |
-| b-xushu | 書 | 後四十回與程本 | 4 |
+| b-xushu | 書 | 後四十回與程本 | 5 |
 | b-zhiping | 書 | 脂硯齋評 | 4 |
-| b-hongxue | 書 | 紅學 | 7 |
+| b-hongxue | 書 | 紅學 | 8 |
 | b-structure | 書 | 盛衰結構 | 18 |
-| b-art | 書 | 寫人藝術 | 5 |
+| b-art | 書 | 寫人藝術 | 6 |
