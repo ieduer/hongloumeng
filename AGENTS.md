@@ -46,3 +46,15 @@ Read `/Users/ylsuen/CF/AGENTS.md`, [operations](docs/OPERATIONS.md), and
   A caller/session change requires the workspace shared-hub transaction.
 - Treat learner activity as `student_owned`; report aggregate outcomes only.
 - Inspect Git and action-log ownership before mutation.
+
+## 石頭收服（/play，2026-11-02 起）
+
+- 子應用 `hlm.bdfz.net/play/`：《紅樓夢》考點收服遊戲（字靈收服／筆靈收服玩法）。說明 [docs/play/README.md](docs/play/README.md)，題庫審計 `docs/play/AUDIT.md`。
+- 資料分層：人工撰寫 `scripts/play/content/`（石靈卡、世界設定、`q/*.json` 撰寫題與審題紀錄、`exam/` 真題快照與解析）；
+  派生 `play/bank/`、`functions/_shared/play/bank-index.js`、`docs/play/AUDIT.md`（`node scripts/play/build_bank.mjs`，**手改必失**）；
+  前端原始碼 `scripts/play/app/` → 建置產物 `play/index.html`、`play/assets/`（提交）。題庫、伺服器索引、前端必須同版發布。
+- 題目閘門：`node scripts/play/check_facts.mjs`（引文與證據逐字出自所註來源、繁體）與 `build_bank.mjs`（每卡至少 3 題、每關至少 10 題、正解分布）。
+  底本是程乙本系統；正解必須對通行本讀者也成立（`scripts/play/content/AUTHORING.md`）。`--loose` 只供本機預覽，不可發布。
+- D1 `hongloumeng-play`（`PLAY_DB`）在 `wrangler.toml` 宣告——Pages 以 `wrangler.toml` 為設定唯一來源，綁定不可在儀表板改。
+  它留存學習資料（對局、逐題作答、雲端存檔），不存個人資料；Pages 回滾不回滾資料。
+- `/api/play/*` 由 `functions/api/play/[[path]].js` 處理（`_routes.json` 已含）；跨站寫入一律 403。既有 `/api/learning/*` 與 `GROWTH_EVIDENCE` 不受影響。

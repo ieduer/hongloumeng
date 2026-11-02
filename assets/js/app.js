@@ -5,7 +5,7 @@
 'use strict';
 
 const SITE_KEY = 'hlm';
-const V = 'v=2026092601';
+const V = 'v=2026110201';
 
 
 let detailedSession='';
@@ -196,6 +196,7 @@ const TABS = [
   ['#/poems', '詩詞'],
   ['#/plan', '進度'],
   ['#/method', '讀法'],
+  ['/play/', '石頭收服'],
 ];
 function renderTabs() {
   const cur = location.hash || '#/';
@@ -335,6 +336,8 @@ async function viewHome(view) {
         詩詞判詞 <b class="zhu">${poems.items.length}</b> 篇 ·
         人物檔案 <b class="zhu">44</b> 位
       </div>
+      <p style="margin:14px 0 0"><a class="btn primary" href="/play/">石頭收服</a>
+        <span class="small muted">把判詞、人物、情節與北京卷、指考真題收成石靈</span></p>
     </div>
   </section>
 

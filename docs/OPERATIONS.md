@@ -38,6 +38,19 @@ Rollback anchor: `e9a223f8-7a94-483e-bc10-76bcbb929e7a`. Roll back the leaf befo
 
 This section supersedes earlier candidate/pending statements for this completion release only; unrelated historical incidents and follow-ups retain their own authority.
 
+## 石頭收服 /play 發布程序（2026-11-02 起）
+
+/play 與主站同一個 Pages 專案、同一條受控自動發布（push `main` → `.release/guard.mjs` 原生建置）。改題目或前端時：
+
+1. 改 `scripts/play/content/`（撰寫題要過 `node scripts/play/check_facts.mjs`，規範見 `scripts/play/content/AUTHORING.md`）。
+2. `node scripts/play/build_bank.mjs`（不可用 `--loose`）→ `play/bank/`、`functions/_shared/play/bank-index.js`、`docs/play/AUDIT.md`。
+3. `cd scripts/play/app && npm ci && npm run build` → `play/index.html`、`play/assets/`；`node scripts/play/app/tools/contrast.mjs` 四套色系 0 失敗。
+4. `node --test tests/*.test.mjs`（含 `play-engine`、`play-bank`），`TZ=America/Los_Angeles node --test scripts/test_app.mjs`，`/Users/ylsuen/.venv/bin/python scripts/verify_study.py`。
+5. 本機 `hlm-play`（`.claude/launch.json`，`wrangler pages dev . --d1 PLAY_DB=<id>`；目錄參數會忽略 `wrangler.toml` 綁定，所以 D1 要顯式傳）逐頁走：出戰、旅程、真題（含多選與附圖）、圖鑑、我、排行；手機 375 寬無橫向捲動。
+6. 依 release authority 走受控發布：基線、prepare、D1 遷移（只增不改）、push、驗證部署設定只多出 `PLAY_DB`、產物與函式只動 /play 範圍、探針、真實匿名一局（零分、重送冪等、跨站 403）、登入身分讀回、Status。
+   驅動範本：`/Users/ylsuen/CF/_meta/reports/operations/hlm-play-20261102/release/hlm-play-release.mjs`。
+7. D1 `hongloumeng-play` 的學習資料不隨 Pages 回滾；回滾只回滾程式與題庫。題庫換版後，伺服器以新索引重算：舊題號的作答照樣保留、仍計入所屬石靈與對局入帳，只是不在新索引的題不算「答對過的題」。
+
 # Hongloumeng operations
 
 Reviewed 2026-09-17; owner suen. This is the local operations entrypoint.

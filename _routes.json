@@ -1,7 +1,8 @@
 {
   "version": 1,
   "include": [
-    "/api/learning/*"
+    "/api/learning/*",
+    "/api/play/*"
   ],
   "exclude": []
 }

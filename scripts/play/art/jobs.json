@@ -1,0 +1,345 @@
+[
+ {
+  "name": "logo",
+  "prompt": "Round coin-shaped emblem filling the frame: a legendary translucent jade stone pendant glowing from within, five-colored auspicious clouds swirling around it, a red silk tassel, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 401
+ },
+ {
+  "name": "stone-ren-n",
+  "prompt": "A magical spirit stone made of translucent green jade: a small rough unpolished pebble with a faint inner glow, a carved plum blossom and a tiny phoenix feather, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 411
+ },
+ {
+  "name": "stone-ren-r",
+  "prompt": "A magical spirit stone made of translucent green jade: a smooth polished oval stone with subtle carved cloud patterns and a soft glow, a carved plum blossom and a tiny phoenix feather, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 412
+ },
+ {
+  "name": "stone-ren-sr",
+  "prompt": "A magical spirit stone made of translucent green jade: an ornately carved stone pendant in a gold filigree setting with a silk tassel, bright magical glow, a carved plum blossom and a tiny phoenix feather, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 413
+ },
+ {
+  "name": "stone-ren-ssr",
+  "prompt": "A magical spirit stone made of translucent green jade: a radiant legendary stone pendant blazing with five-colored light, wrapped in swirling clouds and golden sparks, majestic, a carved plum blossom and a tiny phoenix feather, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 414
+ },
+ {
+  "name": "stone-poem-n",
+  "prompt": "A magical spirit stone made of polished black ink stone with veins of gold: a small rough unpolished pebble with a faint inner glow, peach blossom petals drifting around it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 415
+ },
+ {
+  "name": "stone-poem-r",
+  "prompt": "A magical spirit stone made of polished black ink stone with veins of gold: a smooth polished oval stone with subtle carved cloud patterns and a soft glow, peach blossom petals drifting around it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 416
+ },
+ {
+  "name": "stone-poem-sr",
+  "prompt": "A magical spirit stone made of polished black ink stone with veins of gold: an ornately carved oval pendant in a golden setting with a red silk tassel, bright magical glow, plum blossom petals drifting around it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 731
+ },
+ {
+  "name": "stone-poem-ssr",
+  "prompt": "A magical spirit stone made of polished black ink stone with veins of gold: a radiant legendary stone pendant blazing with five-colored light, wrapped in swirling clouds and golden sparks, majestic, peach blossom petals drifting around it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 418
+ },
+ {
+  "name": "stone-event-n",
+  "prompt": "A magical spirit stone made of deep red cinnabar agate: a small rough unpolished pebble with a faint inner glow, tiny glowing red paper lanterns orbiting it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 419
+ },
+ {
+  "name": "stone-event-r",
+  "prompt": "A magical spirit stone made of deep red cinnabar agate: a smooth polished oval stone with subtle carved cloud patterns and a soft glow, tiny glowing red paper lanterns orbiting it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 420
+ },
+ {
+  "name": "stone-event-sr",
+  "prompt": "A magical spirit stone made of deep red cinnabar agate: an ornately carved stone pendant in a gold filigree setting with a silk tassel, bright magical glow, tiny glowing red paper lanterns orbiting it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no inscriptions, no seals, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 941
+ },
+ {
+  "name": "stone-event-ssr",
+  "prompt": "A magical spirit stone made of deep red cinnabar agate: a radiant legendary stone pendant blazing with five-colored light, wrapped in swirling clouds and golden sparks, majestic, tiny glowing red paper lanterns orbiting it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 422
+ },
+ {
+  "name": "stone-book-n",
+  "prompt": "A magical spirit stone made of deep blue lapis lazuli with golden flecks: a small rough unpolished pebble with a faint inner glow, a tiny rolled bamboo scroll tied with silk floating beside it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 423
+ },
+ {
+  "name": "stone-book-r",
+  "prompt": "A magical spirit stone made of deep blue lapis lazuli with golden flecks: a smooth polished oval stone with subtle carved cloud patterns and a soft glow, a tiny rolled bamboo scroll tied with silk floating beside it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 424
+ },
+ {
+  "name": "stone-book-sr",
+  "prompt": "A magical spirit stone made of deep blue lapis lazuli with golden flecks: an ornately carved stone pendant in a gold filigree setting with a silk tassel, bright magical glow, a tiny rolled bamboo scroll tied with silk floating beside it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 425
+ },
+ {
+  "name": "stone-book-ssr",
+  "prompt": "A magical spirit stone made of deep blue lapis lazuli with golden flecks: a radiant legendary stone pendant blazing with five-colored light, wrapped in swirling clouds and golden sparks, majestic, a tiny rolled bamboo scroll tied with silk floating beside it, Chinese mythology treasure, glossy 3D fantasy game item art, dramatic golden rim light, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 426
+ },
+ {
+  "name": "rank-0",
+  "prompt": "Round coin-shaped emblem filling the frame: a rough grey moss-covered boulder standing alone on a misty mountain peak, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 430
+ },
+ {
+  "name": "rank-1",
+  "prompt": "Round coin-shaped emblem filling the frame: a small egg-shaped translucent jade gem glowing like rosy dawn clouds, wrapped in swirling five-colored cloud patterns, the gem large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no inscriptions, no engravings, no seals, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 951
+ },
+ {
+  "name": "rank-2",
+  "prompt": "Round coin-shaped emblem filling the frame: swirling dream clouds flowing through a round moon gate, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 432
+ },
+ {
+  "name": "rank-3",
+  "prompt": "Round coin-shaped emblem filling the frame: twelve ornate golden Chinese hairpins with dangling pearls and jade beads fanned out around a central round red gemstone, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no inscriptions, no engravings, no faces, no people, no seals, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 953
+ },
+ {
+  "name": "rank-4",
+  "prompt": "Round coin-shaped emblem filling the frame: a small arched stone bridge over a clear stream with a tiny pavilion and weeping willows, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no inscriptions, no seals, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 934
+ },
+ {
+  "name": "rank-5",
+  "prompt": "Round coin-shaped emblem filling the frame: white crabapple begonia blossoms in a celadon porcelain vase, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 435
+ },
+ {
+  "name": "rank-6",
+  "prompt": "Round coin-shaped emblem filling the frame: golden chrysanthemum flowers crowned with a jade laurel wreath, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 436
+ },
+ {
+  "name": "rank-7",
+  "prompt": "Round coin-shaped emblem filling the frame: a wooden alms bowl with a string of prayer beads resting on a lotus leaf, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 437
+ },
+ {
+  "name": "rank-8",
+  "prompt": "Round coin-shaped emblem filling the frame: five-colored luminous stones floating in the sky sealing a glowing crack in the heavens, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 438
+ },
+ {
+  "name": "rank-9",
+  "prompt": "Round coin-shaped emblem filling the frame: a celadon teacup on a lotus leaf with rising steam curling into a phoenix, the motif large and clearly visible in the center, glossy 3D game rank badge, ornate gold filigree rim, lacquer black, jade and gold palette, soft studio lighting, perfectly centered on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 439
+ },
+ {
+  "name": "map-p1",
+  "prompt": "Top-down fantasy map: a lone giant stone at the foot of a misty green mountain peak beside a crystal river, a fairy realm of clouds with a floating moon gate above, a long winding path with small glowing lantern stations, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 450
+ },
+ {
+  "name": "map-p2",
+  "prompt": "Top-down fantasy map: a grand Chinese aristocratic mansion compound seen from above with many courtyards, red pillars, grey tiled roofs, gates and covered corridors, a long winding path with small glowing lantern stations, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 451
+ },
+ {
+  "name": "map-p3",
+  "prompt": "Top-down fantasy map: a vast spring garden with blooming peach trees, arched stone bridges, streams, pavilions and bamboo groves, a long winding path with small glowing lantern stations, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 452
+ },
+ {
+  "name": "map-p4",
+  "prompt": "Top-down fantasy map: a winter garden covered in snow with bright red plum blossoms, a frozen lake and snowy pavilions, a long winding path with small glowing lantern stations, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 453
+ },
+ {
+  "name": "map-p5",
+  "prompt": "Top-down fantasy map: an autumn garden under a huge full moon, falling red maple leaves, an empty lotus pond with a white crane flying over it, a long winding path with small glowing lantern stations, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 454
+ },
+ {
+  "name": "map-p6",
+  "prompt": "Top-down fantasy map: a withered bamboo garden at dusk, drifting ashes of burnt paper and cold mist, broken pavilions, a long winding path with small glowing lantern stations, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 455
+ },
+ {
+  "name": "map-p7",
+  "prompt": "Top-down fantasy map: a vast endless white snowfield, silent and pure, a single path toward distant blue mountains and a lone stone under falling snow, small glowing lantern stations, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 456
+ },
+ {
+  "name": "map-exam",
+  "prompt": "Top-down fantasy map: an ancient imperial examination hall with long rows of small cells beside a winding river, red lanterns and scrolls, a long winding path with small glowing lantern stations, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 457
+ },
+ {
+  "name": "bg-home",
+  "prompt": "A misty Chinese garden pavilion by a lotus pond at dawn, a glowing jade stone floating above the water, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 470
+ },
+ {
+  "name": "bg-battle",
+  "prompt": "A storm of crimson peach petals and swirling ink clouds over a dark garden courtyard with red pillars, dramatic and mysterious, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 471
+ },
+ {
+  "name": "bg-journey",
+  "prompt": "A long winding garden path with arched bridges, willows and lanterns leading into misty mountains, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 472
+ },
+ {
+  "name": "bg-codex",
+  "prompt": "An ancient carved wooden cabinet of curiosities with glowing jade and agate stones resting on its shelves, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 473
+ },
+ {
+  "name": "bg-me",
+  "prompt": "A quiet scholar's study with a round window open to moonlit bamboo, a writing desk with brushes, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 474
+ },
+ {
+  "name": "bg-board",
+  "prompt": "A lantern-lit garden pavilion at night with silk banners and a moonlit pond, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1536,
+  "seed": 475
+ },
+ {
+  "name": "foe-1",
+  "prompt": "A grey ink-smoke demon made of torn book pages and tangled red threads, mischievous grin, menacing but slightly comical, glossy 3D fantasy game monster art, dramatic rim light, perfectly centered full body on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 480
+ },
+ {
+  "name": "foe-2",
+  "prompt": "A sly fox demon made of swirling ink smoke wearing a cracked opera mask, menacing but slightly comical, glossy 3D fantasy game monster art, dramatic rim light, perfectly centered full body on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 481
+ },
+ {
+  "name": "foe-3",
+  "prompt": "A demon formed from shards of a broken bronze mirror floating in dark mist, glowing eyes, menacing but slightly comical, glossy 3D fantasy game monster art, dramatic rim light, perfectly centered full body on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 482
+ },
+ {
+  "name": "foe-4",
+  "prompt": "A demon of tangled thorny peony vines and smoke with glowing amber eyes, menacing but slightly comical, glossy 3D fantasy game monster art, dramatic rim light, perfectly centered full body on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 483
+ },
+ {
+  "name": "foe-boss",
+  "prompt": "A huge armored demon made of burnt paper and swirling ash with a giant red wax seal on its chest, glowing red eyes, menacing but slightly comical, glossy 3D fantasy game monster art, dramatic rim light, perfectly centered full body on a plain solid black background, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1024,
+  "h": 1024,
+  "seed": 484
+ },
+ {
+  "name": "mode-daily",
+  "prompt": "Wide panoramic banner: sunrise over a red garden pavilion with blooming peach trees and golden morning light, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no inscriptions, no seals, no watermark",
+  "w": 1536,
+  "h": 768,
+  "seed": 990
+ },
+ {
+  "name": "mode-free",
+  "prompt": "Wide panoramic banner: Peach blossom petals drifting over a winding stream through a misty garden, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1536,
+  "h": 768,
+  "seed": 491
+ },
+ {
+  "name": "mode-wrong",
+  "prompt": "Wide panoramic banner: Cold autumn rain falling on a moonlit courtyard with a single glowing lantern, atmospheric fantasy concept art painted in Chinese ink-wash style with soft color glazes, misty depth, drifting peach blossom petals and warm lantern glows, dreamy and melancholic, no text, no letters, no calligraphy, no characters, no watermark",
+  "w": 1536,
+  "h": 768,
+  "seed": 492
+ }
+]

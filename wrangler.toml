@@ -6,3 +6,10 @@ compatibility_date = "2025-03-24"
 binding = "GROWTH_EVIDENCE"
 service = "bdfz-user-center"
 entrypoint = "HlmGrowthEvidence"
+
+# 石頭收服（/play）學習資料：對局、逐題作答、雲端存檔。只存學習資料，不存個人資料
+# （身分只記 my.bdfz.net 的 slug 或匿名 cookie id）。結構見 migrations/0001_play.sql。
+[[d1_databases]]
+binding = "PLAY_DB"
+database_name = "hongloumeng-play"
+database_id = "312b6340-d35c-40ee-84a8-e0216e9ae3ee"
