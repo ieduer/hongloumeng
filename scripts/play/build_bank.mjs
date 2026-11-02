@@ -224,7 +224,7 @@ for (const id of ["bj2005-15", "bj2014-4c", "bj2017-fw6"]) {
 }
 const gkPath = C("exam/gaokao.json");
 if (fs.existsSync(gkPath)) {
-  for (const g of readJSON(gkPath).questions.filter((g) => ["mc", "multi"].includes(g.format) && g.verify === "confirmed")) {
+  for (const g of readJSON(gkPath).questions.filter((g) => ["mc", "multi"].includes(g.format) && ["confirmed", "single_source"].includes(g.verify))) {
     if (!cardById.has(g.card)) fail(`高考 ${g.id} 石靈卡不存在：${g.card}`);
     const keys = g.options.map((o) => o.key);
     const multi = g.answer.length > 1;

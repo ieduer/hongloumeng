@@ -729,31 +729,6 @@
       ]
     },
     {
-      "id": "a8-hongxue-huimu-23",
-      "card": "b-hongxue",
-      "kind": "book",
-      "ch": 23,
-      "prompt": "回目「西廂記妙詞通戲語，牡丹亭艷曲警芳心」屬於第幾回？",
-      "options": [
-        "第二十三回",
-        "第三十二回",
-        "第二十七回",
-        "第十八回"
-      ],
-      "optionsSource": null,
-      "explain": "依原著目錄是第二十三回。本站論文導讀指出，漆永祥論文第 99 頁把它標成第三十二回，本站依目錄校正。研究論著也會出錯，引用回目要回原著核對。",
-      "evidence": [
-        {
-          "ch": 23,
-          "text": "西厢记妙词通戏语 牡丹亭艳曲警芳心"
-        },
-        {
-          "doc": "research",
-          "text": "本站依原著目錄校為第二十三回"
-        }
-      ]
-    },
-    {
       "id": "a8-structure-zhuzhou",
       "card": "b-structure",
       "kind": "exam-adapted",
