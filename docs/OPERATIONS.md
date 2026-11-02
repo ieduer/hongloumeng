@@ -1,8 +1,14 @@
-## Current accepted 石頭收服 /play — 2026-11-02T14:22Z
+## Current accepted 石頭收服 round 2 — 2026-11-02T14:46Z
+
+Exact source `c34f24e5fd3de5d2e53ec046cde2c72af113e5b8`; Pages deployment `3d3bf1aa-4468-4c07-84f4-e0fcc929709e` via the existing guarded native channel. Adds the provincial 高考 stages `gk-1` and `gk-2` to `/play/`: 32 《紅樓夢》 items from papers other than 北京卷 (2004–2023, each checked on at least two domains; 4 multiple-choice originals, the rest adapted), bank `9e1e20727f1d` with 647 questions, 41 stages and 142 石靈. Home page fix: the learning-record status and the 「重試保存學習記錄」 button now sit in a bar that stays hidden unless saving needs attention, and the footer clears the floating nav logo and 問 button. Configuration digest is unchanged; the only function input changed is `functions/_shared/play/bank-index.js`. Production probes, an anonymous gk-1 run (D1 write, idempotent replay, cross-site 403; test rows deleted) and a browser check of the live home page at desktop and phone width passed. Status `20261102-hlm-shitou-gaokao` r1 verified (record, page, global and site RSS). Rollback: Pages deployment `f7aed9ac-4a7f-4a80-a642-5925a1fc0ba7` (source `2995450`); D1 learning data is kept, and runs on gk stages stay stored.
+
+Evidence and driver: `/Users/ylsuen/CF/_meta/reports/operations/hlm-play-r2-20261102/` (release/, acceptance/, STATUS-NOTE.json, REPORT.md). Next release base: `main` after this record.
+
+## Previous accepted 石頭收服 /play — 2026-11-02T14:22Z
 
 Exact source `2995450557c7f7777aaeae621c8fa29b22773738`; Pages deployment `f7aed9ac-4a7f-4a80-a642-5925a1fc0ba7` via the existing guarded native channel. Adds 石頭收服 at `/play/` (611 questions, bank `cffa7b8c44d3`, 142 石靈, 39 stages), Pages Functions `/api/play/*`, and D1 `hongloumeng-play` (`PLAY_DB`, `312b6340-d35c-40ee-84a8-e0216e9ae3ee`, migration 0001). Configuration changed only by the PLAY_DB binding (wrangler.toml); the 150 existing assets and the learning functions are byte-identical. Production probes, an anonymous run (write, idempotent replay, cross-site 403) and a signed-in run with the authorized test identity (D1 readback, cloud save) passed; all test rows deleted. Status `20261102-hlm-shitou-play` r1 verified (record, global and site RSS). Rollback: Pages deployment `e8b6c1d8-eebf-4b1b-98f6-5483821f0432` (source `6e2554f`); D1 learning data is kept.
 
-Evidence and driver: `/Users/ylsuen/CF/_meta/reports/operations/hlm-play-20261102/` (release/, acceptance/, STATUS-NOTE.json). Game docs: [docs/play/README.md](docs/play/README.md). Pending: questions from provincial 高考 papers other than 北京卷 (verified list in the task report) are not yet in the bank.
+Evidence and driver: `/Users/ylsuen/CF/_meta/reports/operations/hlm-play-20261102/` (release/, acceptance/, STATUS-NOTE.json). Game docs: [docs/play/README.md](docs/play/README.md). Provincial 高考 questions were added in round 2 (section above).
 
 ## Captures at page load or after a window focus wait for their owner — 2026-10-26 (task `learning-scope-kz-hlm-20261026`)
 
