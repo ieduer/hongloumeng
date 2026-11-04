@@ -1,4 +1,4 @@
-# 石頭收服題庫審計（版本 b5e0179a21d6）
+# 石頭收服題庫審計（版本 ce65b0e94fe0）
 
 由 `node scripts/play/build_bank.mjs` 產生，手改必失。
 
