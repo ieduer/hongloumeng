@@ -1,4 +1,10 @@
-## Current accepted 石頭收服 round 3 — 2026-11-03T01:11Z
+## Current accepted 石頭收服 bank corrections — 2026-11-04T02:40Z
+
+Exact source `a5df0e9258fc8babc69758c38af5f9aca5e24998`; Pages deployment `50735dbf-ec83-4a9d-9306-4b26868eaa1f` via the existing guarded native channel (effective 2026-11-04T02:28Z). After the two-model bank review (`bank-qa-openai-20261104`, 47 findings for this site) 27 questions were corrected and 1 explanation note added; 19 findings were not changed (14 exam multi-answer/passage/figure items misread by the review extractor, 5 contradicted by the base text). Bank `ce65b0e94fe0`, still 657 questions, 42 stages, exams 74/74; answer keys unchanged. Details in `docs/play/QUALITY.md`. Rollback: Pages `d2d96337-ea68-4d86-9283-67e23dca99d7` (`f618017`); D1 `hongloumeng-play` keeps learning data.
+
+Evidence and driver: `/Users/ylsuen/CF/_meta/reports/operations/bank-fix-hlm-ly-20261104/`.
+
+## Previous accepted 石頭收服 round 3 — 2026-11-03T01:11Z
 
 Exact source `f6180170ae7fc8696122fb77bbd64f313f748149`; Pages deployment `d2d96337-ea68-4d86-9283-67e23dca99d7` via the existing guarded native channel (effective 2026-11-02T15:17Z). Bank `b5e0179a21d6` re-audited by exam-point value: 95 trivial questions removed, 102 added (residences and garden names, name meanings with text or 脂評 support, cultural knowledge, key poems and chapter-3 portraits, endings of major characters with continuation marked, character turning points; 判詞 14/14, 十二支曲 14/14), plus the 8 single-source provincial 高考 items (`verify: "single_source"`). 657 questions, 42 stages, exams 74/74. Criteria and lists: [docs/play/QUALITY.md](docs/play/QUALITY.md); authoring rule section 六 in `scripts/play/content/AUTHORING.md`. Stage files `p2-4` and `p4-6` were removed by re-chunking (engine and app ignore progress on removed ids). Configuration unchanged; only function input changed is the bank index. Probes, an anonymous gk-1 run (D1 write, replay, cross-site 403; test rows deleted) and a live browser check passed. Status `20261102-hlm-shitou-quality` r1 verified. Rollback: Pages `3d3bf1aa-4468-4c07-84f4-e0fcc929709e` (`c34f24e`); D1 learning data is kept.
 
