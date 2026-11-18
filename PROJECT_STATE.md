@@ -1,3 +1,9 @@
+## 2026-11-18 accepted: AI through the gateway's credit lanes
+
+- Source `17eeb38` on `main`, Pages deployment `7bd6297a-9790-4e7e-bba2-1fe1e1547fb5`, effective 2026-11-18T10:34:58Z; rollback 50735dbf (source a5df0e9).
+- hlm.bdfz.net AI answers come from Claude first, then OpenAI, then Gemini, through `functions/api/ai.js` (verified caller `hlm.bdfz.net`, server-built request, per-client rate guard, 65 s gateway wait, 70 s page wait). Details and operating notes: `docs/OPERATIONS.md`, section "2026-11-18 AI answers through the gateway's credit lanes".
+- Open: none for this change.
+
 ## Current accepted 石頭收服 bank corrections — 2026-11-04T02:40Z
 
 Exact source `a5df0e9258fc8babc69758c38af5f9aca5e24998`; Pages deployment `50735dbf-ec83-4a9d-9306-4b26868eaa1f` via the existing guarded native channel (effective 2026-11-04T02:28Z). After the two-model bank review (`bank-qa-openai-20261104`, 47 findings for this site) 27 questions were corrected and 1 explanation note added; 19 findings were not changed (14 exam multi-answer/passage/figure items misread by the review extractor, 5 contradicted by the base text). Bank `ce65b0e94fe0`, still 657 questions, 42 stages, exams 74/74; answer keys unchanged. Details in `docs/play/QUALITY.md`. Rollback: Pages `d2d96337-ea68-4d86-9283-67e23dca99d7` (`f618017`); D1 `hongloumeng-play` keeps learning data.

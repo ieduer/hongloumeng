@@ -1,3 +1,15 @@
+## 2026-11-18 AI answers through the gateway's credit lanes (sites-three-tier-20261118)
+
+This section supersedes earlier statements in this file about how the page reaches the AI gateway and how long it waits.
+
+- Accepted: source `17eeb38` on `main`, Pages deployment `7bd6297a-9790-4e7e-bba2-1fe1e1547fb5`, effective 2026-11-18T10:34:58Z. Rollback: Pages rollback to 50735dbf (source a5df0e9).
+- Before: the site called `https://ai.bdfz.net/` from the browser and waited 25 s; only the free Gemini pool could answer (no caller credential).
+- Now: `functions/api/ai.js` is the verified gateway caller `hlm.bdfz.net`. It accepts a same-origin POST, builds the gateway request on the server (`chat`; no model, tools or generation settings from the browser), runs the per-client rate guard `functions/_shared/ai-rate-guard.js` before every model request (ten requests per clock minute per hashed client address; refuses with 503 when its KV binding is missing or failing), calls the gateway through the service binding and waits 65 s. The page waits 70 s.
+- Bindings: `wrangler.toml` (service `APIS`, KV `AI_RATE_KV`); `_routes.json` now includes `/api/ai`. KV namespace: shared `ai-rate-guard` (`88ca57c8cb534d539b959e29617e6fa6`), keys `ai-rate:<site>:<hash>:<minute>`, two-minute expiry. Secret `APIS_CALLER_TOKEN` on the Pages project (production only; never in this repository; private store name `HLM_APIS_CALLER_TOKEN`).
+- Gateway side (APIS `1182b59`, version `4c5995f6`, 2026-11-18): `hlm.bdfz.net` is in the credit lanes for chat, so an answer comes from Claude first, then OpenAI, then the paid Gemini tier, then the free pool; 300 paid attempts per UTC day. The caller is registered by a credential digest in the gateway secret `APIS_CALLER_TOKEN_HASH_ADDITIONS`; rotating the credential needs a gateway release (new digest) before the Pages secret and a redeploy.
+- Operating notes: the guard counts per clock minute, so a burst across a minute boundary can reach twice the limit. A preview deployment has no caller secret and answers 503 `AI_GATEWAY_UNAVAILABLE`.
+- Tests: `tests/ai-route.test.mjs` (`node --test tests/*.test.mjs`). Acceptance: one real answer by claude-sonnet-5-5 and the eleventh request of a minute refused with 429. Evidence: `/Users/ylsuen/CF/_meta/reports/operations/sites-three-tier-20261118/sites/hlm/`. Public update: `20261118-kz-gk-hlm-claude-first`.
+
 ## Current accepted 石頭收服 bank corrections — 2026-11-04T02:40Z
 
 Exact source `a5df0e9258fc8babc69758c38af5f9aca5e24998`; Pages deployment `50735dbf-ec83-4a9d-9306-4b26868eaa1f` via the existing guarded native channel (effective 2026-11-04T02:28Z). After the two-model bank review (`bank-qa-openai-20261104`, 47 findings for this site) 27 questions were corrected and 1 explanation note added; 19 findings were not changed (14 exam multi-answer/passage/figure items misread by the review extractor, 5 contradicted by the base text). Bank `ce65b0e94fe0`, still 657 questions, 42 stages, exams 74/74; answer keys unchanged. Details in `docs/play/QUALITY.md`. Rollback: Pages `d2d96337-ea68-4d86-9283-67e23dca99d7` (`f618017`); D1 `hongloumeng-play` keeps learning data.
