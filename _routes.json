@@ -2,7 +2,8 @@
   "version": 1,
   "include": [
     "/api/learning/*",
-    "/api/play/*"
+    "/api/play/*",
+    "/api/ai"
   ],
   "exclude": []
 }

@@ -28,7 +28,7 @@ function page({identityDelay=0,authenticated=true}={}){
   const context=vm.createContext({console,setTimeout,clearTimeout,AbortSignal,URLSearchParams,window:root,document,location:{hash:'#/exam',href:'https://hlm.bdfz.net/#/exam'},
     localStorage:{getItem:key=>local.get(key)??null,setItem:(key,value)=>local.set(key,value),removeItem:key=>local.delete(key)},
     fetch:async(url,init)=>{
-      if(url!=='https://ai.bdfz.net/')return {ok:true,json:async()=>({}),text:async()=>'{}'};
+      if(url!=='/api/ai')return {ok:true,json:async()=>({}),text:async()=>'{}'};
       events.push('fetch:ai');assert.equal(init.headers['X-Request-ID'],rows.find(row=>row.operation.action==='ai.request')?.operation.operationId,'provider request carries the saved attempt id');
       return {ok:true,text:async()=>JSON.stringify({answer:'synthetic reply',model:'test-model'})};
     }});

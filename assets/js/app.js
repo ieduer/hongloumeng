@@ -1053,8 +1053,10 @@ async function callAI(prompt,captureContext=detailedContext(),attemptNumber=1) {
   captureContext.requestAt ||= request.operation.occurredAt;
   let raw,j,a;
   try {
+    // Same-origin AI route (functions/api/ai.js, 2026-11-18): the site's own function calls the shared gateway as a verified caller
+    // (Claude first, then OpenAI, then Gemini) and waits 65 s for it; the page waits 70 s.
     // The captured request operation id travels with the call so the gateway and ledger correlate the same logical ask.
-    const res=await fetch('https://ai.bdfz.net/',{signal:AbortSignal.timeout(25000),method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':String(request.operation.operationId)},body:JSON.stringify({prompt})});
+    const res=await fetch('/api/ai',{signal:AbortSignal.timeout(70000),method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':String(request.operation.operationId)},body:JSON.stringify({prompt})});
     raw=await res.text();
     if(!res.ok){const error=new Error('AI 服務暫時無法回應（HTTP '+res.status+'）');error.status=res.status;
       // APIS 2026-10-15: PAYLOAD_TOO_LARGE / UPSTREAM_OUTPUT_TOO_LARGE (also as an older 503) and retryable:false are final for this request.
