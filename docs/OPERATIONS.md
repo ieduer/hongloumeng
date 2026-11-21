@@ -1,3 +1,10 @@
+## 2026-11-21 學習記錄條不再對未登入訪客顯示「待處理」（task hlm-lrbar-20261120）
+
+- Cause: on every page load (and every window focus) the page calls the shared recorder's `prepare()`. For a signed-out visitor it fails with `LEARNING_LOGIN_REQUIRED` and reports `status: needs_attention`; the bottom bar added on 2026-11-02 showed for any `needs_attention`, so every signed-out visitor saw 「學習記錄待處理，請保留此頁並重試」 although nothing was waiting to be saved.
+- Fix (hlm only, `assets/js/app.js`): the page keeps the state's `code`; `needs_attention` with `LEARNING_LOGIN_REQUIRED` no longer opens the bar, and the status text reads 「尚未登入：學習記錄只保存在本機」. Real recording failures, storage errors, captures still waiting to be stored locally and failed saves still open it. The shared `learning-records.js`, the capture chain and signed-out local storage are unchanged.
+- Test: `scripts/test_app.mjs` "record bar: signed-out is quiet…" (fails on the previous code).
+- Local previews still show the bar, because localhost cannot reach the User Center (a real `LEARNING_RECORDING_UNAVAILABLE`).
+
 ## 2026-11-20 與 ly.bdfz.net 一致的外殼＋圖譜（task hlm-viz-20261120）
 
 This section supersedes earlier statements in this file about the top bar, the appearance dialog, the 「問」 floating button and the navigation widget position.

@@ -5,7 +5,7 @@
 'use strict';
 
 const SITE_KEY = 'hlm';
-const V = 'v=2026112001';
+const V = 'v=2026112002';
 
 
 let detailedSession='';
@@ -81,12 +81,14 @@ async function retryDetailedStorage(){
  for(const [id,item]of [...detailedPending]){await item.service.record(item.operation);detailedPending.delete(id);item.context.storageFailure=false;if(['draft.edit','question.submit','answer.submit'].includes(item.operation.action)&&item.context.pointerKey){try{localStorage.setItem(item.context.pointerKey,item.operation.operationId);}catch{}}}
  return window.BdfzLearningRecords.retry();
 }
-let recordState='',recordFailure=false;
-// 底部記錄條平時隱藏；只有保存失敗、待處理或仍有未保存項目時才顯示（可重試）
-function syncRecordBar(){const bar=document.getElementById('learning-record-bar');if(!bar)return;bar.hidden=!(recordFailure||detailedPending.size>0||['needs_attention','storage_error'].includes(recordState));document.body.classList.toggle('lr-open',!bar.hidden);}
+let recordState='',recordCode='',recordFailure=false;
+// 底部記錄條平時隱藏；只有保存失敗、待處理或仍有未保存項目時才顯示（可重試）。
+// 未登入（LEARNING_LOGIN_REQUIRED）不是待處理：沒有東西等著保存，內容照常只存本機，所以不顯示。
+const recordAlarm=()=>['needs_attention','storage_error'].includes(recordState)&&!(recordState==='needs_attention'&&recordCode==='LEARNING_LOGIN_REQUIRED');
+function syncRecordBar(){const bar=document.getElementById('learning-record-bar');if(!bar)return;bar.hidden=!(recordFailure||detailedPending.size>0||recordAlarm());document.body.classList.toggle('lr-open',!bar.hidden);}
 function initDetailedCapture() {
  const service=window.BdfzLearningRecords;if(!service)return;
- service.onState(s=>{recordState=s.status;const node=document.getElementById('learning-record-status');if(node)node.textContent=s.status==='unattributed'?'記錄已保存在本機；身份未確認時的內容不會自動歸屬':s.status==='saved'?'學習記錄已同步':['needs_attention','storage_error'].includes(s.status)?'學習記錄待處理，請保留此頁並重試':'學習記錄已在本機保存';syncRecordBar();});
+ service.onState(s=>{recordState=s.status;recordCode=s.code||'';const node=document.getElementById('learning-record-status');if(node)node.textContent=s.status==='unattributed'?'記錄已保存在本機；身份未確認時的內容不會自動歸屬':s.status==='saved'?'學習記錄已同步':recordCode==='LEARNING_LOGIN_REQUIRED'?'尚未登入：學習記錄只保存在本機':['needs_attention','storage_error'].includes(s.status)?'學習記錄待處理，請保留此頁並重試':'學習記錄已在本機保存';syncRecordBar();});
  void service.prepare().catch(()=>{});
  document.getElementById('learning-record-retry')?.addEventListener('click',()=>retryDetailedStorage().then(()=>{recordFailure=false;},()=>{}).finally(syncRecordBar));
  window.addEventListener('bdfz:session-invalidated',()=>{detailedGeneration++;detailedSession='';convo.length=0;sessionKey='';aiLog()?.replaceChildren();const input=$('#ai-input');if(input)input.value='';});

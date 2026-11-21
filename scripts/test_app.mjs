@@ -44,6 +44,22 @@ test('AI validates answer shape; valid answers still work',async()=>{
   c.fetch=async()=>({ok:true,text:async()=>'{"answer":" 正常回答 "}'});
   assert.equal(await run(c,"callAI('test')"),'正常回答');
 });
+test('record bar: signed-out is quiet; real failures, storage errors and unsaved captures still show it',()=>{
+  const c=setup(),bar={hidden:true},status={textContent:''};
+  c.document.getElementById=id=>id==='learning-record-bar'?bar:id==='learning-record-status'?status:null;
+  c.document.body={classList:{toggle(){}}};
+  let listener=null;c.window.BdfzLearningRecords.onState=fn=>{listener=fn;};c.window.BdfzLearningRecords.prepare=()=>Promise.reject(Object.assign(Error('x'),{code:'LEARNING_LOGIN_REQUIRED'}));
+  run(c,'initDetailedCapture()');
+  listener({status:'needs_attention',code:'LEARNING_LOGIN_REQUIRED'});
+  assert.equal(bar.hidden,true,'signed-out visitor sees no pending bar');assert.match(status.textContent,/尚未登入/);
+  listener({status:'unattributed',count:1});assert.equal(bar.hidden,true);
+  listener({status:'needs_attention',code:'LEARNING_RECORDING_UNAVAILABLE'});assert.equal(bar.hidden,false,'a real recording failure still shows');assert.match(status.textContent,/待處理/);
+  listener({status:'saved'});assert.equal(bar.hidden,true);
+  listener({status:'storage_error',code:'LEARNING_STORAGE_WRITE_FAILED'});assert.equal(bar.hidden,false,'storage errors still show');
+  listener({status:'needs_attention',code:'LEARNING_LOGIN_REQUIRED'});assert.equal(bar.hidden,true);
+  run(c,"detailedPending.set('x',{});syncRecordBar()");assert.equal(bar.hidden,false,'an unsaved capture still shows while signed out');
+  run(c,"detailedPending.clear();recordFailure=true;syncRecordBar()");assert.equal(bar.hidden,false,'a failed save still shows while signed out');
+});
 test('legacy progress key is unchanged',()=>assert.equal(run(setup(),'itemKey(12)'),'chapter-第12章'));
 test('exam AI keeps reference-answer authority limits',()=>{
   const c=setup();
