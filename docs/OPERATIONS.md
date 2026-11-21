@@ -4,6 +4,7 @@
 - Fix (hlm only, `assets/js/app.js`): the page keeps the state's `code`; `needs_attention` with `LEARNING_LOGIN_REQUIRED` no longer opens the bar, and the status text reads 「尚未登入：學習記錄只保存在本機」. Real recording failures, storage errors, captures still waiting to be stored locally and failed saves still open it. The shared `learning-records.js`, the capture chain and signed-out local storage are unchanged.
 - Test: `scripts/test_app.mjs` "record bar: signed-out is quiet…" (fails on the previous code).
 - Local previews still show the bar, because localhost cannot reach the User Center (a real `LEARNING_RECORDING_UNAVAILABLE`).
+- Accepted: source `315cf4f`, Pages `fd6e97bf-39fd-4d12-b3ae-1a57287841a4` (2 served files changed), effective 2026-11-21T04:16:05Z; driver `/Users/ylsuen/CF/_meta/reports/operations/hlm-lrbar-20261120/release/hlm-lrbar-release.mjs`; rollback Pages `13cb6a5f`.
 
 ## 2026-11-20 與 ly.bdfz.net 一致的外殼＋圖譜（task hlm-viz-20261120）
 

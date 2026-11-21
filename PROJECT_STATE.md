@@ -1,6 +1,7 @@
-## 2026-11-21 candidate: no 「待處理」 bar for signed-out visitors (hlm-lrbar-20261120)
+## 2026-11-21 accepted: no 「待處理」 bar for signed-out visitors (hlm-lrbar-20261120)
 
-- `assets/js/app.js` treats the recorder's `LEARNING_LOGIN_REQUIRED` as quiet; details in `docs/OPERATIONS.md` (2026-11-21 section). Report: `/Users/ylsuen/CF/_meta/reports/operations/hlm-lrbar-20261120/REPORT.md`.
+- Source `315cf4f` on `main`, Pages `fd6e97bf-39fd-4d12-b3ae-1a57287841a4`, effective 2026-11-21T04:16:05Z, accepted 04:19:32Z; rollback Pages `13cb6a5f` (source `a0b7986`).
+- `assets/js/app.js` treats the recorder's `LEARNING_LOGIN_REQUIRED` as quiet; details in `docs/OPERATIONS.md` (2026-11-21 section). Production: 10/10 signed-out bar checks, 121/121 regression checks; Status `20261121-hlm-record-bar`. Report: `/Users/ylsuen/CF/_meta/reports/operations/hlm-lrbar-20261120/REPORT.md`.
 
 ## 2026-11-21 accepted: ly-consistent shell and 圖譜 (hlm-viz-20261120)
 
