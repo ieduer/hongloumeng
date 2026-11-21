@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" data-theme="light">
+<html lang="zh-Hant" data-theme="dark">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>紅樓夢 · 整本書閱讀與北京卷真題</title>
   <meta name="description"
-    content="《紅樓夢》一百二十回全文閱讀，北京高考歷年《紅樓夢》真題全編（2005—2026）、人物分析、詩詞判詞索引、每日進度計畫與日常閱讀方法建議。" />
-  <meta name="keywords" content="紅樓夢,北京高考,名著閱讀,整本書閱讀,判詞,金陵十二釵,微寫作,人物分析,曹雪芹" />
+    content="《紅樓夢》一百二十回全文閱讀，北京高考歷年《紅樓夢》真題全編（2005—2026）、人物分析、詩詞判詞索引、全書脈絡與人物命運圖譜、大觀園與書中地理地圖、每日進度計畫與日常閱讀方法建議。" />
+  <meta name="keywords" content="紅樓夢,北京高考,名著閱讀,整本書閱讀,判詞,金陵十二釵,微寫作,人物分析,人物關係,大觀園地圖,曹雪芹" />
   <meta name="author" content="Suen" />
-  <meta name="theme-color" content="#f6f1e7" />
+  <meta name="theme-color" content="#000000" />
   <link rel="icon" href="https://raw.githubusercontent.com/gptv/suen/main/images/Avatar-small.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://mx.bdfz.net" crossorigin>
   <link rel="stylesheet" href="https://mx.bdfz.net/fonts/huwen/v1/HuWenMingChao.4eeeeaf657.css" crossorigin>
-  <link rel="stylesheet" href="assets/css/study.css?v=20261102-record-bar" />
-  <script src="assets/js/appearance.js?v=2026091704"></script>
+  <link rel="stylesheet" href="assets/css/study.css?v=2026112001" />
+  <link rel="stylesheet" href="assets/css/shell.css?v=2026112001" />
+  <link rel="stylesheet" href="assets/css/atlas.css?v=2026112001" />
+  <script src="assets/js/appearance.js?v=2026112001"></script>
   <script type="text/javascript">
     (function (c, l, a, r, i, t, y) {
       c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
@@ -27,41 +29,38 @@
 <body>
   <header class="top">
     <div class="top-in">
-      <a class="brand" href="#/"><b>紅樓夢</b><span>整本書閱讀 · 北京卷</span></a>
-      <nav class="tabs" id="tabs"></nav>
+      <a class="brand" href="#/" aria-label="紅樓夢首頁"><b>紅樓夢</b><span>DREAM OF THE RED CHAMBER</span></a>
+      <nav class="tabs" id="tabs" aria-label="主要分區"></nav>
       <div class="top-tools">
-        <button class="icon-btn" id="btn-search" title="全站搜尋（按 /）" aria-label="搜尋">⌕</button>
-        <button class="icon-btn" id="btn-theme" title="閱讀外觀" aria-label="閱讀外觀">◐</button>
+        <button class="icon-btn" id="btn-search" title="全站搜尋（按 /）" aria-label="搜尋"></button>
+        <button class="icon-btn" id="btn-ai" title="問一問（AI 助讀）" aria-label="問一問（AI 助讀）"></button>
+        <button class="me-btn" id="btn-me" aria-haspopup="dialog" aria-controls="me"><span class="me-ava" id="me-ava"></span><span>我的</span></button>
       </div>
     </div>
+    <nav class="subnav" id="subnav" aria-label="分區" hidden></nav>
   </header>
 
-  <dialog id="appearance" aria-labelledby="appearance-title">
-    <div class="appearance-head"><h2 id="appearance-title">閱讀外觀</h2><button class="icon-btn" id="appearance-close" aria-label="關閉外觀設定">✕</button></div>
-    <p class="small muted">選一種喜歡的紙墨配色，會記住在這個瀏覽器。</p>
-    <div class="appearance-modes" role="group" aria-label="明暗模式">
-      <button class="btn" data-mode="auto" aria-pressed="false">跟隨系統</button>
-      <button class="btn" data-mode="light" aria-pressed="false">淺色</button>
-      <button class="btn" data-mode="dark" aria-pressed="false">深色</button>
+  <dialog id="me" class="me-dialog" aria-labelledby="me-title">
+    <div class="me-sheet">
+      <div class="me-head"><h2 id="me-title">我的</h2><button class="icon-btn" id="me-close" aria-label="關閉「我的」"></button></div>
+      <div class="me-panel" id="me-panel"></div>
     </div>
-    <h3>色系</h3><div id="palette-options" class="palette-options" role="group" aria-label="色系"></div>
   </dialog>
 
   <main id="view" class="wrap" role="main"></main>
 
   <footer class="foot">
-    《紅樓夢》正文為公有領域文本；詩詞註釋採自公開的《紅樓夢》詩詞鑑賞資料。
-    真題題面據北京卷原卷／解析卷校訂，答案來源逐題標註。<br>
+    《紅樓夢》正文為公有領域文本（程乙本系統）；通行本後四十回為無名氏續，程偉元、高鶚整理。詩詞註釋採自公開的《紅樓夢》詩詞鑑賞資料。
+    真題題面據北京卷原卷／解析卷校訂，答案來源逐題標註。圖譜每條事件均附底本原文以供核對。<br>
     © Suen · <a href="https://bdfz.net/posts/hlm" target="_blank" rel="noopener noreferrer">關於本站</a>
   </footer>
 
-  <button class="ai-fab" id="ai-fab" title="問一問（AI 助讀）" aria-label="AI 助讀">問</button>
   <div class="scrim" id="scrim"></div>
   <aside class="ai-panel" id="ai-panel" aria-label="AI 助讀">
     <div class="ai-head">
       <h3 id="ai-title">問一問</h3>
-      <button class="icon-btn" id="ai-clear" title="清空對話">↺</button>
-      <button class="icon-btn" id="ai-close" title="關閉">✕</button>
+      <button class="icon-btn" id="ai-clear" title="清空對話" aria-label="清空對話">↺</button>
+      <button class="icon-btn" id="ai-close" title="關閉" aria-label="關閉 AI 助讀"></button>
     </div>
     <div class="ai-log" id="ai-log"></div>
     <div class="ai-quick" id="ai-quick"></div>
@@ -71,13 +70,19 @@
     </div>
   </aside>
 
-  <script defer src="https://my.bdfz.net/site-auth.js" data-site-key="hlm" data-position="left"></script>
+  <script>
+    // Shared navigation button bottom-right, as on ly.bdfz.net (the left edge holds the chapter list).
+    window.__BDFZ_WIDGET_CONFIG__ = { position: "right", insetBottom: 18, insetSide: 18 };
+  </script>
+  <script defer src="https://my.bdfz.net/site-auth.js" data-site-key="hlm" data-position="right"></script>
   <script src="learning-manifest.js"></script>
   <script src="reader-learning-evidence-v1.js"></script>
   <script src="reader-completion-ui.js"></script>
   <div class="lr-bar" id="learning-record-bar" hidden><span role="status" id="learning-record-status"></span><button type="button" class="lr-retry" id="learning-record-retry">重試保存學習記錄</button></div>
   <script src="assets/js/learning-records.js?v=20260925-capture-recovery" data-site-key="hlm"></script>
-  <script src="assets/js/app.js?v=2026111801"></script>
+  <script src="assets/js/icons.js?v=2026112001"></script>
+  <script src="assets/js/atlas.js?v=2026112001"></script>
+  <script src="assets/js/app.js?v=2026112001"></script>
 </body>
 
 </html>

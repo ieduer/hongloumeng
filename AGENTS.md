@@ -19,6 +19,8 @@ Read `/Users/ylsuen/CF/AGENTS.md`, [operations](docs/OPERATIONS.md), and
 | 人工撰寫 | `data/authored/people.json`、`data/authored/method.json` | 人物分析與讀法，人手撰寫 | 否（改動＝重寫內容） |
 | 人工撰寫 | `data/study/exams.json` | 北京卷真題全編，人手校訂 | 否 |
 | 派生 | `data/study/{chapters,people,poems,plans}.json`、`data/text/ch***.json` | 由 `scripts/build_study.py` 產出 | 是，`python3 scripts/build_study.py` |
+| 人工撰寫 | `data/authored/atlas/*.json` | 圖譜事件、地點、關係、紀年、研究前沿；每條附底本原文 `ev` | 否（改動＝重寫內容） |
+| 派生 | `data/study/atlas.json` | 由 `scripts/build_atlas.py` 產出（先跑 build_study.py），原文對不上即失敗 | 是，`python3 scripts/build_atlas.py` |
 
 - **不要手改 `data/study/chapters.json`、`people.json`、`poems.json`、`plans.json`
   或 `data/text/`**——它們會被建置腳本整檔覆寫。改內容請改「來源」或「人工撰寫」層。
@@ -40,8 +42,9 @@ Read `/Users/ylsuen/CF/AGENTS.md`, [operations](docs/OPERATIONS.md), and
   兩者都帶 `?v=` 版本參數，**改動必須同步升版**，否則使用者拿到舊快取。
 - 閱讀進度沿用舊契約：localStorage `hlm_read_progress`，itemKey 形如 `chapter-第12章`，
   並經 `BdfzIdentity.syncProgress` 上報用戶中心。改 key 會使既有使用者進度歸零。
-- AI 走 `https://ai.bdfz.net/`（POST `{prompt}` → `{answer}`）。本站右下角已有自己的
-  「問」浮鈕，故導航 widget 以 `data-position="left"` 掛在左下。
+- AI 走站內 `/api/ai`（見 docs/OPERATIONS.md 2026-11-18 節）。2026-11-20 起外殼與 ly.bdfz.net 一致：
+  「問」移到頂欄、「我的」為右側面板，導航 widget 以 `data-position="right"` 掛在右下。
+- 圖譜顯示文字一律正體；引用底本原文照錄（底本為簡體數位本），不做繁簡轉換。
 - Never print browser storage, learner content, sessions, or AI request bodies.
   A caller/session change requires the workspace shared-hub transaction.
 - Treat learner activity as `student_owned`; report aggregate outcomes only.

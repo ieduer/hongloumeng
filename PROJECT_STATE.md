@@ -1,3 +1,8 @@
+## 2026-11-20 candidate: ly-consistent shell and 圖譜 (hlm-viz-20261120)
+
+- Shell, appearance and navigation now follow ly.bdfz.net; new 圖譜 section (plot arc, fate timelines, relation network, genealogy, three maps, chronology, research notes) built from `data/authored/atlas/` by `scripts/build_atlas.py`, with every quoted source string checked at build time. Details: `docs/OPERATIONS.md`, section "2026-11-20 與 ly.bdfz.net 一致的外殼＋圖譜".
+- State: see the workspace report `_meta/reports/operations/hlm-viz-20261120/REPORT.md` for release and acceptance.
+
 ## 2026-11-18 accepted: AI through the gateway's credit lanes
 
 - Source `17eeb38` on `main`, Pages deployment `7bd6297a-9790-4e7e-bba2-1fe1e1547fb5`, effective 2026-11-18T10:34:58Z; rollback 50735dbf (source a5df0e9).

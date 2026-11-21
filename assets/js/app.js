@@ -5,7 +5,7 @@
 'use strict';
 
 const SITE_KEY = 'hlm';
-const V = 'v=2026110201';
+const V = 'v=2026112001';
 
 
 let detailedSession='';
@@ -133,6 +133,7 @@ const D = {
   text: (n) => getJSON('data/text/ch' + String(n).padStart(3, '0') + '.json'),
   full: () => getJSON('data/hongloumeng.json'),
   research: () => getJSON('data/authored/research.json'),
+  atlas: () => getJSON('data/study/atlas.json'),
 };
 
 /* ---------------- 進度（沿用舊版 itemKey 契約） ---------------- */
@@ -190,23 +191,44 @@ function applyPrefs() {
   store.set('hlm_reader_prefs', prefs);
 }
 
-/* ---------------- 導覽 ---------------- */
+/* ---------------- 導覽（與 ly.bdfz.net 同一套：圖示主分區＋分區內第二列） ---------------- */
+const icon = (name, size) => window.HLMIcon ? window.HLMIcon(name, size) : '';
 const TABS = [
-  ['#/', '今日'],
-  ['#/read', '通讀'],
-  ['#/exam', '真題'],
-  ['#/people', '人物'],
-  ['#/poems', '詩詞'],
-  ['#/plan', '進度'],
-  ['#/method', '讀法'],
-  ['/play/', '石頭收服'],
+  { id: 'home', href: '#/', label: '今日', icon: 'house', match: h => h === '#/' || h === '' || h === '#' },
+  { id: 'read', href: '#/read', label: '通讀', icon: 'book' },
+  { id: 'exam', href: '#/exam', label: '真題', icon: 'cap' },
+  { id: 'people', href: '#/people', label: '人物', icon: 'users' },
+  { id: 'poems', href: '#/poems', label: '詩詞', icon: 'feather' },
+  { id: 'atlas', href: '#/atlas', label: '圖譜', icon: 'compass' },
+  { id: 'study', href: '#/plan', label: '修業', icon: 'chart', match: h => /^#\/(plan|method|research)/.test(h) },
+  { id: 'play', href: '/play/', label: '石頭收服', icon: 'gem', external: true },
 ];
+const SUBNAV = {
+  atlas: [
+    ['#/atlas/plot', '脈絡', 'activity'], ['#/atlas/fates', '命運', 'hourglass'], ['#/atlas/relations', '關係', 'waypoints'],
+    ['#/atlas/family', '世系', 'tree'], ['#/atlas/map', '地圖', 'map'], ['#/atlas/time', '時序', 'clock'], ['#/atlas/frontier', '研究前沿', 'bulb'],
+  ],
+  study: [['#/plan', '進度', 'checks'], ['#/method', '讀法', 'notebook'], ['#/research', '論文導讀', 'file']],
+};
+function currentTab(cur) {
+  return TABS.find(t => !t.external && (t.match ? t.match(cur) : cur.startsWith(t.href))) || null;
+}
 function renderTabs() {
   const cur = location.hash || '#/';
-  $('#tabs').innerHTML = TABS.map(([h, t]) => {
-    const on = h === '#/' ? (cur === '#/' || cur === '') : cur.startsWith(h);
-    return `<a href="${h}" class="${on ? 'on' : ''}">${t}</a>`;
+  const tab = currentTab(cur);
+  $('#tabs').innerHTML = TABS.map(t => {
+    const on = tab && tab.id === t.id;
+    return `<a href="${t.href}" class="${on ? 'on' : ''}"${on ? ' aria-current="page"' : ''}>${icon(t.icon, 18)}<span>${t.label}</span></a>`;
   }).join('');
+  const sub = tab && SUBNAV[tab.id], el = $('#subnav');
+  if (!el) return;
+  el.hidden = !sub;
+  if (!sub) { el.innerHTML = ''; document.body.classList.remove('has-subnav'); return; }
+  document.body.classList.add('has-subnav');
+  const path = cur.split('?')[0];
+  const active = sub.find(([h]) => path === h || path.startsWith(h + '/')) || (tab.id === 'atlas' ? sub[0] : null);
+  el.innerHTML = '<div class="subnav-in">' + sub.map(([h, t, ic]) =>
+    `<a href="${h}"${active && active[0] === h ? ' aria-current="page"' : ''}>${icon(ic, 16)}<span>${t}</span></a>`).join('') + '</div>';
 }
 
 /* =============================================================
@@ -240,6 +262,7 @@ async function render() {
     else if (page === 'method') await viewMethod(view);
     else if (page === 'search') await viewSearch(view, r);
     else if (page === 'research') await viewResearch(view, r);
+    else if (page === 'atlas') await viewAtlas(view, r);
     else view.innerHTML = '<p class="muted">找不到這一頁。<a href="#/">回首頁</a></p>';
   } catch (e) {
     if (renderId !== state.renderId) return;
@@ -354,6 +377,8 @@ async function viewHome(view) {
     ${pick.qualityNote ? `<p class="tiny muted">${esc(pick.qualityNote)}</p>` : ''}
   </div>` : ''}
 
+  <section class="card pad home-atlas" id="home-atlas" aria-label="全書脈絡"><div class="skel"></div><div class="skel" style="width:70%"></div></section>
+
   <div class="grid g4">
     <a class="entry" href="#/exam"><div class="num">${exams.items.length}</div><h3>北京卷真題全編</h3>
       <p>2005—2026 年北京卷中全部涉及《紅樓夢》的試題，含原題、材料、答案要點與詳解。</p></a>
@@ -364,6 +389,11 @@ async function viewHome(view) {
     <a class="entry" href="#/method"><div class="num">七</div><h3>日常閱讀方法</h3>
       <p>日常閱讀、證據組織與十項自查，附論文導讀考點卡。</p></a>
   </div>`;
+  D.atlas().then(atlas => {
+    const box = $('#home-atlas');
+    if (renderId !== state.renderId || !box) return;
+    box.innerHTML = window.HLMAtlas.homeCard(atlas, { chLabel, esc, icon });
+  }).catch(() => { const box = $('#home-atlas'); if (box) box.remove(); });
 
   $$('[data-pace]', view).forEach(b => b.onclick = () => {
     const today = new Date();
@@ -425,6 +455,7 @@ async function viewRead(view, r) {
         <button class="chip" id="lh-tog">行距</button>
         <button class="chip ${isRead(n) ? 'on' : ''}" id="mark-read">${isRead(n) ? '✓ 已讀' : '標記已讀'}</button>
       </div>
+      <div class="ch-strip" id="ch-strip" aria-label="本回在全書中的位置"></div>
       <div class="reader-cols">
         <div>
           <h1 class="chapter-title">${chLabel(n)}　${esc(meta.title)}</h1>
@@ -466,6 +497,11 @@ async function viewRead(view, r) {
   };
 
   // 側欄
+  D.atlas().then(atlas => {
+    const strip = $('#ch-strip');
+    if (renderId !== state.renderId || !strip) return;
+    strip.innerHTML = window.HLMAtlas.chapterStrip(atlas, n, { chLabel, esc, icon });
+  }).catch(() => { const strip = $('#ch-strip'); if (strip) strip.remove(); });
   const [poems, exams, people, research] = await Promise.all([D.poems(), D.exams(), D.people(), D.research()]);
   if (renderId !== state.renderId) return;
   const sideParts = [];
@@ -684,6 +720,8 @@ async function viewPeople(view, r) {
       </div>
     </div>
 
+    <div id="p-fate"></div>
+
     ${p.poems.length ? `<div class="card pad" style="margin-bottom:14px">
       <h3 style="font-size:17px">判詞與曲</h3>
       ${p.poems.map(id => {
@@ -724,6 +762,11 @@ async function viewPeople(view, r) {
     </div>` : ''}
     <p style="margin-top:16px"><button class="btn" id="ai-person">請 AI 就這個人物出一道模擬題</button></p>`;
     $('#ai-person').onclick = () => { openAI(); askPerson(p); };
+    D.atlas().then(atlas => {
+      const box = $('#p-fate');
+      if (renderId !== state.renderId || !box) return;
+      box.innerHTML = window.HLMAtlas.personCard(atlas, p.name, { chLabel, esc, icon });
+    }).catch(() => {});
     window.scrollTo({ top: 0 });
     return;
   }
@@ -733,6 +776,7 @@ async function viewPeople(view, r) {
   <div class="page-head">
     <h1>人物分析</h1>
     <p>44 位人物：判詞歸屬、形象要點、可直接引用的關鍵情節（含回目）、易錯點，以及該人物對應哪一年的北京卷真題。柱狀圖按姓名與別名在正文的字面匹配統計，供定位閱讀；共用稱謂或同名詞可能誤計，不等於實際出場次數。</p>
+    <p class="filters" style="margin-top:12px"><a class="chip" href="#/atlas/fates">${icon('hourglass', 14)} 命運時間線</a><a class="chip" href="#/atlas/relations">${icon('waypoints', 14)} 人物關係網</a><a class="chip" href="#/atlas/family">${icon('tree', 14)} 賈府世系</a></p>
   </div>
   ${groups.map(g => `
     <h2 style="font-size:18px;margin:22px 0 10px;letter-spacing:.06em">${esc(g)}</h2>
@@ -1019,6 +1063,102 @@ async function viewResearch(view, r) {
 }
 
 /* =============================================================
+   圖譜（脈絡／命運／關係／世系／地圖／時序／研究前沿）
+   ============================================================= */
+async function viewAtlas(view, r) {
+  const renderId = state.renderId;
+  skeleton(view, 6);
+  const [atlas, chs, people, poems] = await Promise.all([D.atlas(), D.chapters(), D.people(), D.poems()]);
+  if (renderId !== state.renderId) return;
+  state.chapters = chs;
+  view.className = 'wrap wide';
+  window.HLMAtlas.render(view, { section: r.seg[1] || 'plot', sub: r.seg[2] ? decodeURIComponent(r.seg[2]) : null, q: r.q },
+    { atlas, chapters: chs, people, poems, chLabel, esc, icon, isRead, current: () => renderId === state.renderId });
+}
+
+/* =============================================================
+   我的：一張由上到下的面板（與 ly.bdfz.net 同一做法）
+   ============================================================= */
+function meHTML(session) {
+  const ap = window.HLMAppearance.state();
+  const done = [...readSet].filter(k => /^chapter-第\d+章$/.test(k)).length;
+  const signed = !!session?.authenticated;
+  const slug = signed ? (session.user?.slug || '已登入') : '';
+  const loginUrl = identity()?.buildAuthUrl?.('login', location.href) || 'https://my.bdfz.net/';
+  const R = 26, C = 2 * Math.PI * R;
+  return `
+  <section class="me-identity-box">
+    <div class="me-identity">
+      <span class="me-avatar">${icon('user', 24)}</span>
+      <div class="me-who"><strong>${signed ? esc(slug) : '尚未登入'}</strong>
+        <p data-state="${signed ? 'in' : 'out'}">${signed ? '統一帳號已連接，閱讀標記會同步到「我的」主頁' : session === undefined ? '正在確認帳號…' : '登入後，閱讀標記與學習記錄可跨裝置保存'}</p></div>
+      ${signed ? `<a class="me-primary" href="https://my.bdfz.net/" target="_blank" rel="noopener">我的主頁</a>` : `<a class="me-primary" href="${esc(loginUrl)}">登入</a>`}
+    </div>
+  </section>
+  <section>
+    <h3>閱讀進度</h3>
+    <div class="me-progress">
+      <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="${R}" fill="none" stroke="var(--ui-border)" stroke-width="6"/>
+        <circle cx="32" cy="32" r="${R}" fill="none" stroke="var(--ui-accent-text)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - done / 120)}" transform="rotate(-90 32 32)"/></svg>
+      <div><strong>${done}<small> / 120 回</small></strong><p>已讀 ${Math.round(done / 120 * 100)}%（本機記錄）</p></div>
+    </div>
+    <div class="me-shortcuts">
+      <a href="#/plan">${icon('checks', 20)}<span>進度計畫</span><small>每日任務</small></a>
+      <a href="#/atlas">${icon('compass', 20)}<span>圖譜</span><small>脈絡、命運、地圖</small></a>
+      <a href="/play/">${icon('gem', 20)}<span>石頭收服</span><small>真題與判詞</small></a>
+    </div>
+  </section>
+  <section class="me-appearance">
+    <h3>外觀</h3>
+    <div class="me-cycle">
+      <button type="button" id="me-palette" aria-label="色系：${esc(ap.name)}，第 ${ap.index + 1} 種，共 ${ap.total} 種。按一下換下一種">
+        <span class="me-swatch" style="background:${ap.swatch}" aria-hidden="true"><i style="background:${ap.accent}"></i></span>
+        <span><small>色系 ${ap.index + 1}/${ap.total}</small><strong>${esc(ap.name)}</strong></span>${icon('palette', 17)}
+      </button>
+      <button type="button" id="me-mode" aria-label="明暗：${esc(ap.modeName)}。按一下切換">
+        <span class="me-swatch me-swatch-mode" data-mode="${ap.mode}" aria-hidden="true"></span>
+        <span><small>明暗</small><strong>${esc(ap.modeName)}</strong></span>${icon('sunmoon', 17)}
+      </button>
+    </div>
+    <p class="me-hint">按一下換下一種，只存在這台裝置。</p>
+  </section>
+  <section class="me-reading">
+    <h3>閱讀</h3>
+    <div class="me-row"><span>正文字號<small>${prefs.size}px</small></span>
+      <span class="me-segment"><button type="button" data-fs="-1" aria-label="縮小字號">A−</button><button type="button" data-fs="1" aria-label="放大字號">A+</button></span></div>
+    <div class="me-row"><span>行距<small>${prefs.lh}</small></span>
+      <span class="me-segment">${[1.75, 2.05, 2.3].map(v => `<button type="button" data-lh="${v}" aria-pressed="${prefs.lh === v}">${v === 1.75 ? '緊' : v === 2.05 ? '中' : '鬆'}</button>`).join('')}</span></div>
+  </section>
+  <section class="me-data">
+    <h3>更多</h3>
+    <a class="me-line" href="#/search">${icon('search', 18)}<span>全站搜尋<small>回目、真題、人物、詩詞與正文</small></span>${icon('chevron', 16)}</a>
+    <a class="me-line" href="#/method">${icon('notebook', 18)}<span>日常讀法<small>十項自查與論文導讀</small></span>${icon('chevron', 16)}</a>
+    <a class="me-line" href="#/atlas/frontier">${icon('bulb', 18)}<span>研究前沿<small>2022—2026 年紅學動態</small></span>${icon('chevron', 16)}</a>
+  </section>`;
+}
+let meSession;
+function renderMe(focusSelector) {
+  const panel = $('#me-panel');
+  if (!panel) return;
+  panel.innerHTML = meHTML(meSession);
+  $('#me-palette').onclick = () => { window.HLMAppearance.nextPalette(); renderMe('#me-palette'); };
+  $('#me-mode').onclick = () => { window.HLMAppearance.nextMode(); renderMe('#me-mode'); };
+  $$('[data-fs]', panel).forEach(b => b.onclick = () => {
+    prefs.size = Math.min(26, Math.max(15, prefs.size + Number(b.dataset.fs))); applyPrefs(); renderMe('[data-fs="' + b.dataset.fs + '"]');
+  });
+  $$('[data-lh]', panel).forEach(b => b.onclick = () => { prefs.lh = Number(b.dataset.lh); applyPrefs(); renderMe('[data-lh="' + b.dataset.lh + '"]'); });
+  $$('a', panel).forEach(a => a.addEventListener('click', () => { if ((a.getAttribute('href') || '').startsWith('#')) $('#me').close(); }));
+  if (focusSelector) { const el = panel.querySelector(focusSelector); if (el) el.focus(); }
+}
+function openMe() {
+  const dialog = $('#me');
+  renderMe();
+  dialog.showModal();
+  $('#me-close').focus();
+  identity()?.getSession?.().then(s => { meSession = s || null; if (dialog.open) renderMe(); }).catch(() => { meSession = null; if (dialog.open) renderMe(); });
+}
+
+/* =============================================================
    AI 助讀
    ============================================================= */
 let aiBusy = false;
@@ -1199,10 +1339,18 @@ function updateAIContext() {
 function boot() {
   initDetailedCapture();
   applyPrefs();
-  window.HLMAppearance.bind();
-  $('#btn-theme').onclick = window.HLMAppearance.open;
+  $('#btn-search').innerHTML = icon('search', 18);
+  $('#btn-ai').innerHTML = icon('message', 18) + '<span>問</span>';
+  $('#me-ava').innerHTML = icon('user', 16);
+  $('#me-close').innerHTML = icon('x', 18);
+  $('#ai-close').innerHTML = icon('x', 18);
   $('#btn-search').onclick = () => { location.hash = '#/search'; };
-  $('#ai-fab').onclick = openAI;
+  $('#btn-ai').onclick = openAI;
+  $('#btn-me').onclick = openMe;
+  const me = $('#me');
+  $('#me-close').onclick = () => me.close();
+  me.addEventListener('close', () => $('#btn-me').focus());
+  me.addEventListener('click', e => { if (e.target === me) me.close(); });
   $('#ai-close').onclick = closeAI;
   $('#scrim').onclick = closeAI;
   $('#ai-clear').onclick = () => { if (aiBusy) return; aiLog().innerHTML = ''; convo.length = 0; sessionKey = ''; };

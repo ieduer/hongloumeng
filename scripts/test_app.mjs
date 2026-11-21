@@ -61,11 +61,26 @@ test('appearance keeps old mode, restores new palette and rejects corrupt prefer
   const c=appearance({hlm_appearance:'{"palette":"yutanqing","mode":"light"}'},true);
   assert.equal(c.document.documentElement.dataset.palette,'yutanqing');
   assert.equal(c.document.documentElement.dataset.theme,'light');
-  assert.equal(appearance({hlm_appearance:'{"palette":"bad","mode":"bad"}'},true).document.documentElement.dataset.palette,'classic');
+  assert.equal(appearance({hlm_appearance:'{"palette":"bad","mode":"bad"}'},true).document.documentElement.dataset.palette,'ink');
   assert.equal(appearance({hlm_appearance:'broken'},true).document.documentElement.dataset.theme,'dark');
+  // A reader who never chose an appearance gets ly.bdfz.net's default: 墨黑 in dark, whatever the system says.
+  const fresh=appearance({},false).document.documentElement.dataset;
+  assert.equal(fresh.palette,'ink');assert.equal(fresh.theme,'dark');
+  // An explicit legacy choice keeps the old 紅樓原色 palette.
+  assert.equal(appearance({hlm_theme:'"light"'}).document.documentElement.dataset.palette,'classic');
 });
-test('all 18 palettes pass text, UI and action contrast in both modes',()=>{
-  const api=appearance().window.HLMAppearance;assert.equal(api.palettes.length,18);
+test('one-button cycling moves through every palette and mode, and 墨黑／紙白 fix the brightness',()=>{
+  const stored={},api=appearance(stored).window.HLMAppearance;
+  const seen=new Set([api.state().palette]);
+  for(let i=1;i<api.palettes.length;i++)seen.add(api.nextPalette().palette);
+  assert.equal(seen.size,api.palettes.length);
+  assert.equal(api.nextPalette().palette,'ink');assert.equal(api.state().mode,'dark');
+  assert.equal(api.nextPalette().palette,'paper');assert.equal(api.state().mode,'light');
+  assert.deepEqual([api.nextMode().mode,api.nextMode().mode,api.nextMode().mode],['dark','auto','light']);
+  assert.match(stored.hlm_appearance,/"palette":"paper"/);
+});
+test('all 20 palettes pass text, UI and action contrast in both modes',()=>{
+  const api=appearance().window.HLMAppearance;assert.equal(api.palettes.length,20);
   for(const p of api.palettes) for(const dark of [false,true]) {
     const c=api.colors(p,dark);
     for(const bg of ['paper','paper-2','card','line-2']) {
@@ -80,17 +95,18 @@ test('palette backgrounds carry distinct washes through light and dark surface l
   const api=appearance().window.HLMAppearance;
   const distance=(a,b)=>Math.max(...a.slice(1).match(/../g).map((v,i)=>Math.abs(parseInt(v,16)-parseInt(b.slice(1).match(/../g)[i],16))));
   for(const dark of [false,true]) {
-    const schemes=api.palettes.map(p=>api.colors(p,dark));
+    // 墨黑 and 紙白 are one neutral base in two brightnesses, so they count once.
+    const schemes=api.palettes.filter(p=>p.id!=='paper').map(p=>api.colors(p,dark));
     for(const surface of ['paper','card','paper-2','line-2']) {
-      assert.equal(new Set(schemes.map(c=>c[surface])).size,18,surface+' must reflect each palette');
+      assert.equal(new Set(schemes.map(c=>c[surface])).size,19,surface+' must reflect each palette');
       // These presets share an accent but have different canonical washes.
-      const a=schemes[api.palettes.findIndex(p=>p.id==='yutanqing')];
-      const b=schemes[api.palettes.findIndex(p=>p.id==='yuhonglan')];
+      const a=api.colors(api.palettes.find(p=>p.id==='yutanqing'),dark);
+      const b=api.colors(api.palettes.find(p=>p.id==='yuhonglan'),dark);
       assert.ok(distance(a[surface],b[surface])>=(dark?15:4),surface+' must visibly distinguish the two washes');
     }
     for(const [i,c] of schemes.entries()) {
-      assert.ok(distance(c.paper,c.card)>=5,api.palettes[i].id+' card remains distinct from page');
-      assert.ok(distance(c.card,c['paper-2'])>=5,api.palettes[i].id+' sidebar remains distinct from card');
+      assert.ok(distance(c.paper,c.card)>=5,'card remains distinct from page');
+      assert.ok(distance(c.card,c['paper-2'])>=5,'sidebar remains distinct from card');
       assert.notEqual(c.card.toLowerCase(),'#ffffff','cards retain a palette tint');
     }
   }

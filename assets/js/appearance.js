@@ -4,6 +4,8 @@
 (function () {
 'use strict';
 const PALETTES = [
+  { "id": "ink", "name": "墨黑", "neutral": true, "accent": "#ededed", "background": "#000000" },
+  { "id": "paper", "name": "紙白", "neutral": true, "accent": "#1e1e1e", "background": "#ffffff" },
   {
     "id": "classic",
     "name": "紅樓原色",
@@ -250,7 +252,20 @@ function fit(color, backgrounds, target, dark) {
   }
   return dark ? '#ffffff' : '#000000';
 }
+// 墨黑／紙白 follow ly.bdfz.net's neutral base exactly: one base in two brightnesses.
+function neutral(dark) {
+  const paper = dark ? '#000000' : '#ffffff', card = dark ? '#080808' : '#f7f7f7';
+  const paper2 = dark ? '#111111' : '#eeeeee', wash = dark ? '#1c1c1c' : '#e4e4e4';
+  const bg = [paper, card, paper2, wash];
+  const ink = fit(dark ? '#ededed' : '#1e1e1e', bg, 7, dark);
+  const zhu = fit(dark ? '#ededed' : '#1e1e1e', bg, 4.5, dark);
+  return {paper, 'paper-2': paper2, card, ink, 'ink-2': fit(dark ? '#c7c7c7' : '#454545', bg, 4.5, dark),
+    'ink-3': fit(dark ? '#c7c7c7' : '#454545', bg, 4.5, dark), line: mix(paper, ink, .22), 'line-2': wash, zhu, 'zhu-soft': zhu,
+    qing: fit(dark ? '#8fc1cc' : '#3c6b78', bg, 4.5, dark), gold: fit(dark ? '#d8b878' : '#8a6d33', bg, 4.5, dark),
+    ok: fit(dark ? '#8fcf9a' : '#3f6e47', bg, 4.5, dark), 'on-accent': dark ? '#000000' : '#ffffff', 'on-ok': dark ? '#000000' : '#ffffff'};
+}
 function colors(p, dark) {
+  if (p.neutral) return neutral(dark);
   // Expand the pastel wash's hue before dimming, so complementary palettes
   // do not collapse into gray at night. Preserve neutral washes if present.
   const channels = rgb(p.wash), low = Math.min(...channels), high = Math.max(...channels);
@@ -270,40 +285,56 @@ function colors(p, dark) {
     qing:fit('#3c6b78',bg,4.5,dark),gold:fit('#a9884a',bg,4.5,dark),ok:fit('#4a7a52',bg,4.5,dark),
     'on-accent':onAccent,'on-ok':dark ? '#101116' : '#ffffff'};
 }
+// ly.bdfz.net's token names, derived from the same colours, for the shared shell.
+function tokens(c, dark) {
+  return {'ui-bg': c.paper, 'ui-fg': c.ink, 'ui-surface': c.card, 'ui-shade': c['paper-2'], 'ui-muted': c['ink-2'],
+    'ui-border': c.line, 'ui-control': fit(mix(c.paper, c.ink, .45), [c.paper, c.card, c['paper-2']], 3, dark),
+    'ui-accent': c.zhu, 'ui-accent-text': c.zhu, 'ui-on-accent': c['on-accent'], 'ui-accent-soft': c['line-2'], 'ui-mark': c['line-2']};
+}
+const MODES = [['light', '淺色'], ['dark', '深色'], ['auto', '跟隨系統']];
 const media = matchMedia('(prefers-color-scheme: dark)');
-let pref = {palette:'classic',mode:'auto'};
+// Default follows ly.bdfz.net: 墨黑 in dark. Earlier explicit choices (hlm_appearance, legacy hlm_theme) are kept.
+let pref = {palette:'ink',mode:'dark'};
 try {
   const old = JSON.parse(localStorage.getItem('hlm_theme') || 'null');
-  pref = Object.assign(pref, {mode:['dark','light'].includes(old)?old:'auto'}, JSON.parse(localStorage.getItem('hlm_appearance') || '{}'));
+  const saved = JSON.parse(localStorage.getItem('hlm_appearance') || 'null');
+  if (['dark','light'].includes(old)) pref = {palette:'classic',mode:old};
+  if (saved && typeof saved === 'object') pref = Object.assign({palette:'classic',mode:'auto'}, saved);
 } catch (_) { }
-if (!PALETTES.some(p=>p.id===pref.palette)) pref.palette='classic';
-if (!['light','dark','auto'].includes(pref.mode)) pref.mode='auto';
+if (!PALETTES.some(p=>p.id===pref.palette)) pref.palette='ink';
+if (!['light','dark','auto'].includes(pref.mode)) pref.mode='dark';
+const listeners = [];
+function isDark() { return pref.mode==='dark'||(pref.mode==='auto'&&media.matches); }
 function apply(persist) {
-  const p=PALETTES.find(p=>p.id===pref.palette), dark=pref.mode==='dark'||(pref.mode==='auto'&&media.matches);
+  const p=PALETTES.find(p=>p.id===pref.palette), dark=isDark();
   const root=document.documentElement,c=colors(p,dark);
   root.dataset.theme=dark?'dark':'light';root.dataset.palette=p.id;
   for (const [k,v] of Object.entries(c)) root.style.setProperty('--'+k,v);
+  for (const [k,v] of Object.entries(tokens(c,dark))) root.style.setProperty('--'+k,v);
+  root.style.setProperty('color-scheme', dark ? 'dark' : 'light');
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content',c.paper);
   if (persist) {try {localStorage.setItem('hlm_appearance',JSON.stringify(pref));} catch (_) {}}
-  document.querySelectorAll('[data-palette]').forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed',String(b.dataset.palette===pref.palette));});
-  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===pref.mode)));
+  listeners.forEach(fn => { try { fn(state()); } catch (_) {} });
 }
-function open() {
-  const dialog=document.getElementById('appearance');
-  dialog.showModal();document.getElementById('appearance-close').focus();
+function state() {
+  const at = PALETTES.findIndex(p=>p.id===pref.palette), p = PALETTES[at];
+  const mode = MODES.find(m=>m[0]===pref.mode);
+  return {palette:p.id, name:p.name, index:at, total:PALETTES.length, swatch:p.background, accent:p.accent,
+    mode:pref.mode, modeName:mode[1], dark:isDark()};
 }
-function bind() {
-  const list=document.getElementById('palette-options');
-  list.innerHTML=PALETTES.map(p=>'<button type="button" class="palette-option" data-palette="'+p.id+'" aria-pressed="false"><i aria-hidden="true" style="background:'+p.accent+'"></i>'+p.name+'</button>').join('');
-  list.querySelectorAll('button').forEach(b=>b.onclick=()=>{pref.palette=b.dataset.palette;apply(true);});
-  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{pref.mode=b.dataset.mode;apply(true);});
-  const dialog=document.getElementById('appearance');
-  document.getElementById('appearance-close').onclick=()=>dialog.close();
-  dialog.addEventListener('close',()=>document.getElementById('btn-theme').focus());
-  dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-  apply(false);
+// One button per setting (ly.bdfz.net): each press moves to the next choice.
+function nextPalette() {
+  const p = PALETTES[(PALETTES.findIndex(x=>x.id===pref.palette)+1)%PALETTES.length];
+  pref = {palette:p.id, mode:p.id==='ink'?'dark':p.id==='paper'?'light':pref.mode};
+  apply(true); return state();
 }
+function nextMode() {
+  const at = MODES.findIndex(m=>m[0]===pref.mode);
+  pref = {palette:pref.palette, mode:MODES[(at+1)%MODES.length][0]};
+  apply(true); return state();
+}
+function onChange(fn) { listeners.push(fn); }
 media.addEventListener('change',()=>{if(pref.mode==='auto')apply(false);});
-window.HLMAppearance={open,bind,palettes:PALETTES,colors,contrast};
+window.HLMAppearance={palettes:PALETTES,colors,contrast,tokens,state,nextPalette,nextMode,onChange};
 apply(false);
 })();
