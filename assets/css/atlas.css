@@ -1,13 +1,22 @@
 /* 圖譜：圖表全部用主題變數上色；分類色在淺、深兩種模式各有一組，對背景至少 3:1。 */
 :root {
-  --c-red: #a8382a; --c-blue: #2d6a98; --c-green: #3b7449; --c-amber: #94600f; --c-violet: #6a4ca3;
-  --c-rose: #a63e68; --c-teal: #2b7470; --c-gray: #666666; --c-water: #3d7fa8;
+  --c-red: #b4321f; --c-blue: #2563eb; --c-green: #3b7449; --c-amber: #a16207; --c-violet: #6a4ca3;
+  --c-rose: #a63e68; --c-teal: #0f766e; --c-gray: #666666; --c-water: #2f74a6;
 }
 html[data-theme="dark"] {
-  --c-red: #ff8f7a; --c-blue: #86bdf0; --c-green: #8bd6a0; --c-amber: #f0b862; --c-violet: #bea6f5;
-  --c-rose: #f294bb; --c-teal: #74d3c9; --c-gray: #ababab; --c-water: #6fb3dd;
+  --c-red: #fb8a6e; --c-blue: #7aa7ff; --c-green: #8bd6a0; --c-amber: #facc15; --c-violet: #bea6f5;
+  --c-rose: #f294bb; --c-teal: #2dd4bf; --c-gray: #ababab; --c-water: #6fb3dd;
 }
-.atlas-head { margin-bottom: 18px; }
+.atlas-head { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid var(--ui-border); }
+.atlas-head h1 { font: 600 clamp(30px, 4.4vw, 44px)/1.2 var(--serif); letter-spacing: .02em; }
+.atlas-figures { display: flex; flex-wrap: wrap; gap: 14px clamp(22px, 4vw, 54px); margin: 18px 0 0; }
+.atlas-figures div { display: grid; gap: 2px; }
+.atlas-figures dt { order: 2; color: var(--ui-muted); font-size: 13px; }
+.atlas-figures dd { margin: 0; font: 500 clamp(24px, 3.4vw, 36px)/1.15 system-ui, sans-serif; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.segment { display: inline-flex; flex-wrap: wrap; padding: 3px; border-radius: 11px; background: var(--ui-shade); }
+.segment > a, .segment > button { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border: 0; border-radius: 8px; background: none; color: var(--ui-muted); font: inherit; font-size: 13.5px; white-space: nowrap; cursor: pointer; }
+.segment > a:hover, .segment > button:hover { color: var(--ui-fg); text-decoration: none; }
+.segment > [aria-pressed="true"] { background: var(--ui-bg); color: var(--ui-fg); font-weight: 600; box-shadow: 0 0 0 1px var(--ui-border); }
 .atlas-proof { display: inline-flex; align-items: center; gap: 6px; margin: 10px 0 0 !important; font-size: 12.5px !important; color: var(--ui-muted); }
 .atlas-card { margin-bottom: 18px; }
 .atlas-filters { align-items: center; margin-bottom: 14px; }
@@ -33,7 +42,7 @@ html[data-theme="dark"] {
 .atlas-method p { margin: 8px 0 0; }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--ui-muted); margin-bottom: 4px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
-.legend i { display: inline-block; width: 16px; height: 10px; border-radius: 2px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
 .legend svg { overflow: visible; }
 .lg-line { height: 3px !important; background: var(--ui-accent-text); }
 .lg-dot { width: 10px !important; height: 10px !important; border-radius: 50% !important; border: 2px solid var(--ui-accent-text); }

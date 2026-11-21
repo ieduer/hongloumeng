@@ -75,11 +75,25 @@ const SECTIONS = {
   time: ['時序', '故事過了多少年？每一年佔多少回？書中明寫的月日與年齡，連同前後矛盾之處。'],
   frontier: ['研究前沿', '2022—2026 年與本圖譜相關的紅學研究與動態，附原頁連結。'],
 };
+function figures(section) {
+  const A = X.atlas;
+  const examCh = (X.chapters?.items || []).filter(c => c.exams.length).length;
+  const f = {
+    plot: [[120, '回'], [A.plot.nodes.length, '情節節點'], [A.parts.length, '段落'], [examCh, '回涉北京卷']],
+    fates: [[A.fates.people.length, '位人物'], [A.fates.people.reduce((n, p) => n + p.events.length, 0), '個事件'], [A.fates.people.filter(p => p.omen).length, '組判詞對照']],
+    relations: [[A.relations.network.nodes.length, '位人物'], [A.relations.edges.length, '條標註關係'], [A.relations.network.cooc.length, '組同段共現']],
+    family: [[A.relations.family.rows.length, '代'], [A.relations.family.nodes.length, '人'], [4, '大家族']],
+    map: [[A.places.garden.places.length, '處園景'], [A.places.world.places.length, '個城鎮'], [A.places.world.journeys.length, '段行旅']],
+    time: [[A.chrono.years.length, '個故事年'], [A.chrono.anchors.length, '個月日錨點'], [A.chrono.ages.filter(a => a.issue).length, '處年齡矛盾']],
+    frontier: [[A.frontier.items.length, '條研究與動態'], ['2022—2026', '年']],
+  }[section];
+  return `<dl class="atlas-figures">${f.map(([n, t]) => `<div><dt>${esc(t)}</dt><dd>${esc(String(n))}</dd></div>`).join('')}</dl>`;
+}
 function head(section, extra) {
   const [title, lead] = SECTIONS[section];
   const m = X.atlas.meta;
-  return `<div class="page-head atlas-head"><h1>${esc(title)}</h1><p>${esc(lead)}</p>${extra || ''}
-    <p class="atlas-proof">${ico('checks', 14)} 本頁 ${section === 'frontier' ? '條目均附原頁連結' : `事件取自底本原文；全站圖譜共 ${m.checked} 條原文建置時逐條核對`}</p></div>`;
+  return `<div class="page-head atlas-head"><h1>${esc(title)}</h1><p>${esc(lead)}</p>${figures(section)}${extra || ''}
+    <p class="atlas-proof">${ico('checks', 14)} ${section === 'frontier' ? '條目均附原頁連結' : `事件取自底本原文；全站圖譜共 ${m.checked} 條原文建置時逐條核對`}</p></div>`;
 }
 function method(...notes) {
   return `<details class="atlas-method"><summary>資料與方法</summary>${notes.filter(Boolean).map(t => `<p>${esc(t)}</p>`).join('')}</details>`;
@@ -261,7 +275,7 @@ function viewFates(view, route) {
   const omens = F.people.filter(p => p.omen);
   view.innerHTML = head('fates') + `
     <div class="filters atlas-filters">${LANES.map(([k, t]) => `<a class="chip ${lane === k ? 'on' : ''}" href="#/atlas/fates?lane=${encodeURIComponent(k)}&sort=${sort}">${esc(t)}</a>`).join('')}
-      <span class="spacer"></span><a class="chip ${sort === 'first' ? 'on' : ''}" href="#/atlas/fates?lane=${encodeURIComponent(lane)}&sort=first">按登場</a><a class="chip ${sort === 'end' ? 'on' : ''}" href="#/atlas/fates?lane=${encodeURIComponent(lane)}&sort=end">按結局</a></div>
+      <span class="spacer"></span><span class="segment" role="group" aria-label="排序"><a href="#/atlas/fates?lane=${encodeURIComponent(lane)}&sort=first" aria-pressed="${sort === 'first'}">按登場</a><a href="#/atlas/fates?lane=${encodeURIComponent(lane)}&sort=end" aria-pressed="${sort === 'end'}">按結局</a></span></div>
     <section class="card pad atlas-card">
       <div class="legend"><span><svg width="14" height="14"><circle class="enter" cx="7" cy="7" r="4.5"/></svg>登場</span><span><svg width="14" height="14"><circle class="turn" cx="7" cy="7" r="3.2"/></svg>轉折</span>
         <span><svg width="14" height="14">${endShape('死', 7, 7)}</svg>死</span><span><svg width="14" height="14">${endShape('出家', 7, 7)}</svg>出家</span><span><svg width="16" height="14">${endShape('遠嫁', 8, 7)}</svg>遠嫁／出走</span>
@@ -299,7 +313,7 @@ function viewRelations(view, route) {
   const state = { mode: route.q.get('mode') || 'typed', focus: route.sub || null, off: new Set(), k: 1, tx: 0, ty: 0 };
   view.innerHTML = head('relations') + `
     <div class="filters atlas-filters">
-      <span class="seg" role="group" aria-label="連線">${[['typed', '關係類型'], ['cooc', '同段共現'], ['both', '兩者']].map(([k, t]) => `<button type="button" class="chip" data-mode="${k}" aria-pressed="${state.mode === k}">${t}</button>`).join('')}</span>
+      <span class="segment" role="group" aria-label="連線">${[['typed', '關係類型'], ['cooc', '同段共現'], ['both', '兩者']].map(([k, t]) => `<button type="button" data-mode="${k}" aria-pressed="${state.mode === k}">${t}</button>`).join('')}</span>
       <span class="spacer"></span>
       <label class="atlas-search">${ico('search', 15)}<input id="rel-q" type="search" placeholder="找人物" list="rel-names" aria-label="找人物"><datalist id="rel-names">${N.nodes.map(n => `<option value="${esc(nm(n.id))}">`).join('')}</datalist></label>
     </div>
@@ -567,7 +581,7 @@ function viewMap(view, route) {
   const tabs = [['garden', '大觀園'], ['mansion', '兩府'], ['world', '書中地理']];
   const residents = [...new Set(PL_.garden.places.flatMap(p => p.residents || []))];
   view.innerHTML = head('map') + `
-    <div class="filters atlas-filters">${tabs.map(([k, t]) => `<a class="chip ${sub === k ? 'on' : ''}" href="#/atlas/map/${k}">${t}</a>`).join('')}</div>
+    <div class="filters atlas-filters"><span class="segment" role="group" aria-label="地圖">${tabs.map(([k, t]) => `<a href="#/atlas/map/${k}" aria-pressed="${sub === k}">${t}</a>`).join('')}</span></div>
     <section class="card pad atlas-card map-card">${sub === 'garden' ? `
       <div class="filters map-tools"><button type="button" class="chip" id="route-tog" aria-pressed="false">${ico('route', 14)}第十七回遊園路線</button>
         <span class="spacer"></span><span class="small muted">誰住哪裡：</span>${residents.map(id => `<button type="button" class="chip" data-res="${esc(id)}">${esc(nm(id))}</button>`).join('')}</div>
