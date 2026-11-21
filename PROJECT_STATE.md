@@ -1,7 +1,9 @@
-## 2026-11-20 candidate: ly-consistent shell and 圖譜 (hlm-viz-20261120)
+## 2026-11-21 accepted: ly-consistent shell and 圖譜 (hlm-viz-20261120)
 
-- Shell, appearance and navigation now follow ly.bdfz.net; new 圖譜 section (plot arc, fate timelines, relation network, genealogy, three maps, chronology, research notes) built from `data/authored/atlas/` by `scripts/build_atlas.py`, with every quoted source string checked at build time. Details: `docs/OPERATIONS.md`, section "2026-11-20 與 ly.bdfz.net 一致的外殼＋圖譜".
-- State: see the workspace report `_meta/reports/operations/hlm-viz-20261120/REPORT.md` for release and acceptance.
+- Source `a0b7986` on `main`, Pages deployment `13cb6a5f-b8f6-461b-96c4-adeeb1c46d79`, effective 2026-11-21T04:02:49Z, accepted 04:05:27Z; rollback Pages `7bd6297a` (source `17eeb38`), no data or binding change. Published after ly.bdfz.net's interface release (`c82c0310` / `84508d4f`).
+- Shell, appearance and navigation follow ly.bdfz.net; new 圖譜 section (plot arc, fate timelines, relation network, genealogy, three maps, chronology, research notes) built from `data/authored/atlas/` by `scripts/build_atlas.py`, with 389 quoted source strings checked at build time. Details: `docs/OPERATIONS.md`, section "2026-11-20 與 ly.bdfz.net 一致的外殼＋圖譜".
+- Acceptance: 121 headless-Chrome checks on production (desktop and 375 px, no page errors); Status `20261120-hlm-atlas`. Report: `/Users/ylsuen/CF/_meta/reports/operations/hlm-viz-20261120/REPORT.md`.
+- Observed, not changed: a fresh anonymous visitor sees the 「學習記錄待處理」 bar on the home page; the same happens on the previous deployment, and the recorder code is untouched by this release.
 
 ## 2026-11-18 accepted: AI through the gateway's credit lanes
 
